@@ -7,51 +7,51 @@ const Gallery = () => {
   const galleryImages = [
     {
       id: 1,
-      url: "https://images.unsplash.com/photo-1744153470889-7c660893f3d5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85",
-      title: "Panama City Beach Paradise",
-      category: "Panama City Beach"
+      url: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/vdf83j58_Gemini_Generated_Image_34qasw34qasw34qa.png",
+      title: "Luxury Floating Cabana Pods",
+      category: "Floating Cabanas"
     },
     {
       id: 2,
-      url: "https://images.unsplash.com/photo-1737398574270-754940c6e0ee?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85",
-      title: "Crystal Clear Emerald Waters",
+      url: "https://images.unsplash.com/photo-1562678845-e8af0857435d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85",
+      title: "Panama City Beach Skyline",
       category: "Panama City Beach"
     },
     {
       id: 3,
-      url: "https://images.unsplash.com/photo-1642889352356-bc193a9157c1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxQYW5hbWElMjBDaXR5JTIwQmVhY2glMjBrYXlha2luZ3xlbnwwfHx8fDE3NTg4Mzg5OTZ8MA&ixlib=rb-4.1.0&q=85",
-      title: "Water Sports Activities",
-      category: "Watercraft"
-    },
-    {
-      id: 4,
-      url: "https://images.unsplash.com/photo-1622581768977-9bb782bfabb5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwzfHxQYW5hbWElMjBDaXR5JTIwQmVhY2glMjBrYXlha2luZ3xlbnwwfHx8fDE3NTg4Mzg5OTZ8MA&ixlib=rb-4.1.0&q=85",
-      title: "Kayaking Adventures",
-      category: "Watercraft"
-    },
-    {
-      id: 5,
-      url: "https://images.unsplash.com/photo-1737398574225-bc25c46113d4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwzfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85",
-      title: "Aerial Beach Views",
-      category: "Panama City Beach"
-    },
-    {
-      id: 6,
-      url: "https://images.pexels.com/photos/4846619/pexels-photo-4846619.jpeg",
-      title: "Water Adventure Activities",
-      category: "Watercraft"
-    },
-    {
-      id: 7,
-      url: "https://images.pexels.com/photos/386158/pexels-photo-386158.jpeg",
+      url: "https://images.unsplash.com/photo-1531933166154-63dbb479f8d3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85",
       title: "White Sand Beach Paradise",
       category: "Panama City Beach"
     },
     {
+      id: 4,
+      url: "https://images.unsplash.com/photo-1531854703027-ccdc628b796e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwzfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85",
+      title: "Panama City Beach Sunset",
+      category: "Panama City Beach"
+    },
+    {
+      id: 5,
+      url: "https://images.unsplash.com/photo-1644578843995-b2cc1acbdf33?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwxfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMEd1bGZ8ZW58MHx8fHwxNzU4ODM5MjA0fDA&ixlib=rb-4.1.0&q=85",
+      title: "Gulf Coast Sunset Views",
+      category: "Panama City Beach"
+    },
+    {
+      id: 6,
+      url: "https://images.unsplash.com/photo-1529707003676-f799c1097a72?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMEd1bGZ8ZW58MHx8fHwxNzU4ODM5MjA0fDA&ixlib=rb-4.1.0&q=85",
+      title: "White Sand Gulf Beach",
+      category: "Panama City Beach"
+    },
+    {
+      id: 7,
+      url: "https://images.unsplash.com/photo-1661090921594-4aea7a8fb41d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwzfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMEd1bGZ8ZW58MHx8fHwxNzU4ODM5MjA0fDA&ixlib=rb-4.1.0&q=85",
+      title: "Gulf Waters Beach Walk",
+      category: "Panama City Beach"
+    },
+    {
       id: 8,
-      url: "https://images.pexels.com/photos/21054054/pexels-photo-21054054.jpeg",
-      title: "Gulf Coast Water Fun",
-      category: "Watercraft"
+      url: "https://images.pexels.com/photos/1598324/pexels-photo-1598324.jpeg",
+      title: "Crystal Clear Waters",
+      category: "Panama City Beach"
     }
   ];
 
