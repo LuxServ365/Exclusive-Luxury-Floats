@@ -1,0 +1,122 @@
+import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { Button } from './ui/button';
+
+const Navigation = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const location = useLocation();
+
+  const navigation = [
+    { name: 'Home', href: '/' },
+    { name: 'Floats & Amenities', href: '/floats-amenities' },
+    { name: 'Watercraft Rentals', href: '/watercraft-rentals' },
+    { name: 'Gallery', href: '/gallery' },
+    { name: 'About', href: '/about' },
+    { name: 'Contact', href: '/contact' },
+  ];
+
+  const isActive = (href) => location.pathname === href;
+
+  return (
+    <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
+      <div className="container mx-auto px-4">
+        <div className="flex justify-between items-center py-4">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-2" data-testid="nav-logo">
+            <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-teal-700 rounded-full flex items-center justify-center">
+              <span className="text-white font-bold text-lg">E</span>
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-teal-700">Exclusive</h1>
+              <p className="text-xs text-gray-600 -mt-1">Gulf Float</p>
+            </div>
+          </Link>
+
+          {/* Desktop Navigation */}
+          <div className="hidden lg:flex items-center space-x-8">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                to={item.href}
+                className={`text-sm font-medium transition-colors hover:text-teal-600 ${
+                  isActive(item.href)
+                    ? 'text-teal-600 border-b-2 border-teal-600 pb-1'
+                    : 'text-gray-700'
+                }`}
+                data-testid={`nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+
+          {/* CTA Button */}
+          <div className="hidden lg:block">
+            <Link to="/bookings">
+              <Button 
+                className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
+                data-testid="nav-book-now-btn"
+              >
+                Book Now
+              </Button>
+            </Link>
+          </div>
+
+          {/* Mobile menu button */}
+          <button
+            className="lg:hidden p-2 rounded-md text-gray-700 hover:text-teal-600 focus:outline-none focus:ring-2 focus:ring-teal-500"
+            onClick={() => setIsOpen(!isOpen)}
+            data-testid="mobile-menu-toggle"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              {isOpen ? (
+                <path d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
+          </button>
+        </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="lg:hidden border-t border-gray-200 py-4" data-testid="mobile-menu">
+            <div className="flex flex-col space-y-4">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.href}
+                  className={`text-base font-medium transition-colors hover:text-teal-600 ${
+                    isActive(item.href) ? 'text-teal-600' : 'text-gray-700'
+                  }`}
+                  onClick={() => setIsOpen(false)}
+                  data-testid={`mobile-nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
+                >
+                  {item.name}
+                </Link>
+              ))}
+              <Link to="/bookings" onClick={() => setIsOpen(false)}>
+                <Button 
+                  className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-3 rounded-full font-semibold w-full mt-4"
+                  data-testid="mobile-nav-book-now-btn"
+                >
+                  Book Now
+                </Button>
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+};
+
+export default Navigation;
