@@ -71,7 +71,7 @@ const WatercraftRentals = () => {
       <section 
         className="hero-section"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.unsplash.com/photo-1597799119438-cbf326f268b9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwyfHxjbGVhciUyMGtheWFrfGVufDB8fHx8MTc1ODgzNzM1MHww&ixlib=rb-4.1.0&q=85)`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.unsplash.com/photo-1622581768977-9bb782bfabb5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwzfHxQYW5hbWElMjBDaXR5JTIwQmVhY2glMjBrYXlha2luZ3xlbnwwfHx8fDE3NTg4Mzg5OTZ8MA&ixlib=rb-4.1.0&q=85)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
