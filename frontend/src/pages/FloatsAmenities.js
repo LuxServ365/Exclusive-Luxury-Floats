@@ -65,7 +65,7 @@ const FloatsAmenities = () => {
       <section 
         className="hero-section"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.unsplash.com/photo-1705039379347-8ec747e29749?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwyfHxmbG9hdGluZyUyMGNhYmFuYXxlbnwwfHx8fDE3NTg4MzczMDZ8MA&ixlib=rb-4.1.0&q=85)`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.unsplash.com/photo-1737398574270-754940c6e0ee?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
