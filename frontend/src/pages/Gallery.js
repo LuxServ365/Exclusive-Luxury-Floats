@@ -68,7 +68,7 @@ const Gallery = () => {
       <section 
         className="hero-section min-h-[60vh]"
         style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(${galleryImages[0].url})`,
+          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url(https://images.unsplash.com/photo-1744153470889-7c660893f3d5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
