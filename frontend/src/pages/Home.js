@@ -4,7 +4,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 
 const Home = () => {
-  const heroImage = "https://images.unsplash.com/photo-1744153470889-7c660893f3d5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85";
+  const heroImage = "https://images.unsplash.com/photo-1562678845-e8af0857435d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85";
   
   const features = [
     {
