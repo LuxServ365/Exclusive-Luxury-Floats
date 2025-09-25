@@ -252,8 +252,8 @@ const FloatsAmenities = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="relative order-2 lg:order-1">
               <img 
-                src="https://images.pexels.com/photos/34021479/pexels-photo-34021479.jpeg"
-                alt="Sun-bathing loungers"
+                src="https://images.unsplash.com/photo-1529707003676-f799c1097a72?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMEd1bGZ8ZW58MHx8fHwxNzU4ODM5MjA0fDA&ixlib=rb-4.1.0&q=85"
+                alt="Panama City Beach Gulf Coast white sand beaches"
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
                 data-testid="loungers-image"
               />
