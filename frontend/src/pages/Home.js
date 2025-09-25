@@ -231,8 +231,8 @@ const Home = () => {
             
             <div className="relative">
               <img 
-                src="https://images.unsplash.com/photo-1708952483586-bc3d393a5ea0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwyfHxlbWVyYWxkJTIwd2F0ZXJzfGVufDB8fHx8MTc1ODgzNzMxMnww&ixlib=rb-4.1.0&q=85"
-                alt="Panama City emerald waters"
+                src="https://images.unsplash.com/photo-1737398574225-bc25c46113d4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwzfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85"
+                alt="Panama City Beach crystal clear waters and white sand"
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
                 data-testid="panama-city-image"
               />
