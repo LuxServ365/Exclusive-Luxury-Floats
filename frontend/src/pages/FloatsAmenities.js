@@ -230,8 +230,8 @@ const FloatsAmenities = () => {
             
             <div className="relative">
               <img 
-                src="https://images.unsplash.com/photo-1708515905649-477068d77781?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwzfHxmbG9hdGluZyUyMGNhYmFuYXxlbnwwfHx8fDE3NTg4MzczMDZ8MA&ixlib=rb-4.1.0&q=85"
-                alt="Luxury floating houses"
+                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/vdf83j58_Gemini_Generated_Image_34qasw34qasw34qa.png"
+                alt="Luxury floating cabana pods with white domes on Panama City Beach Gulf waters"
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
                 data-testid="details-image"
               />
