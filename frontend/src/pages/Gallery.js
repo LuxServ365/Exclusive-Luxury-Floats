@@ -7,55 +7,55 @@ const Gallery = () => {
   const galleryImages = [
     {
       id: 1,
-      url: "https://images.unsplash.com/photo-1571927688370-68ba84685dec?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwxfHxlbWVyYWxkJTIwd2F0ZXJzfGVufDB8fHx8MTc1ODgzNzMxMnww&ixlib=rb-4.1.0&q=85",
-      title: "Emerald Waters Paradise",
-      category: "Waters"
+      url: "https://images.unsplash.com/photo-1744153470889-7c660893f3d5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwxfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85",
+      title: "Panama City Beach Paradise",
+      category: "Panama City Beach"
     },
     {
       id: 2,
-      url: "https://images.unsplash.com/photo-1705039379347-8ec747e29749?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwyfHxmbG9hdGluZyUyMGNhYmFuYXxlbnwwfHx8fDE3NTg4MzczMDZ8MA&ixlib=rb-4.1.0&q=85",
-      title: "Luxury Floating Platform",
-      category: "Floating Cabanas"
+      url: "https://images.unsplash.com/photo-1737398574270-754940c6e0ee?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85",
+      title: "Crystal Clear Emerald Waters",
+      category: "Panama City Beach"
     },
     {
       id: 3,
-      url: "https://images.unsplash.com/photo-1597799119438-cbf326f268b9?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwyfHxjbGVhciUyMGtheWFrfGVufDB8fHx8MTc1ODgzNzM1MHww&ixlib=rb-4.1.0&q=85",
-      title: "Crystal Clear Kayaks",
+      url: "https://images.unsplash.com/photo-1642889352356-bc193a9157c1?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwxfHxQYW5hbWElMjBDaXR5JTIwQmVhY2glMjBrYXlha2luZ3xlbnwwfHx8fDE3NTg4Mzg5OTZ8MA&ixlib=rb-4.1.0&q=85",
+      title: "Water Sports Activities",
       category: "Watercraft"
     },
     {
       id: 4,
-      url: "https://images.unsplash.com/photo-1708952483586-bc3d393a5ea0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwyfHxlbWVyYWxkJTIwd2F0ZXJzfGVufDB8fHx8MTc1ODgzNzMxMnww&ixlib=rb-4.1.0&q=85",
-      title: "Pristine Gulf Coast",
-      category: "Waters"
+      url: "https://images.unsplash.com/photo-1622581768977-9bb782bfabb5?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2Mzl8MHwxfHNlYXJjaHwzfHxQYW5hbWElMjBDaXR5JTIwQmVhY2glMjBrYXlha2luZ3xlbnwwfHx8fDE3NTg4Mzg5OTZ8MA&ixlib=rb-4.1.0&q=85",
+      title: "Kayaking Adventures",
+      category: "Watercraft"
     },
     {
       id: 5,
-      url: "https://images.unsplash.com/photo-1708515905649-477068d77781?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwzfHxmbG9hdGluZyUyMGNhYmFuYXxlbnwwfHx8fDE3NTg4MzczMDZ8MA&ixlib=rb-4.1.0&q=85",
-      title: "Floating Houses Experience",
-      category: "Floating Cabanas"
+      url: "https://images.unsplash.com/photo-1737398574225-bc25c46113d4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzl8MHwxfHNlYXJjaHwzfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMGNyeXN0YWwlMjBjbGVhciUyMHdhdGVyfGVufDB8fHx8MTc1ODgzOTAwMXww&ixlib=rb-4.1.0&q=85",
+      title: "Aerial Beach Views",
+      category: "Panama City Beach"
     },
     {
       id: 6,
-      url: "https://images.unsplash.com/photo-1741274236526-62166e39bcc4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxrYXlhayUyMExFRCUyMGxpZ2h0c3xlbnwwfHx8fDE3NTg4MzczNDN8MA&ixlib=rb-4.1.0&q=85",
-      title: "Night Water Adventures",
+      url: "https://images.pexels.com/photos/4846619/pexels-photo-4846619.jpeg",
+      title: "Water Adventure Activities",
       category: "Watercraft"
     },
     {
       id: 7,
-      url: "https://images.unsplash.com/photo-1697445089382-13a6e84e5d54?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwzfHxlbWVyYWxkJTIwd2F0ZXJzfGVufDB8fHx8MTc1ODgzNzMxMnww&ixlib=rb-4.1.0&q=85",
-      title: "Aerial Paradise View",
-      category: "Waters"
+      url: "https://images.pexels.com/photos/386158/pexels-photo-386158.jpeg",
+      title: "White Sand Beach Paradise",
+      category: "Panama City Beach"
     },
     {
       id: 8,
-      url: "https://images.unsplash.com/photo-1625872508255-13cb821b9417?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwzfHxuaWdodCUyMGtheWFraW5nfGVufDB8fHx8MTc1ODgzNzM4NHww&ixlib=rb-4.1.0&q=85",
-      title: "Magical Lake Experience",
+      url: "https://images.pexels.com/photos/21054054/pexels-photo-21054054.jpeg",
+      title: "Gulf Coast Water Fun",
       category: "Watercraft"
     }
   ];
 
-  const categories = ["All", "Waters", "Floating Cabanas", "Watercraft"];
+  const categories = ["All", "Panama City Beach", "Watercraft", "Floating Cabanas"];
   const [selectedCategory, setSelectedCategory] = useState("All");
 
   const filteredImages = selectedCategory === "All" 
