@@ -116,8 +116,8 @@ const Home = () => {
             <Card className="card overflow-hidden group cursor-pointer" data-testid="cabanas-preview-card">
               <div className="relative h-64 overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1705039379347-8ec747e29749?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwyfHxmbG9hdGluZyUyMGNhYmFuYXxlbnwwfHx8fDE3NTg4MzczMDZ8MA&ixlib=rb-4.1.0&q=85"
-                  alt="Luxury Floating Cabana"
+                  src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/vdf83j58_Gemini_Generated_Image_34qasw34qasw34qa.png"
+                  alt="Luxury Floating Cabanas with dome structures on Panama City Beach Gulf waters"
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
