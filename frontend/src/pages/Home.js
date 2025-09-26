@@ -18,9 +18,9 @@ const Home = () => {
       description: "Paddle through emerald waters in our transparent kayaks with magical LED lighting for night adventures."
     },
     {
-      icon: "🌅",
-      title: "Panama City Beauty",
-      description: "Enjoy pristine white sand beaches and stunning Gulf views in Florida's premier coastal destination."
+      icon: "☀️",
+      title: "Sun Bathing Floating Loungers",
+      description: "Relax in ultimate comfort on our premium floating loungers with direct access to crystal waters."
     }
   ];
 
