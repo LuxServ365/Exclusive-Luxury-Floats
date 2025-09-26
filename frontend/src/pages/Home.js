@@ -38,7 +38,7 @@ const Home = () => {
       >
         <div className="hero-content">
           <h1 className="hero-title" data-testid="hero-title">
-            Premium Floating Cabanas
+            Luxury Floating Cabanas
           </h1>
           <p className="hero-subtitle" data-testid="hero-subtitle">
             Escape to luxury on Panama City Beach's crystal-clear emerald waters. 
