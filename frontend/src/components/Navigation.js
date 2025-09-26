@@ -28,7 +28,7 @@ const Navigation = () => {
             </div>
             <div>
               <h1 className="text-xl font-bold text-teal-700">Exclusive</h1>
-              <p className="text-xs text-gray-600 -mt-1">Gulf Float</p>
+              <p className="text-xs text-gray-600 -mt-1">Luxury Floats</p>
             </div>
           </Link>
 
