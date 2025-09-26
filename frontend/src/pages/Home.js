@@ -169,7 +169,7 @@ const Home = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <div className="absolute bottom-4 left-4 text-white">
                   <h3 className="text-xl font-bold mb-1">Crystal Kayaks</h3>
-                  <p className="text-sm opacity-90">Starting at $60/hour</p>
+                  <p className="text-sm opacity-90">LED Night Adventures Available</p>
                 </div>
               </div>
               <CardContent className="p-6">
