@@ -102,11 +102,11 @@ body {
   text-shadow: 
     0 2px 4px rgba(0, 0, 0, 0.9),
     0 4px 8px rgba(0, 0, 0, 0.7);
-  background: rgba(0, 0, 0, 0.3);
-  backdrop-filter: blur(10px);
-  border-radius: 15px;
-  padding: 1.5rem 2rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 1.2rem 1.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   max-width: 800px;
   margin-left: auto;
   margin-right: auto;
