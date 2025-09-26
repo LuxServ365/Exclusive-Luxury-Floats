@@ -8,10 +8,12 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div className="col-span-1 md:col-span-2">
-            <div className="flex items-center space-x-2 mb-6">
-              <div className="w-12 h-12 bg-gradient-to-br from-teal-400 to-teal-600 rounded-full flex items-center justify-center">
-                <span className="text-white font-bold text-xl">E</span>
-              </div>
+            <div className="flex items-center space-x-3 mb-6">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/w6yd25tc_Exclusive_circle_transparent.png"
+                alt="Exclusive Luxury Floats Logo"
+                className="w-16 h-16"
+              />
               <div>
                 <h3 className="text-2xl font-bold">Exclusive</h3>
                 <p className="text-gray-400 text-sm">Luxury Floats</p>
