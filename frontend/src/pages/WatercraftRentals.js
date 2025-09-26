@@ -57,7 +57,7 @@ const WatercraftRentals = () => {
       name: "Paddle Board Rental",
       price: 75,
       duration: "per hour (individual)",
-      image: "https://images.unsplash.com/photo-1625872508255-13cb821b9417?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwzfHxuaWdodCUyMGtheWFraW5nfGVufDB8fHx8MTc1ODgzNzM4NHww&ixlib=rb-4.1.0&q=85",
+      image: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/agh33vvd_Gemini_Generated_Image_8odocq8odocq8odo.png",
       description: "Stand-up paddle boards for fitness enthusiasts and adventure seekers",
       features: ["Premium SUP boards", "Individual experience", "Adjustable paddle included", "Safety leash provided", "Perfect for fitness", "Yoga-friendly platform"],
       popular: false,
