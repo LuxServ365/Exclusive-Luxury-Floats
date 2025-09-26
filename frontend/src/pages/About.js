@@ -7,7 +7,7 @@ const About = () => {
       <section className="section">
         <div className="container">
           <div className="section-header">
-            <h1 className="section-title" data-testid="about-title">About Exclusive Gulf Float</h1>
+            <h1 className="section-title" data-testid="about-title">About Exclusive</h1>
             <p className="section-subtitle" data-testid="about-subtitle">
               Your premier destination for luxury floating experiences on the Gulf Coast
             </p>
