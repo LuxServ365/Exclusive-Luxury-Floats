@@ -7,8 +7,8 @@ const Gallery = () => {
   const galleryImages = [
     {
       id: 1,
-      url: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/vdf83j58_Gemini_Generated_Image_34qasw34qasw34qa.png",
-      title: "Luxury Floating Cabana Pods",
+      url: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/1w1nz1xd_Gemini_Generated_Image_ej759rej759rej75.png",
+      title: "Magical LED Night Adventures",
       category: "Floating Cabanas"
     },
     {
@@ -19,38 +19,38 @@ const Gallery = () => {
     },
     {
       id: 3,
-      url: "https://images.unsplash.com/photo-1531933166154-63dbb479f8d3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85",
-      title: "White Sand Beach Paradise",
-      category: "Panama City Beach"
+      url: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/bex47x81_Gemini_Generated_Image_d49l9gd49l9gd49l.png",
+      title: "Crystal Clear Canoe Adventure",
+      category: "Watercraft"
     },
     {
       id: 4,
-      url: "https://images.unsplash.com/photo-1531854703027-ccdc628b796e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwzfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85",
-      title: "Panama City Beach Sunset",
-      category: "Panama City Beach"
+      url: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/sjguxfxv_Gemini_Generated_Image_8odocq8odocq8odo.png",
+      title: "Transparent Paddle Board Experience",
+      category: "Watercraft"
     },
     {
       id: 5,
-      url: "https://images.unsplash.com/photo-1644578843995-b2cc1acbdf33?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwxfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMEd1bGZ8ZW58MHx8fHwxNzU4ODM5MjA0fDA&ixlib=rb-4.1.0&q=85",
-      title: "Gulf Coast Sunset Views",
+      url: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/jocqvv3n_Gemini_Generated_Image_ss2hu1ss2hu1ss2h.png",
+      title: "Crystal Kayak Fleet on Panama City Beach",
       category: "Panama City Beach"
     },
     {
       id: 6,
-      url: "https://images.unsplash.com/photo-1529707003676-f799c1097a72?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMEd1bGZ8ZW58MHx8fHwxNzU4ODM5MjA0fDA&ixlib=rb-4.1.0&q=85",
-      title: "White Sand Gulf Beach",
-      category: "Panama City Beach"
+      url: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/yw4yzp11_Gemini_Generated_Image_h8bzn5h8bzn5h8bz.png",
+      title: "LED Night Tours at Panama City Beach",
+      category: "Watercraft"
     },
     {
       id: 7,
-      url: "https://images.unsplash.com/photo-1661090921594-4aea7a8fb41d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwzfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMEd1bGZ8ZW58MHx8fHwxNzU4ODM5MjA0fDA&ixlib=rb-4.1.0&q=85",
-      title: "Gulf Waters Beach Walk",
-      category: "Panama City Beach"
+      url: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/b7rwjchz_Gemini_Generated_Image_ej759rej759rej75.png",
+      title: "Moonlit LED Watercraft Adventures",
+      category: "Watercraft"
     },
     {
       id: 8,
       url: "https://images.pexels.com/photos/1598324/pexels-photo-1598324.jpeg",
-      title: "Crystal Clear Waters",
+      title: "Crystal Clear Gulf Waters",
       category: "Panama City Beach"
     }
   ];
