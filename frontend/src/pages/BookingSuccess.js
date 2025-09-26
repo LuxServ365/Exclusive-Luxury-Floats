@@ -209,11 +209,11 @@ const BookingSuccess = () => {
                 📞 (850) 555-GULF
               </a>
               <a 
-                href="mailto:bookings@exclusivegulffloat.com" 
+                href="mailto:exclusivefloat850@gmail.com" 
                 className="text-teal-600 hover:text-teal-700 font-semibold"
                 data-testid="contact-email"
               >
-                ✉️ bookings@exclusivegulffloat.com
+                ✉️ exclusivefloat850@gmail.com
               </a>
             </div>
           </div>
