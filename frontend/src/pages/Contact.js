@@ -154,7 +154,7 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-teal-700">Email Us</h3>
-                      <p className="text-gray-600">bookings@exclusivegulffloat.com</p>
+                      <p className="text-gray-600">exclusivefloat850@gmail.com</p>
                       <p className="text-sm text-gray-500">We reply within 2 hours</p>
                     </div>
                   </div>
