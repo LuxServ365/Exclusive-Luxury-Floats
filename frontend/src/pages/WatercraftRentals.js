@@ -246,8 +246,8 @@ const WatercraftRentals = () => {
             
             <div className="relative">
               <img 
-                src="https://images.unsplash.com/photo-1741274236526-62166e39bcc4?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1Nzd8MHwxfHNlYXJjaHwxfHxrYXlhayUyMExFRCUyMGxpZ2h0c3xlbnwwfHx8fDE3NTg4MzczNDN8MA&ixlib=rb-4.1.0&q=85"
-                alt="Night water adventures with LED lights"
+                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/ubh7vfuq_Gemini_Generated_Image_h8bzn5h8bzn5h8bz.png"
+                alt="LED-lit kayaks glowing at night on Panama City Beach with bridge skyline"
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
                 data-testid="night-adventures-image"
               />
