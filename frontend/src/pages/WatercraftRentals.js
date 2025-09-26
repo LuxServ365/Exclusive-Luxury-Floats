@@ -127,7 +127,7 @@ const WatercraftRentals = () => {
         </div>
       </section>
 
-      {/* Watercraft Selection */}
+      {/* Watercraft Selection with Pricing */}
       <section className="section section-alt" data-testid="watercraft-selection">
         <div className="container">
           <div className="section-header">
@@ -135,7 +135,7 @@ const WatercraftRentals = () => {
               Choose Your Adventure
             </h2>
             <p className="section-subtitle" data-testid="selection-subtitle">
-              Select from our premium collection of crystal-clear watercraft
+              Select from our premium collection of crystal-clear watercraft with competitive pricing
             </p>
           </div>
 
@@ -184,17 +184,56 @@ const WatercraftRentals = () => {
                     ))}
                   </ul>
                   
-                  <Link to="/bookings">
-                    <Button 
-                      className={`w-full ${craft.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
-                      data-testid={`book-${craft.id}-btn`}
-                    >
-                      Rent This Watercraft
-                    </Button>
-                  </Link>
+                  <div className="space-y-3">
+                    <Link to="/bookings">
+                      <Button 
+                        className={`w-full ${craft.popular ? 'bg-blue-600 hover:bg-blue-700' : ''}`}
+                        data-testid={`book-${craft.id}-btn`}
+                      >
+                        Book Now - ${craft.price}/hour
+                      </Button>
+                    </Link>
+                    <div className="text-center text-sm text-gray-500">
+                      LED Night Adventures Available
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             ))}
+          </div>
+
+          {/* Quick Pricing Summary */}
+          <div className="mt-12 bg-blue-50 rounded-2xl p-8">
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-bold text-blue-700 mb-2">Watercraft Pricing Summary</h3>
+              <p className="text-gray-600">All prices include equipment, safety gear, and LED lighting for night adventures</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="text-center" data-testid="pricing-kayak">
+                <div className="text-2xl font-bold text-blue-600">$60</div>
+                <div className="text-sm text-gray-600">Crystal Kayak (2 person)</div>
+                <div className="text-xs text-blue-500 mt-1">Day & Night Available</div>
+              </div>
+              <div className="text-center" data-testid="pricing-canoe">
+                <div className="text-2xl font-bold text-blue-600">$75</div>
+                <div className="text-sm text-gray-600">Canoe (2+ people)</div>
+                <div className="text-xs text-blue-500 mt-1">Day & Night Available</div>
+              </div>
+              <div className="text-center" data-testid="pricing-paddle">
+                <div className="text-2xl font-bold text-blue-600">$75</div>
+                <div className="text-sm text-gray-600">Paddle Board (individual)</div>
+                <div className="text-xs text-blue-500 mt-1">Day & Night Available</div>
+              </div>
+            </div>
+            
+            <div className="text-center mt-6">
+              <Link to="/bookings">
+                <Button size="lg" className="bg-blue-600 hover:bg-blue-700" data-testid="pricing-summary-book-btn">
+                  Book Any Watercraft Experience
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
