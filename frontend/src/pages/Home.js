@@ -21,6 +21,21 @@ const Home = () => {
       icon: "☀️",
       title: "Sun Bathing Floating Loungers",
       description: "Relax in ultimate comfort on our premium floating loungers with direct access to crystal waters."
+    },
+    {
+      icon: "🎈",
+      title: "Fun Floats",
+      description: "Enjoy exciting floating adventures with our variety of fun floats perfect for groups and families."
+    },
+    {
+      icon: "🚣",
+      title: "Crystal Clear Canoes",
+      description: "Explore the Gulf waters in our transparent canoes offering unique underwater views and stable paddling."
+    },
+    {
+      icon: "🏄",
+      title: "Crystal Clear Paddle Boards",
+      description: "Stand-up paddle boarding with a twist - see through the crystal clear boards to the emerald waters below."
     }
   ];
 
