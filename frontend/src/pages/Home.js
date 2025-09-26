@@ -25,17 +25,17 @@ const Home = () => {
     {
       icon: "🌊",
       title: "Crystal-Clear Kayaks",
-      description: "Paddle through emerald waters in our transparent kayaks with magical LED lighting for night adventures."
+      description: "Paddle through emerald waters in our transparent kayaks with magical LED lighting for stunning night adventures."
     },
     {
       icon: "🚣",
       title: "Crystal Clear Canoes",
-      description: "Explore the Gulf waters in our transparent canoes offering unique underwater views and stable paddling."
+      description: "Explore the Gulf waters day or night in our transparent canoes with LED lighting systems for unforgettable nighttime experiences."
     },
     {
       icon: "🏄",
       title: "Crystal Clear Paddle Boards",
-      description: "Stand-up paddle boarding with a twist - see through the crystal clear boards to the emerald waters below."
+      description: "Stand-up paddle boarding with LED-lit crystal clear boards - perfect for both daytime exploration and magical night floats."
     }
   ];
 
