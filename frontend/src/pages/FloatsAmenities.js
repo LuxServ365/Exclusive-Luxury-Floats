@@ -169,57 +169,45 @@ const FloatsAmenities = () => {
       {/* Sun-Bathing Loungers Section */}
       <section className="section section-alt" data-testid="loungers-section">
         <div className="container">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-            <div className="relative order-2 lg:order-1">
-              <img 
-                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/rmgw8d55_Gemini_Generated_Image_h8bzn5h8bzn5h8bz.png"
-                alt="LED-lit kayaks at night on Panama City Beach with bridge skyline"
-                className="rounded-2xl shadow-2xl w-full h-96 object-cover"
-                style={{ objectPosition: "center" }}
-                data-testid="loungers-image"
-              />
+          <div className="text-center max-w-4xl mx-auto">
+            <h2 className="section-title mb-6" data-testid="loungers-title">
+              Sun-Bathing Loungers
+            </h2>
+            <p className="text-lg text-gray-600 mb-8 leading-relaxed" data-testid="loungers-description">
+              For those seeking pure relaxation, our sun-bathing loungers offer the perfect 
+              way to soak up the Florida sunshine while floating on crystal-clear waters.
+            </p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="flex flex-col items-center space-y-3" data-testid="lounger-feature-1">
+                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                  <span className="text-amber-600 text-2xl">☀️</span>
+                </div>
+                <span className="text-gray-700 font-medium text-center">Premium cushioned loungers</span>
+              </div>
+              <div className="flex flex-col items-center space-y-3" data-testid="lounger-feature-2">
+                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                  <span className="text-amber-600 text-2xl">🌊</span>
+                </div>
+                <span className="text-gray-700 font-medium text-center">Direct water access</span>
+              </div>
+              <div className="flex flex-col items-center space-y-3" data-testid="lounger-feature-3">
+                <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center">
+                  <span className="text-amber-600 text-2xl">📸</span>
+                </div>
+                <span className="text-gray-700 font-medium text-center">Instagram-perfect positioning</span>
+              </div>
             </div>
             
-            <div className="order-1 lg:order-2">
-              <h2 className="section-title text-left mb-6" data-testid="loungers-title">
-                Sun-Bathing Loungers
-              </h2>
-              <p className="text-lg text-gray-600 mb-6 leading-relaxed" data-testid="loungers-description">
-                For those seeking pure relaxation, our sun-bathing loungers offer the perfect 
-                way to soak up the Florida sunshine while floating on crystal-clear waters.
-              </p>
-              
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center space-x-3" data-testid="lounger-feature-1">
-                  <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                    <span className="text-amber-600">☀️</span>
-                  </div>
-                  <span className="text-gray-700 font-medium">Premium cushioned loungers</span>
-                </div>
-                <div className="flex items-center space-x-3" data-testid="lounger-feature-2">
-                  <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                    <span className="text-amber-600">🌊</span>
-                  </div>
-                  <span className="text-gray-700 font-medium">Direct water access</span>
-                </div>
-                <div className="flex items-center space-x-3" data-testid="lounger-feature-3">
-                  <div className="w-8 h-8 bg-amber-100 rounded-full flex items-center justify-center">
-                    <span className="text-amber-600">📸</span>
-                  </div>
-                  <span className="text-gray-700 font-medium">Instagram-perfect positioning</span>
-                </div>
-              </div>
-              
-              <Link to="/bookings">
-                <Button 
-                  size="lg" 
-                  className="btn btn-primary"
-                  data-testid="loungers-book-btn"
-                >
-                  Add Loungers to Experience
-                </Button>
-              </Link>
-            </div>
+            <Link to="/bookings">
+              <Button 
+                size="lg" 
+                className="btn btn-primary"
+                data-testid="loungers-book-btn"
+              >
+                Add Loungers to Experience
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
