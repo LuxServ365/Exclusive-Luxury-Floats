@@ -97,94 +97,7 @@ const FloatsAmenities = () => {
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="section" data-testid="cabana-features">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title" data-testid="features-title">
-              Premium Floating Experience
-            </h2>
-            <p className="section-subtitle" data-testid="features-subtitle">
-              Our luxury floating cabanas are designed for comfort, safety, and unforgettable experiences
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {cabanaFeatures.map((feature, index) => (
-              <Card key={index} className="card text-center" data-testid={`feature-${index}`}>
-                <CardHeader>
-                  <div className="mx-auto mb-4 w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center text-teal-600">
-                    {feature.icon}
-                  </div>
-                  <CardTitle className="text-lg">{feature.title}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600">{feature.description}</p>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Packages */}
-      <section className="section section-alt" data-testid="pricing-packages">
-        <div className="container">
-          <div className="section-header">
-            <h2 className="section-title" data-testid="pricing-title">
-              Choose Your Experience
-            </h2>
-            <p className="section-subtitle" data-testid="pricing-subtitle">
-              Select the perfect floating cabana package for your Gulf adventure
-            </p>
-          </div>
-
-          <div className="pricing-grid">
-            {packages.map((pkg, index) => (
-              <Card 
-                key={pkg.id} 
-                className={`pricing-card ${pkg.popular ? 'featured border-teal-500' : ''}`}
-                data-testid={`package-${pkg.id}`}
-              >
-                {pkg.popular && (
-                  <Badge className="absolute top-4 right-4 bg-teal-600" data-testid="popular-badge">
-                    Most Popular
-                  </Badge>
-                )}
-                
-                <CardHeader className="text-center">
-                  <CardTitle className="pricing-title">{pkg.name}</CardTitle>
-                  <div className="pricing-price">${pkg.price}</div>
-                  <div className="pricing-duration">{pkg.duration}</div>
-                  <p className="text-gray-600 mt-4">{pkg.description}</p>
-                </CardHeader>
-                
-                <CardContent>
-                  <ul className="pricing-features space-y-3 mb-6">
-                    {pkg.features.map((feature, idx) => (
-                      <li key={idx} className="flex items-start space-x-3">
-                        <span className="text-teal-600 mt-1">✓</span>
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  
-                  <Link to="/bookings">
-                    <Button 
-                      className={`w-full ${pkg.popular ? 'bg-teal-600 hover:bg-teal-700' : ''}`}
-                      data-testid={`book-${pkg.id}-btn`}
-                    >
-                      Book This Experience
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Experience Details */}
+      {/* What Makes Our Cabanas Special */}
       <section className="section" data-testid="experience-details">
         <div className="container">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
@@ -201,7 +114,8 @@ const FloatsAmenities = () => {
                     <h3 className="text-xl font-semibold mb-2 text-teal-700">Ultimate Comfort</h3>
                     <p className="text-gray-600">
                       Plush cushioned seating with premium materials designed to withstand Gulf conditions 
-                      while providing luxury hotel-level comfort.
+                      while providing luxury hotel-level comfort. Choose to relax in our shaded areas or enjoy 
+                      our sun loungers for the perfect tanning experience.
                     </p>
                   </div>
                 </div>
@@ -306,6 +220,93 @@ const FloatsAmenities = () => {
                 </Button>
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing Packages */}
+      <section className="section" data-testid="pricing-packages">
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title" data-testid="pricing-title">
+              Choose Your Experience
+            </h2>
+            <p className="section-subtitle" data-testid="pricing-subtitle">
+              Select the perfect floating cabana package for your Gulf adventure
+            </p>
+          </div>
+
+          <div className="pricing-grid">
+            {packages.map((pkg, index) => (
+              <Card 
+                key={pkg.id} 
+                className={`pricing-card ${pkg.popular ? 'featured border-teal-500' : ''}`}
+                data-testid={`package-${pkg.id}`}
+              >
+                {pkg.popular && (
+                  <Badge className="absolute top-4 right-4 bg-teal-600" data-testid="popular-badge">
+                    Most Popular
+                  </Badge>
+                )}
+                
+                <CardHeader className="text-center">
+                  <CardTitle className="pricing-title">{pkg.name}</CardTitle>
+                  <div className="pricing-price">${pkg.price}</div>
+                  <div className="pricing-duration">{pkg.duration}</div>
+                  <p className="text-gray-600 mt-4">{pkg.description}</p>
+                </CardHeader>
+                
+                <CardContent>
+                  <ul className="pricing-features space-y-3 mb-6">
+                    {pkg.features.map((feature, idx) => (
+                      <li key={idx} className="flex items-start space-x-3">
+                        <span className="text-teal-600 mt-1">✓</span>
+                        <span>{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  
+                  <Link to="/bookings">
+                    <Button 
+                      className={`w-full ${pkg.popular ? 'bg-teal-600 hover:bg-teal-700' : ''}`}
+                      data-testid={`book-${pkg.id}-btn`}
+                    >
+                      Book This Experience
+                    </Button>
+                  </Link>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Premium Floating Experience Features */}
+      <section className="section section-alt" data-testid="cabana-features">
+        <div className="container">
+          <div className="section-header">
+            <h2 className="section-title" data-testid="features-title">
+              Premium Floating Experience
+            </h2>
+            <p className="section-subtitle" data-testid="features-subtitle">
+              Our luxury floating cabanas are designed for comfort, safety, and unforgettable experiences
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {cabanaFeatures.map((feature, index) => (
+              <Card key={index} className="card text-center" data-testid={`feature-${index}`}>
+                <CardHeader>
+                  <div className="mx-auto mb-4 w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center text-teal-600">
+                    {feature.icon}
+                  </div>
+                  <CardTitle className="text-lg">{feature.title}</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600">{feature.description}</p>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </section>
