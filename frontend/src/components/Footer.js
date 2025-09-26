@@ -13,8 +13,8 @@ const Footer = () => {
                 <span className="text-white font-bold text-xl">E</span>
               </div>
               <div>
-                <h3 className="text-2xl font-bold">Exclusive Gulf Float</h3>
-                <p className="text-gray-400 text-sm">Luxury Gulf Coast Experiences</p>
+                <h3 className="text-2xl font-bold">Exclusive</h3>
+                <p className="text-gray-400 text-sm">Luxury Floats</p>
               </div>
             </div>
             <p className="text-gray-300 mb-6 max-w-md leading-relaxed">
