@@ -119,7 +119,7 @@ const Home = () => {
         <div className="container">
           <div className="section-header">
             <h2 className="section-title" data-testid="services-title">
-              Premium Gulf Experiences
+              Exclusive Gulf Experiences
             </h2>
             <p className="section-subtitle" data-testid="services-subtitle">
               Choose from our carefully curated collection of luxury water activities
