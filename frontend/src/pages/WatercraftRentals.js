@@ -77,9 +77,14 @@ const WatercraftRentals = () => {
           muted 
           loop 
           playsInline
+          preload="auto"
           className="absolute top-0 left-0 w-full h-full object-cover"
           style={{ zIndex: 1 }}
+          onError={(e) => console.error('Video error:', e)}
+          onLoadStart={() => console.log('Video loading started')}
+          onCanPlay={() => console.log('Video can play')}
         >
+          <source src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/tdy0svbt_video (1).mp4" type="video/mp4" />
           <source src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/tdy0svbt_video%20%281%29.mp4" type="video/mp4" />
         </video>
         <div className="hero-overlay" style={{ zIndex: 2 }}></div>
