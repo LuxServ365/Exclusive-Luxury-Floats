@@ -38,11 +38,11 @@ const Home = () => {
       >
         <div className="hero-content">
           <h1 className="hero-title" data-testid="hero-title">
-            Your Exclusive Escape on the Emerald Coast
+            Premium Floating Cabanas
           </h1>
           <p className="hero-subtitle" data-testid="hero-subtitle">
-            Experience the ultimate floating adventure and relaxation on Panama City's crystal-clear waters. 
-            Luxury cabanas, transparent kayaks, and unforgettable Gulf memories await.
+            Escape to luxury on Panama City Beach's crystal-clear emerald waters. 
+            Experience our exclusive floating pods with premium amenities and breathtaking Gulf views.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/bookings">
