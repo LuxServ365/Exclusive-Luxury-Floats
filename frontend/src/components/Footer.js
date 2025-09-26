@@ -32,11 +32,11 @@ const Footer = () => {
               </a>
               <span className="text-gray-500">|</span>
               <a 
-                href="mailto:bookings@exclusivegulffloat.com" 
+                href="mailto:exclusivefloat850@gmail.com" 
                 className="text-teal-400 hover:text-teal-300 font-semibold"
                 data-testid="footer-email"
               >
-                bookings@exclusivegulffloat.com
+                exclusivefloat850@gmail.com
               </a>
             </div>
           </div>
