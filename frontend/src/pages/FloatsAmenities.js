@@ -252,9 +252,10 @@ const FloatsAmenities = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div className="relative order-2 lg:order-1">
               <img 
-                src="https://images.unsplash.com/photo-1529707003676-f799c1097a72?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwyfHx3aGl0ZSUyMHNhbmQlMjBiZWFjaCUyMEd1bGZ8ZW58MHx8fHwxNzU4ODM5MjA0fDA&ixlib=rb-4.1.0&q=85"
-                alt="Panama City Beach Gulf Coast white sand beaches"
+                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/rmgw8d55_Gemini_Generated_Image_h8bzn5h8bzn5h8bz.png"
+                alt="LED-lit kayaks at night on Panama City Beach with bridge skyline"
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
+                style={{ objectPosition: "center" }}
                 data-testid="loungers-image"
               />
             </div>
