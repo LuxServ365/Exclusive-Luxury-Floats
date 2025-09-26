@@ -74,7 +74,7 @@ const Gallery = () => {
         }}
         data-testid="gallery-hero"
       >
-        <div className="hero-content">
+        <div className="hero-content" style={{ transform: 'translateY(-100px)' }}>
           <h1 className="hero-title" data-testid="gallery-hero-title">
             Experience Gallery
           </h1>
