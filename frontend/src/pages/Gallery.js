@@ -82,27 +82,11 @@ const Gallery = () => {
             </p>
           </div>
 
-          {/* Category Filter */}
-          <div className="flex flex-wrap justify-center gap-4 mb-8" data-testid="category-filter">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-2 rounded-full font-medium transition-all duration-300 ${
-                  selectedCategory === category
-                    ? 'bg-teal-600 text-white shadow-lg'
-                    : 'bg-white text-gray-700 border border-gray-300 hover:border-teal-300 hover:bg-teal-50'
-                }`}
-                data-testid={`category-${category.toLowerCase().replace(/\s+/g, '-')}`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
+          {/* Category Filter - Removed */}
 
           {/* Gallery Grid */}
           <div className="gallery-grid" data-testid="gallery-grid">
-            {filteredImages.map((image, index) => (
+            {galleryImages.map((image, index) => (
               <Card 
                 key={image.id} 
                 className="gallery-item overflow-hidden cursor-pointer group"
