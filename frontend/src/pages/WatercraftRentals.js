@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
-import { Users, Clock, Zap, Shield, Star, Moon } from 'lucide-react';
+import { Users, Clock, Zap, Shield, Star, Moon, DollarSign } from 'lucide-react';
 
 const WatercraftRentals = () => {
   const watercraftFeatures = [
