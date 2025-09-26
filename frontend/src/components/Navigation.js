@@ -26,7 +26,7 @@ const Navigation = () => {
             <img 
               src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/w6yd25tc_Exclusive_circle_transparent.png"
               alt="Exclusive Luxury Floats Logo"
-              className="w-12 h-12"
+              className="w-16 h-16"
             />
             <div>
               <h1 className="text-xl font-bold text-teal-700">Exclusive</h1>
