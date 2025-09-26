@@ -46,7 +46,7 @@ const WatercraftRentals = () => {
       name: "Canoe Rental",
       price: 75,
       duration: "per hour (2+ people)",
-      image: "https://images.unsplash.com/photo-1657373725182-6bb195badcbc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Nzh8MHwxfHNlYXJjaHwxfHxuaWdodCUyMGtheWFraW5nfGVufDB8fHx8MTc1ODgzNzM4NHww&ixlib=rb-4.1.0&q=85",
+      image: "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/2x3z661v_Gemini_Generated_Image_d49l9gd49l9gd49l.png",
       description: "Stable and comfortable canoes perfect for families and beginners",
       features: ["Stable family-friendly design", "2+ person capacity", "Perfect for beginners", "All paddles included", "Safety equipment provided", "Great for wildlife viewing"],
       popular: false,
