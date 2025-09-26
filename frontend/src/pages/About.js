@@ -30,8 +30,8 @@ const About = () => {
             
             <div className="relative">
               <img 
-                src="https://images.unsplash.com/photo-1708952483586-bc3d393a5ea0?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzZ8MHwxfHNlYXJjaHwyfHxlbWVyYWxkJTIwd2F0ZXJzfGVufDB8fHx8MTc1ODgzNzMxMnww&ixlib=rb-4.1.0&q=85"
-                alt="Panama City emerald waters"
+                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/f2ezo9vy_Gemini_Generated_Image_7dc19d7dc19d7dc1.png"
+                alt="Crystal clear kayaks on Panama City Beach at sunset with floating cabanas and bridge skyline"
                 className="rounded-2xl shadow-2xl w-full h-80 object-cover"
                 data-testid="about-story-image"
               />
