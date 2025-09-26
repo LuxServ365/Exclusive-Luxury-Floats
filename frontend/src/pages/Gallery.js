@@ -103,7 +103,6 @@ const Gallery = () => {
                   <div className="gallery-overlay absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
                     <div className="text-center text-white">
                       <h3 className="text-xl font-bold mb-2">{image.title}</h3>
-                      <p className="text-sm opacity-90">{image.category}</p>
                       <div className="mt-4 text-xs bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full">
                         Click to view
                       </div>
