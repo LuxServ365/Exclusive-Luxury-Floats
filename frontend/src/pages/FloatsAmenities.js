@@ -63,15 +63,21 @@ const FloatsAmenities = () => {
     <div className="main-content">
       {/* Hero Section */}
       <section 
-        className="hero-section"
-        style={{
-          backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url(https://images.unsplash.com/photo-1562678845-e8af0857435d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85)`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
+        className="hero-section relative"
         data-testid="floats-hero"
       >
-        <div className="hero-content">
+        <video 
+          autoPlay 
+          muted 
+          loop 
+          playsInline
+          className="absolute top-0 left-0 w-full h-full object-cover"
+          style={{ zIndex: 1 }}
+        >
+          <source src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/aazpki8o_Exclusive.mp4" type="video/mp4" />
+        </video>
+        <div className="hero-overlay" style={{ zIndex: 2 }}></div>
+        <div className="hero-content" style={{ zIndex: 3 }}>
           <h1 className="hero-title" data-testid="floats-hero-title">
             Luxury Floating Cabanas
           </h1>
