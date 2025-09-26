@@ -239,7 +239,7 @@ const Home = () => {
                   className="btn btn-primary"
                   data-testid="panama-book-btn"
                 >
-                  Experience Panama City Waters
+                  Experience Our Gulf
                 </Button>
               </Link>
             </div>
