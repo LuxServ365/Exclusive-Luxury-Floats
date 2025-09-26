@@ -13,19 +13,19 @@ const Home = () => {
       description: "Experience ultimate comfort on our premium floating platforms with plush seating and shade."
     },
     {
-      icon: "🌊",
-      title: "Crystal-Clear Kayaks",
-      description: "Paddle through emerald waters in our transparent kayaks with magical LED lighting for night adventures."
-    },
-    {
       icon: "☀️",
       title: "Sun Bathing Floating Loungers",
       description: "Relax in ultimate comfort on our premium floating loungers with direct access to crystal waters."
     },
     {
-      icon: "🎈",
+      icon: "🛟",
       title: "Fun Floats",
       description: "Enjoy exciting floating adventures with our variety of fun floats perfect for groups and families."
+    },
+    {
+      icon: "🌊",
+      title: "Crystal-Clear Kayaks",
+      description: "Paddle through emerald waters in our transparent kayaks with magical LED lighting for night adventures."
     },
     {
       icon: "🚣",
