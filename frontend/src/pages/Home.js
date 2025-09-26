@@ -4,7 +4,7 @@ import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 
 const Home = () => {
-  const heroImage = "https://images.unsplash.com/photo-1562678845-e8af0857435d?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwxfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85";
+  const heroImage = "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/n6hv7zg3_Gemini_Generated_Image_tftk0ktftk0ktftk.png";
   
   const features = [
     {
