@@ -246,8 +246,8 @@ const Home = () => {
             
             <div className="relative">
               <img 
-                src="https://images.unsplash.com/photo-1531933166154-63dbb479f8d3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwyfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85"
-                alt="Panama City Beach white sand beaches and crystal clear Gulf waters"
+                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/rmgw8d55_Gemini_Generated_Image_h8bzn5h8bzn5h8bz.png"
+                alt="LED-lit crystal kayaks at night on Panama City Beach with bridge skyline"
                 className="rounded-2xl shadow-2xl w-full h-96 object-cover"
                 data-testid="panama-city-image"
               />
