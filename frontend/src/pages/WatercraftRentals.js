@@ -87,7 +87,7 @@ const WatercraftRentals = () => {
           style={{ zIndex: 1 }}
           poster="https://images.unsplash.com/photo-1531854703027-ccdc628b796e?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDF8MHwxfHNlYXJjaHwzfHxQYW5hbWElMjBDaXR5JTIwQmVhY2h8ZW58MHx8fHwxNzU4ODM5MTk5fDA&ixlib=rb-4.1.0&q=85"
         >
-          <source src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/tdy0svbt_video (1).mp4" type="video/mp4" />
+          <source src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/2uzqgsvs_video%20%281%29.mp4" type="video/mp4" />
         </video>
         <div className="hero-overlay" style={{ zIndex: 2, background: 'rgba(0, 0, 0, 0.3)' }}></div>
         <div className="hero-content" style={{ zIndex: 3 }}>
