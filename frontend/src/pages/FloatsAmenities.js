@@ -43,7 +43,7 @@ const FloatsAmenities = () => {
       id: "luxury_cabana_3hr",
       name: "Half-Day Adventure",
       price: 100,
-      duration: "3 hours",
+      duration: "3 hours total",
       description: "Extended relaxation experience with plenty of time to unwind",
       features: ["3-hour exclusive use", "All hourly amenities", "Refreshment storage", "Photo opportunities", "Best value for couples"],
       popular: true
