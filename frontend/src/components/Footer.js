@@ -12,7 +12,7 @@ const Footer = () => {
               <img 
                 src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/w6yd25tc_Exclusive_circle_transparent.png"
                 alt="Exclusive Luxury Floats Logo"
-                className="w-16 h-16"
+                className="w-20 h-20"
               />
               <div>
                 <h3 className="text-2xl font-bold">Exclusive</h3>
