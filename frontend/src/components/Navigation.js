@@ -22,10 +22,12 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2" data-testid="nav-logo">
-            <div className="w-10 h-10 bg-gradient-to-br from-teal-600 to-teal-700 rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">E</span>
-            </div>
+          <Link to="/" className="flex items-center space-x-3" data-testid="nav-logo">
+            <img 
+              src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/w6yd25tc_Exclusive_circle_transparent.png"
+              alt="Exclusive Luxury Floats Logo"
+              className="w-12 h-12"
+            />
             <div>
               <h1 className="text-xl font-bold text-teal-700">Exclusive</h1>
               <p className="text-xs text-gray-600 -mt-1">Luxury Floats</p>
