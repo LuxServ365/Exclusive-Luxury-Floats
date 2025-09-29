@@ -227,6 +227,14 @@ class ContactCreate(BaseModel):
     phone: Optional[str] = None
     message: str
 
+# Configure logging first
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
+
 # Google Sheets Service
 class GoogleSheetsService:
     def __init__(self):
