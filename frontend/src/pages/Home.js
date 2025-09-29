@@ -143,7 +143,7 @@ const Home = () => {
               </div>
               <CardContent className="p-6">
                 <p className="text-gray-600 mb-4">
-                  Relax in luxury on our premium floating platforms featuring plush seating, 
+                  Relax in luxury on our exclusive floating platforms featuring plush seating, 
                   shade coverage, and private space for up to 6 guests.
                 </p>
                 <Link to="/floats-amenities">
