@@ -10,8 +10,6 @@ from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone, date, time, timedelta
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
-import sendgrid
-from sendgrid.helpers.mail import Mail
 import httpx
 import json
 import paypalrestsdk
