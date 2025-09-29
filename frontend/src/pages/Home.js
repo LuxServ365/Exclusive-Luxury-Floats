@@ -57,7 +57,7 @@ const Home = () => {
           </h1>
           <p className="hero-subtitle" data-testid="hero-subtitle">
             Escape to luxury on Panama City Beach's crystal-clear emerald waters. 
-            Experience our exclusive floating pods with premium amenities and breathtaking Gulf views.
+            Experience our exclusive floating pods with exclusive amenities and breathtaking Gulf views.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link to="/bookings">
