@@ -10,7 +10,7 @@ const Home = () => {
     {
       icon: "🏖️",
       title: "Luxury Floating Cabanas",
-      description: "Experience ultimate comfort on our premium floating platforms with plush seating and shade."
+      description: "Experience ultimate comfort on our exclusive floating platforms with plush seating and shade."
     },
     {
       icon: "☀️",
