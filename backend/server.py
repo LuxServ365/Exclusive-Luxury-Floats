@@ -55,7 +55,7 @@ SERVICES = {
     },
     "luxury_cabana_hourly": {
         "name": "Luxury Floating Cabana (per person per hour)",
-        "price": 50.0,
+        "price": 35.0,
         "duration": "hourly"
     },
     "luxury_cabana_3hr": {
@@ -65,7 +65,7 @@ SERVICES = {
     },
     "luxury_cabana_4hr": {
         "name": "Luxury Floating Cabana (4 hours, 6 person max)",
-        "price": 400.0,
+        "price": 299.0,
         "duration": "4 hours"
     }
 }
