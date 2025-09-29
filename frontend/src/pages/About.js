@@ -7,6 +7,13 @@ const About = () => {
       <section className="section">
         <div className="container">
           <div className="section-header">
+            <div className="flex justify-center mb-8">
+              <img 
+                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/90n9ndga_Gemini_Generated_Image_bw7zsebw7zsebw7z.png"
+                alt="Exclusive Luxury Floats Logo"
+                className="h-32 w-auto"
+              />
+            </div>
             <h1 className="section-title" data-testid="about-title">About Exclusive</h1>
             <p className="section-subtitle" data-testid="about-subtitle">
               Your premier destination for luxury floating experiences on the Gulf Coast
