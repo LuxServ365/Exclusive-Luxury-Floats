@@ -30,16 +30,16 @@ const Navigation = () => {
             />
           </Link>
 
-          {/* Desktop Navigation - Now in header */}
-          <div className="hidden lg:flex items-center space-x-8">
+          {/* Desktop Navigation - Button Style */}
+          <div className="hidden lg:flex items-center space-x-3">
             {navigation.map((item) => (
               <Link
                 key={item.name}
                 to={item.href}
-                className={`text-sm font-medium transition-colors hover:text-teal-600 ${
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
                   isActive(item.href)
-                    ? 'text-teal-600 border-b-2 border-teal-600 pb-1'
-                    : 'text-gray-700'
+                    ? 'bg-teal-600 text-white shadow-lg'
+                    : 'bg-gray-100 text-gray-700 hover:bg-teal-100 hover:text-teal-700 hover:shadow-md'
                 }`}
                 data-testid={`nav-${item.name.toLowerCase().replace(/\s+/g, '-')}`}
               >
