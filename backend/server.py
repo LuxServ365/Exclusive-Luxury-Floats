@@ -315,12 +315,12 @@ google_sheets = GoogleSheetsService()
 # Cart storage (in production, use Redis or database)
 carts_storage = {}
 
-# Email service
+# Gmail SMTP Email service
 async def send_booking_confirmation_email(booking: BookingConfirmation):
-    """Send booking confirmation email using SendGrid"""
+    """Send booking confirmation email using Gmail SMTP"""
     try:
-        if not SENDGRID_API_KEY or SENDGRID_API_KEY == "your_sendgrid_api_key_here":
-            logger.warning("SendGrid API key not configured")
+        if not GMAIL_APP_PASSWORD or GMAIL_APP_PASSWORD == "your_gmail_app_password_here":
+            logger.warning("Gmail app password not configured")
             return False
             
         items_html = ""
@@ -373,7 +373,7 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
                     
                     <p>If you need to make any changes or have questions, please contact us at:</p>
                     <p><strong>Phone:</strong> (850) 555-GULF<br>
-                    <strong>Email:</strong> {SENDER_EMAIL}</p>
+                    <strong>Email:</strong> {GMAIL_EMAIL}</p>
                     
                     <p style="margin-top: 30px;">We look forward to providing you with an unforgettable experience on the beautiful emerald waters of Panama City, Florida!</p>
                     
@@ -384,16 +384,28 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
         </html>
         """
         
-        message = Mail(
-            from_email=SENDER_EMAIL,
-            to_emails=booking.customer_email,
-            subject=f"Booking Confirmed - Exclusive Gulf Float - {booking.booking_reference}",
-            html_content=html_content
+        # Create message
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = f"Booking Confirmed - Exclusive Gulf Float - {booking.booking_reference}"
+        msg['From'] = GMAIL_EMAIL
+        msg['To'] = booking.customer_email
+        
+        # Create HTML part
+        html_part = MIMEText(html_content, 'html')
+        msg.attach(html_part)
+        
+        # Send email via Gmail SMTP
+        await aiosmtplib.send(
+            msg,
+            hostname="smtp.gmail.com",
+            port=587,
+            start_tls=True,
+            username=GMAIL_EMAIL,
+            password=GMAIL_APP_PASSWORD,
         )
         
-        sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
-        response = sg.send(message)
-        return response.status_code == 202
+        logger.info(f"Email sent successfully to {booking.customer_email}")
+        return True
         
     except Exception as e:
         logger.error(f"Failed to send confirmation email: {str(e)}")
