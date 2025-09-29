@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
+import { ShoppingCart } from 'lucide-react';
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [cartItemCount, setCartItemCount] = useState(0);
   const location = useLocation();
 
   const navigation = [
@@ -14,6 +16,31 @@ const Navigation = () => {
     { name: 'About', href: '/about' },
     { name: 'Contact', href: '/contact' },
   ];
+
+  // Check cart item count
+  useEffect(() => {
+    const checkCartItems = async () => {
+      const cartId = localStorage.getItem('cart_id');
+      if (cartId) {
+        try {
+          const response = await fetch(`${process.env.REACT_APP_BACKEND_URL}/api/cart/${cartId}`);
+          if (response.ok) {
+            const data = await response.json();
+            const totalItems = data.items.reduce((sum, item) => sum + item.quantity, 0);
+            setCartItemCount(totalItems);
+          }
+        } catch (error) {
+          console.error('Error checking cart items:', error);
+        }
+      }
+    };
+
+    checkCartItems();
+    
+    // Check cart items periodically
+    const interval = setInterval(checkCartItems, 5000);
+    return () => clearInterval(interval);
+  }, [location]);
 
   const isActive = (href) => location.pathname === href;
 
