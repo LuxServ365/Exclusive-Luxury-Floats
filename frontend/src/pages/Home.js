@@ -15,7 +15,7 @@ const Home = () => {
     {
       icon: "☀️",
       title: "Sun Bathing Floating Loungers",
-      description: "Relax in ultimate comfort on our premium floating loungers with direct access to crystal waters."
+      description: "Relax in ultimate comfort on our exclusive floating loungers with direct access to crystal waters."
     },
     {
       icon: "🛟",
