@@ -18,7 +18,7 @@ const About = () => {
               <h2 className="text-3xl font-bold text-teal-700 mb-6">Our Story</h2>
               <p className="text-lg text-gray-600 mb-6 leading-relaxed" data-testid="our-story">
                 Exclusive was born from a passion for Panama City's incredible emerald waters 
-                and a vision to provide truly premium water experiences. Founded by local water enthusiasts, 
+                and a vision to provide truly exclusive water experiences. Founded by local water enthusiasts, 
                 we recognized the need for luxury floating adventures that showcase the natural beauty 
                 of the Gulf Coast.
               </p>
