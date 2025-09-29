@@ -58,7 +58,7 @@ const About = () => {
               <CardContent>
                 <p className="text-gray-600">
                   To be the Gulf Coast's premier luxury water experience provider, 
-                  setting the standard for premium floating adventures.
+                  setting the standard for exclusive floating adventures.
                 </p>
               </CardContent>
             </Card>
