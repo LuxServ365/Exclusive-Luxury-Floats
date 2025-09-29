@@ -73,10 +73,29 @@ const Navigation = () => {
                 {item.name}
               </Link>
             ))}
+            
+            {/* Cart Icon */}
+            <Link
+              to="/cart"
+              className={`relative px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                isActive('/cart')
+                  ? 'bg-teal-600 text-white shadow-lg'
+                  : 'bg-gray-100 text-gray-700 hover:bg-teal-100 hover:text-teal-700 hover:shadow-md'
+              }`}
+              data-testid="nav-cart"
+            >
+              <ShoppingCart className="h-4 w-4 inline-block mr-2" />
+              Cart
+              {cartItemCount > 0 && (
+                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
+                  {cartItemCount}
+                </span>
+              )}
+            </Link>
           </div>
 
-          {/* CTA Button */}
-          <div className="hidden lg:block">
+          {/* CTA Buttons */}
+          <div className="hidden lg:flex items-center space-x-3">
             <Link to="/bookings">
               <Button 
                 className="bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-700 hover:to-teal-800 text-white px-6 py-2 rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300"
