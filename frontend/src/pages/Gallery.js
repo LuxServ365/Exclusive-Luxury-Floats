@@ -113,9 +113,9 @@ const Gallery = () => {
             ))}
           </div>
 
-          {filteredImages.length === 0 && (
+          {galleryImages.length === 0 && (
             <div className="text-center py-12" data-testid="no-images">
-              <p className="text-gray-500">No images found for this category.</p>
+              <p className="text-gray-500">No images found.</p>
             </div>
           )}
         </div>
