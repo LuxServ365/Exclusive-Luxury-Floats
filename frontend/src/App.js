@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import FloatsAmenities from "./pages/FloatsAmenities";
 import WatercraftRentals from "./pages/WatercraftRentals";
 import Bookings from "./pages/Bookings";
+import Cart from "./pages/Cart";
 import Gallery from "./pages/Gallery";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
