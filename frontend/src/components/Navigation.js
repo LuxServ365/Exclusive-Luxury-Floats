@@ -26,7 +26,7 @@ const Navigation = () => {
             <img 
               src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/90n9ndga_Gemini_Generated_Image_bw7zsebw7zsebw7z.png"
               alt="Exclusive Luxury Floats Logo"
-              className="h-16 w-auto cursor-pointer"
+              className="h-24 w-auto cursor-pointer"
             />
           </Link>
 
