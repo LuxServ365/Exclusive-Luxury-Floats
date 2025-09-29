@@ -21,16 +21,16 @@ const Navigation = () => {
     <nav className="fixed top-0 w-full z-50 bg-white/95 backdrop-blur-md border-b border-gray-200 shadow-sm">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-6">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-3" data-testid="nav-logo">
+          {/* Logo - Clickable to home */}
+          <Link to="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity" data-testid="nav-logo">
             <img 
               src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/90n9ndga_Gemini_Generated_Image_bw7zsebw7zsebw7z.png"
               alt="Exclusive Luxury Floats Logo"
-              className="h-16 w-auto"
+              className="h-16 w-auto cursor-pointer"
             />
           </Link>
 
-          {/* Desktop Navigation */}
+          {/* Desktop Navigation - Now in header */}
           <div className="hidden lg:flex items-center space-x-8">
             {navigation.map((item) => (
               <Link
