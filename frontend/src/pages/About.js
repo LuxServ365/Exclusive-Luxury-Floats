@@ -24,7 +24,7 @@ const About = () => {
               </p>
               <p className="text-lg text-gray-600 leading-relaxed">
                 Our commitment to excellence drives everything we do – from our crystal-clear kayaks 
-                with LED lighting to our luxury floating cabanas with premium amenities.
+                with LED lighting to our luxury floating cabanas with exclusive amenities.
               </p>
             </div>
             
