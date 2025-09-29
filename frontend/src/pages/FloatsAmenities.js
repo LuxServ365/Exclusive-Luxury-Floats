@@ -33,7 +33,7 @@ const FloatsAmenities = () => {
     {
       id: "luxury_cabana_hourly",
       name: "Hourly Experience",
-      price: 50,
+      price: 35,
       duration: "per hour per person",
       description: "Perfect for a quick luxury escape on the emerald waters",
       features: ["Premium floating platform", "Plush seating", "Shade coverage", "Safety equipment", "Flexible timing"],
@@ -51,7 +51,7 @@ const FloatsAmenities = () => {
     {
       id: "luxury_cabana_4hr",
       name: "Premium Group Package",
-      price: 400,
+      price: 299,
       duration: "4 hours (up to 6 people)",
       description: "Ultimate luxury experience for groups and special occasions",
       features: ["4-hour exclusive access", "Maximum 6 guests", "Premium positioning", "Dedicated service", "Perfect for celebrations"],
