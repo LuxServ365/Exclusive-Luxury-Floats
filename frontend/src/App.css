@@ -23,7 +23,7 @@ body {
 /* Main content area */
 .main-content {
   flex: 1;
-  padding-top: 100px; /* Account for thicker navigation */
+  padding-top: 120px; /* Account for larger logo navigation */
 }
 
 /* Hero sections */
