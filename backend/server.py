@@ -38,10 +38,14 @@ api_router = APIRouter(prefix="/api")
 
 # Configuration
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY')
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
 TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
+
+# PayPal Configuration
+PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID', 'paypal_client_id_here')
+PAYPAL_CLIENT_SECRET = os.environ.get('PAYPAL_CLIENT_SECRET', 'paypal_client_secret_here')
+PAYPAL_MODE = os.environ.get('PAYPAL_MODE', 'sandbox')  # 'sandbox' or 'live'
 
 # Gmail SMTP Configuration
 GMAIL_EMAIL = os.environ.get('GMAIL_EMAIL', 'exclusivefloat850@gmail.com')
