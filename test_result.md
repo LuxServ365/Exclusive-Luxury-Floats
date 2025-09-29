@@ -319,11 +319,10 @@ Enhanced booking system with cart functionality, multiple payment processors (St
 
 ## test_plan:
   current_focus:
-    - "Venmo payment integration"
-    - "CashApp payment integration"
-    - "Zelle payment integration"
+    - "Add to cart functionality"
   stuck_tasks: 
     - "PayPal payment integration"
+    - "Add to cart functionality"
   test_all: false
   test_priority: "high_first"
 
@@ -332,3 +331,5 @@ Enhanced booking system with cart functionality, multiple payment processors (St
     message: "Starting implementation of enhanced booking system with cart functionality and multiple payment processors. Have all integration playbooks ready."
   - agent: "testing"
     message: "✅ BACKEND TESTING COMPLETE: Cart functionality is fully working (94.1% success rate). Core features tested: cart creation, item management, customer info, Stripe payments, database operations, error handling. PayPal integration implemented but needs real credentials. Google Sheets integration code ready but needs credentials file. Venmo/CashApp/Zelle not yet implemented."
+  - agent: "testing"
+    message: "✅ FRONTEND TESTING COMPLETE: Cart UI and booking system are 85% functional. WORKING: Service selection (6 services), booking forms, cart UI, payment method selection, mobile responsiveness, navigation. CRITICAL ISSUE: Add to cart API calls intermittently fail with 'Failed to fetch' errors - this appears to be a network/connectivity issue rather than code issue. Cart shows items added in badge but cart page sometimes empty. Need to investigate API connectivity stability."
