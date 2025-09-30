@@ -649,12 +649,12 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
     
     # Create booking confirmation
     booking_items = []
-    total_amount = 0
+    items_subtotal = 0
     
     for item in cart.items:
         service = SERVICES[item.service_id]
         item_total = service['price'] * item.quantity
-        total_amount += item_total
+        items_subtotal += item_total
         
         booking_items.append({
             "service_id": item.service_id,
@@ -667,6 +667,18 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
             "subtotal": item_total
         })
     
+    # Calculate fees and taxes
+    additional_fees = checkout_request.additional_fees or {}
+    trip_protection_fee = additional_fees.get('trip_protection_fee', 0.0)
+    tax_rate = additional_fees.get('tax_rate', 0.07)
+    credit_card_fee_rate = additional_fees.get('credit_card_fee_rate', 0.0)
+    
+    taxable_amount = items_subtotal + trip_protection_fee
+    tax_amount = taxable_amount * tax_rate
+    subtotal_with_tax = taxable_amount + tax_amount
+    credit_card_fee = subtotal_with_tax * credit_card_fee_rate
+    final_total = subtotal_with_tax + credit_card_fee
+    
     # Generate booking reference
     booking_ref = f"EGF{datetime.now().strftime('%Y%m%d')}{str(uuid.uuid4())[:6].upper()}"
     
@@ -676,7 +688,12 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
         customer_email=checkout_request.customer_info.email,
         customer_phone=checkout_request.customer_info.phone,
         items=booking_items,
-        total_amount=total_amount,
+        total_amount=items_subtotal,
+        trip_protection=checkout_request.trip_protection,
+        trip_protection_fee=trip_protection_fee,
+        tax_amount=tax_amount,
+        credit_card_fee=credit_card_fee,
+        final_total=final_total,
         payment_method=checkout_request.payment_method,
         booking_reference=booking_ref
     )
@@ -698,15 +715,15 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
         payment_instructions = {
             "venmo": {
                 "account": "@ExclusiveFloat850",
-                "instructions": f"Please send ${total_amount:.2f} to @ExclusiveFloat850 on Venmo with note: '{booking_ref}'"
+                "instructions": f"Please send ${final_total:.2f} to @ExclusiveFloat850 on Venmo with note: '{booking_ref}'"
             },
             "cashapp": {
                 "account": "$ExclusiveFloat",
-                "instructions": f"Please send ${total_amount:.2f} to $ExclusiveFloat on Cash App with note: '{booking_ref}'"
+                "instructions": f"Please send ${final_total:.2f} to $ExclusiveFloat on Cash App with note: '{booking_ref}'"
             },
             "zelle": {
                 "account": "exclusivefloat850@gmail.com",
-                "instructions": f"Please send ${total_amount:.2f} to exclusivefloat850@gmail.com via Zelle with note: '{booking_ref}'"
+                "instructions": f"Please send ${final_total:.2f} to exclusivefloat850@gmail.com via Zelle with note: '{booking_ref}'"
             }
         }
         
@@ -717,7 +734,7 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
             "booking_reference": booking_ref,
             "payment_method": checkout_request.payment_method,
             "status": "pending_payment",
-            "total_amount": total_amount,
+            "total_amount": final_total,
             "payment_instructions": method_info.get("instructions", ""),
             "payment_account": method_info.get("account", ""),
             "message": f"Booking created! Please complete payment using {checkout_request.payment_method} and we'll confirm your booking."
