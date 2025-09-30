@@ -135,8 +135,6 @@ const Cart = () => {
       if (response.ok) {
         const updatedItems = cartItems.filter((_, index) => index !== itemIndex);
         setCartItems(updatedItems);
-        const newTotal = updatedItems.reduce((sum, item) => sum + item.subtotal, 0);
-        setTotalAmount(newTotal);
         toast.success('Item removed from cart');
       }
     } catch (error) {
