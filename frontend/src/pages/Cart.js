@@ -182,7 +182,14 @@ const Cart = () => {
           customer_info: customerInfo,
           payment_method: selectedPaymentMethod,
           success_url: `${window.location.origin}/booking-success`,
-          cancel_url: `${window.location.origin}/cart`
+          cancel_url: `${window.location.origin}/cart`,
+          trip_protection: tripProtection,
+          additional_fees: {
+            trip_protection_fee: tripProtection ? TRIP_PROTECTION_FEE : 0,
+            tax_rate: BAY_COUNTY_TAX_RATE,
+            credit_card_fee_rate: (selectedPaymentMethod === 'stripe' || selectedPaymentMethod === 'paypal') ? CREDIT_CARD_FEE_RATE : 0
+          },
+          final_total: totals.finalTotal
         })
       });
 
