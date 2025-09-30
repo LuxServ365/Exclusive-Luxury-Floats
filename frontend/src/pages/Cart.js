@@ -509,7 +509,7 @@ const Cart = () => {
                       onClick={handleCheckout}
                       disabled={loading || cartItems.length === 0}
                     >
-                      {loading ? 'Processing...' : `Proceed to Payment - $${totalAmount.toFixed(2)}`}
+                      {loading ? 'Processing...' : `Proceed to Payment - $${totals.finalTotal.toFixed(2)}`}
                     </Button>
 
                     <div className="text-xs text-gray-500 text-center">
