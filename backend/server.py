@@ -200,6 +200,11 @@ class BookingConfirmation(BaseModel):
     customer_phone: Optional[str] = None
     items: List[Dict[str, Any]] = []
     total_amount: float
+    trip_protection: bool = False
+    trip_protection_fee: float = 0.0
+    tax_amount: float = 0.0
+    credit_card_fee: float = 0.0
+    final_total: float
     payment_method: str
     payment_status: str = "pending"
     payment_session_id: Optional[str] = None
