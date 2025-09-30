@@ -66,6 +66,22 @@ const Cart = () => {
     try {
       const response = await fetch(`${API}/cart/${id}`);
       
+      if (response.ok) {
+        const data = await response.json();
+        setCartItems(data.items);
+        setSubtotal(data.total_amount);
+        setCustomerInfo(data.customer_info || { name: '', email: '', phone: '' });
+      } else if (response.status === 404 || response.status === 410) {
+        // Cart not found or expired, create new one
+        localStorage.removeItem('cart_id');
+        createNewCart();
+      }
+    } catch (error) {
+      console.error('Error loading cart:', error);
+      toast.error('Failed to load cart');
+    }
+  };
+
   // Calculate totals with fees and taxes
   const calculateTotals = () => {
     let itemsSubtotal = cartItems.reduce((sum, item) => sum + item.subtotal, 0);
