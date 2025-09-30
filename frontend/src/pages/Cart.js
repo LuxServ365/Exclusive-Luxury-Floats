@@ -155,10 +155,14 @@ const Cart = () => {
         const checkoutData = await checkoutResponse.json();
         
         if (checkoutData.checkout_url) {
-          // Redirect to payment processor
+          // Redirect to payment processor (Stripe/PayPal)
           window.location.href = checkoutData.checkout_url;
+        } else if (checkoutData.payment_instructions) {
+          // Redirect to manual payment instructions (Venmo/CashApp/Zelle)
+          localStorage.removeItem('cart_id');
+          navigate(`/payment-instructions?booking_id=${checkoutData.booking_id}`);
         } else {
-          // Handle other payment methods that might not have immediate redirect
+          // Handle other scenarios
           toast.success('Booking created successfully!');
           localStorage.removeItem('cart_id');
           navigate('/bookings');
