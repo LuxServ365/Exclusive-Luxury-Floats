@@ -46,6 +46,22 @@ const Bookings = () => {
     initializeCart();
   }, []);
 
+  // Calculate total amount when selections change
+  useEffect(() => {
+    calculateTotal();
+  }, [selectedServices, quantities, services]);
+
+  const calculateTotal = () => {
+    let total = 0;
+    Object.keys(selectedServices).forEach(serviceId => {
+      if (selectedServices[serviceId] && services[serviceId]) {
+        const quantity = quantities[serviceId] || 1;
+        total += services[serviceId].price * quantity;
+      }
+    });
+    setTotalAmount(total);
+  };
+
   const fetchServices = async () => {
     try {
       const response = await fetch(`${API}/services`);
