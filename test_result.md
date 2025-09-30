@@ -180,15 +180,18 @@ Enhanced booking system with cart functionality, multiple payment processors (St
 
   - task: "Database operations"
     implemented: true
-    working: true
+    working: false
     file: "server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
       - working: true
         agent: "testing"
         comment: "✅ TESTED: MongoDB operations working perfectly - booking creation, payment transaction recording, proper UUID usage, date/time serialization working correctly."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE: Database schema mismatch - GET /api/bookings endpoint fails with 500 error due to missing 'final_total' field in existing bookings. Existing bookings in database don't have the new enhanced fee fields (final_total, trip_protection_fee, tax_amount, credit_card_fee) causing validation errors when fetching all bookings. Database migration needed for backward compatibility."
 
   - task: "API error handling"
     implemented: true
