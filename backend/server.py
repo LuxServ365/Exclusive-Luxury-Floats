@@ -818,7 +818,7 @@ async def handle_paypal_checkout(booking: BookingConfirmation, checkout_request:
             payment_method="paypal",
             payment_provider="paypal",
             session_id=payment_result['payment_id'],
-            amount=booking.total_amount,
+            amount=booking.final_total,
             currency="usd",
             customer_email=booking.customer_email
         )
