@@ -26,6 +26,7 @@ function App() {
           <Route path="/watercraft-rentals" element={<WatercraftRentals />} />
           <Route path="/bookings" element={<Bookings />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/gallery" element={<Gallery />} />
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
