@@ -135,7 +135,7 @@ Enhanced booking system with cart functionality, multiple payment processors (St
 
   - task: "PayPal payment integration"
     implemented: true
-    working: false
+    working: true
     file: "server.py"
     stuck_count: 0
     priority: "high"
@@ -147,6 +147,9 @@ Enhanced booking system with cart functionality, multiple payment processors (St
       - working: false
         agent: "testing"
         comment: "❌ TESTED: PayPal integration code is implemented but fails due to invalid credentials (placeholder values). Returns 401 Unauthorized - 'Client Authentication failed'. Need real PayPal sandbox credentials."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: PayPal integration now fully working with real credentials! All tests passed: PayPal SDK configuration (✅), API authentication (✅), checkout flow creation (✅), payment session creation (✅), payment URLs and approval flow setup (✅), payment transaction recording in database (✅), booking creation with PayPal payment method (✅). Both Stripe and PayPal payment methods are available and working correctly. PayPal checkout creates proper booking references and payment IDs."
 
   - task: "Google Sheets integration"
     implemented: true
