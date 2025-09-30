@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 
 const Home = () => {
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+  }, []);
+
   const heroImage = "https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/n6hv7zg3_Gemini_Generated_Image_tftk0ktftk0ktftk.png";
   
   const features = [
