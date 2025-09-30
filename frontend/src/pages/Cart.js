@@ -468,19 +468,36 @@ const Cart = () => {
 
                     {/* Order Summary */}
                     <div className="border-t pt-4">
+                      <h3 className="font-semibold mb-3">Order Summary</h3>
                       <div className="space-y-2">
                         <div className="flex justify-between text-sm">
-                          <span>Subtotal:</span>
-                          <span>${totalAmount.toFixed(2)}</span>
+                          <span>Services Subtotal:</span>
+                          <span>${totals.itemsSubtotal.toFixed(2)}</span>
                         </div>
+                        
+                        {tripProtection && (
+                          <div className="flex justify-between text-sm">
+                            <span>Trip Protection:</span>
+                            <span>${totals.tripProtectionFee.toFixed(2)}</span>
+                          </div>
+                        )}
+                        
                         <div className="flex justify-between text-sm">
-                          <span>Tax:</span>
-                          <span>$0.00</span>
+                          <span>Bay County Tax (7%):</span>
+                          <span>${totals.tax.toFixed(2)}</span>
                         </div>
+                        
+                        {(selectedPaymentMethod === 'stripe' || selectedPaymentMethod === 'paypal') && (
+                          <div className="flex justify-between text-sm">
+                            <span>Credit Card Processing (3%):</span>
+                            <span>${totals.creditCardFee.toFixed(2)}</span>
+                          </div>
+                        )}
+                        
                         <div className="border-t pt-2">
                           <div className="flex justify-between font-bold text-lg">
                             <span>Total:</span>
-                            <span className="text-teal-600">${totalAmount.toFixed(2)}</span>
+                            <span className="text-teal-600">${totals.finalTotal.toFixed(2)}</span>
                           </div>
                         </div>
                       </div>
