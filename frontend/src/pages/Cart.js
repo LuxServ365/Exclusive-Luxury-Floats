@@ -66,12 +66,27 @@ const Cart = () => {
     try {
       const response = await fetch(`${API}/cart/${id}`);
       
-      if (response.ok) {
-        const data = await response.json();
-        setCartItems(data.items);
-        setTotalAmount(data.total_amount);
-        setCustomerInfo(data.customer_info || { name: '', email: '', phone: '' });
-      } else if (response.status === 404 || response.status === 410) {
+  // Calculate totals with fees and taxes
+  const calculateTotals = () => {
+    let itemsSubtotal = cartItems.reduce((sum, item) => sum + item.subtotal, 0);
+    let tripProtectionFee = tripProtection ? TRIP_PROTECTION_FEE : 0;
+    let taxableAmount = itemsSubtotal + tripProtectionFee;
+    let tax = taxableAmount * BAY_COUNTY_TAX_RATE;
+    let subtotalWithTax = taxableAmount + tax;
+    let creditCardFee = (selectedPaymentMethod === 'stripe' || selectedPaymentMethod === 'paypal') ? 
+                        subtotalWithTax * CREDIT_CARD_FEE_RATE : 0;
+    let finalTotal = subtotalWithTax + creditCardFee;
+
+    return {
+      itemsSubtotal,
+      tripProtectionFee,
+      tax,
+      creditCardFee,
+      finalTotal
+    };
+  };
+
+  const totals = calculateTotals();
         // Cart not found or expired, create new one
         localStorage.removeItem('cart_id');
         createNewCart();
