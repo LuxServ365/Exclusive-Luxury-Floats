@@ -39,6 +39,9 @@ const Bookings = () => {
   ];
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     fetchServices();
     initializeCart();
   }, []);
