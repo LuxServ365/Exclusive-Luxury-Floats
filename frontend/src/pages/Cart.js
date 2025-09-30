@@ -423,6 +423,10 @@ const Cart = () => {
                       </div>
                     </div>
                       
+                    {/* Payment Method Selection */}
+                    <div className="space-y-4">
+                      <h3 className="font-semibold">Payment Method</h3>
+                      
                       <Select value={selectedPaymentMethod} onValueChange={setSelectedPaymentMethod}>
                         <SelectTrigger>
                           <SelectValue placeholder="Select payment method" />
