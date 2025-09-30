@@ -97,13 +97,30 @@ const Bookings = () => {
     setCartId(existingCartId);
   };
 
-  const handleServiceSelect = (serviceId) => {
-    setSelectedService(serviceId);
-    setBookingData(prev => ({ ...prev, service_id: serviceId }));
+  const handleServiceToggle = (serviceId) => {
+    setSelectedServices(prev => ({
+      ...prev,
+      [serviceId]: !prev[serviceId]
+    }));
+    
+    // Initialize quantity if service is being selected
+    if (!selectedServices[serviceId] && !quantities[serviceId]) {
+      setQuantities(prev => ({
+        ...prev,
+        [serviceId]: 1
+      }));
+    }
   };
 
-  const handleInputChange = (field, value) => {
-    setBookingData(prev => ({ ...prev, [field]: value }));
+  const handleQuantityChange = (serviceId, quantity) => {
+    setQuantities(prev => ({
+      ...prev,
+      [serviceId]: Math.max(1, quantity)
+    }));
+  };
+
+  const handleCommonDataChange = (field, value) => {
+    setCommonBookingData(prev => ({ ...prev, [field]: value }));
   };
 
   const calculatePrice = () => {
