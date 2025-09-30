@@ -14,6 +14,9 @@ const PaymentInstructions = () => {
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     if (bookingId) {
       fetchBooking();
     }
