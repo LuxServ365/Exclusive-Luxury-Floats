@@ -686,14 +686,33 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
     elif checkout_request.payment_method == "paypal":
         return await handle_paypal_checkout(booking, checkout_request)
     else:
-        # For now, other payment methods return pending status
+        # Handle manual payment methods (Venmo, CashApp, Zelle)
+        payment_instructions = {
+            "venmo": {
+                "account": "@ExclusiveFloat850",
+                "instructions": f"Please send ${total_amount:.2f} to @ExclusiveFloat850 on Venmo with note: '{booking_ref}'"
+            },
+            "cashapp": {
+                "account": "$ExclusiveFloat",
+                "instructions": f"Please send ${total_amount:.2f} to $ExclusiveFloat on Cash App with note: '{booking_ref}'"
+            },
+            "zelle": {
+                "account": "exclusivefloat850@gmail.com",
+                "instructions": f"Please send ${total_amount:.2f} to exclusivefloat850@gmail.com via Zelle with note: '{booking_ref}'"
+            }
+        }
+        
+        method_info = payment_instructions.get(checkout_request.payment_method, {})
+        
         return {
             "booking_id": booking.id,
             "booking_reference": booking_ref,
             "payment_method": checkout_request.payment_method,
             "status": "pending_payment",
             "total_amount": total_amount,
-            "message": f"Please complete payment using {checkout_request.payment_method}"
+            "payment_instructions": method_info.get("instructions", ""),
+            "payment_account": method_info.get("account", ""),
+            "message": f"Booking created! Please complete payment using {checkout_request.payment_method} and we'll confirm your booking."
         }
 
 async def handle_stripe_checkout(booking: BookingConfirmation, checkout_request: CheckoutRequest):
