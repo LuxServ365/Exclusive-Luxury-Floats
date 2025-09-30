@@ -12,6 +12,7 @@ import Gallery from "./pages/Gallery";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
 import BookingSuccess from "./pages/BookingSuccess";
+import PaymentInstructions from "./pages/PaymentInstructions";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 
