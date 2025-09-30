@@ -722,9 +722,13 @@ class BackendTester:
                 "phone": "+1-850-555-9876"
             }
             
+            # Calculate expected total for canoe
+            expected_total = 75.0 * 2  # canoe price * quantity
+            
             checkout_data = {
                 "customer_info": customer_data,
                 "payment_method": "paypal",  # Test with PayPal to verify both payment methods trigger notifications
+                "final_total": expected_total,
                 "success_url": f"{BACKEND_URL}/booking-success",
                 "cancel_url": f"{BACKEND_URL}/cart/{telegram_cart_id}"
             }
