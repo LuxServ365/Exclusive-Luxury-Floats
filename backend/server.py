@@ -487,7 +487,7 @@ class PayPalService:
                 "transactions": [{
                     "item_list": {"items": items},
                     "amount": {
-                        "total": f"{total_amount:.2f}",
+                        "total": f"{booking.final_total:.2f}",
                         "currency": "USD"
                     },
                     "description": f"Booking {booking.booking_reference} - Exclusive Gulf Float"
