@@ -287,6 +287,10 @@ class BackendTester:
             return False
             
         try:
+            # Calculate expected total for current cart items
+            # After removing one item, we should have crystal_kayak (2x$60) + luxury_cabana_3hr (1x$100) = $220
+            expected_total = (60.0 * 2) + (100.0 * 1)  # $220
+            
             checkout_data = {
                 "customer_info": {
                     "name": "Sarah Johnson",
@@ -294,6 +298,7 @@ class BackendTester:
                     "phone": "+1-555-0123"
                 },
                 "payment_method": "stripe",
+                "final_total": expected_total,
                 "success_url": f"{BACKEND_URL}/booking-success",
                 "cancel_url": f"{BACKEND_URL}/cart/{self.cart_id}"
             }
