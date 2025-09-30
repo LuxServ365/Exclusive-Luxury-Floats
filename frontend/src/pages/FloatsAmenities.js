@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
@@ -6,6 +6,10 @@ import { Badge } from '../components/ui/badge';
 import { Users, Clock, Umbrella, Waves, Star } from 'lucide-react';
 
 const FloatsAmenities = () => {
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+  }, []);
   const cabanaFeatures = [
     {
       icon: <Umbrella className="w-6 h-6" />,
