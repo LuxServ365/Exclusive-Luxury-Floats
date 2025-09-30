@@ -832,7 +832,7 @@ async def handle_paypal_checkout(booking: BookingConfirmation, checkout_request:
             "payment_method": "paypal",
             "checkout_url": payment_result['approval_url'],
             "payment_id": payment_result['payment_id'],
-            "total_amount": booking.total_amount
+            "total_amount": booking.final_total
         }
         
     except Exception as e:
