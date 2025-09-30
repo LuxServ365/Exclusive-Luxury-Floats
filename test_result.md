@@ -324,7 +324,6 @@ Enhanced booking system with cart functionality, multiple payment processors (St
   current_focus:
     - "Add to cart functionality"
   stuck_tasks: 
-    - "PayPal payment integration"
     - "Add to cart functionality"
   test_all: false
   test_priority: "high_first"
