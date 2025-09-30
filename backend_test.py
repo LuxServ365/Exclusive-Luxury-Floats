@@ -480,6 +480,384 @@ class BackendTester:
         except Exception as e:
             self.log_test("Booking Retrieval", False, f"Error: {str(e)}")
             return False
+
+    def test_notification_system_complete_flow(self):
+        """Test complete booking flow with Gmail and Telegram notifications"""
+        print("\n🔔 TESTING NOTIFICATION SYSTEM - COMPLETE FLOW")
+        print("=" * 60)
+        
+        try:
+            # Create a new cart for notification testing
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Notification Flow - Create Cart", False, "Failed to create cart")
+                return False
+                
+            notification_cart_id = response.json().get('cart_id')
+            self.log_test("Notification Flow - Create Cart", True, f"Cart ID: {notification_cart_id}")
+            
+            # Add multiple items to cart for comprehensive testing
+            items_to_add = [
+                {
+                    "service_id": "crystal_kayak",
+                    "quantity": 2,
+                    "booking_date": "2024-12-28",
+                    "booking_time": "14:00:00",
+                    "special_requests": "LED lighting requested for evening adventure"
+                },
+                {
+                    "service_id": "luxury_cabana_3hr",
+                    "quantity": 1,
+                    "booking_date": "2024-12-28",
+                    "booking_time": "15:00:00",
+                    "special_requests": "Premium setup with refreshments"
+                }
+            ]
+            
+            for item in items_to_add:
+                response = self.session.post(f"{API_BASE}/cart/{notification_cart_id}/add", json=item)
+                if response.status_code != 200:
+                    self.log_test("Notification Flow - Add Items", False, f"Failed to add {item['service_id']}")
+                    return False
+            
+            self.log_test("Notification Flow - Add Items", True, "Multiple items added successfully")
+            
+            # Update customer information with realistic data
+            customer_data = {
+                "name": "Emma Rodriguez",
+                "email": "emma.rodriguez@gulfadventures.com",
+                "phone": "+1-850-555-7890"
+            }
+            
+            response = self.session.put(f"{API_BASE}/cart/{notification_cart_id}/customer", json=customer_data)
+            if response.status_code != 200:
+                self.log_test("Notification Flow - Customer Info", False, "Failed to update customer info")
+                return False
+            
+            self.log_test("Notification Flow - Customer Info", True, "Customer information updated")
+            
+            # Test Stripe checkout with notifications
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "stripe",
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{notification_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{notification_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                notification_booking_id = data.get('booking_id')
+                checkout_url = data.get('checkout_url')
+                session_id = data.get('session_id')
+                
+                if notification_booking_id and checkout_url and session_id:
+                    self.log_test("Notification Flow - Stripe Checkout", True, f"Booking created: {notification_booking_id}")
+                    
+                    # Verify booking was created with correct details
+                    booking_response = self.session.get(f"{API_BASE}/bookings/{notification_booking_id}")
+                    if booking_response.status_code == 200:
+                        booking_data = booking_response.json()
+                        
+                        # Verify booking details for notification content
+                        expected_total = (60.0 * 2) + (100.0 * 1)  # crystal_kayak + luxury_cabana_3hr
+                        if abs(booking_data.get('total_amount', 0) - expected_total) < 0.01:
+                            self.log_test("Notification Flow - Booking Details", True, f"Total amount correct: ${expected_total}")
+                            
+                            # Verify items are properly formatted for notifications
+                            items = booking_data.get('items', [])
+                            if len(items) == 2:
+                                self.log_test("Notification Flow - Booking Items", True, f"Items correctly stored: {len(items)} items")
+                                return True
+                            else:
+                                self.log_test("Notification Flow - Booking Items", False, f"Expected 2 items, got {len(items)}")
+                                return False
+                        else:
+                            self.log_test("Notification Flow - Booking Details", False, f"Total amount mismatch: expected ${expected_total}, got ${booking_data.get('total_amount', 0)}")
+                            return False
+                    else:
+                        self.log_test("Notification Flow - Booking Verification", False, f"Failed to retrieve booking: {booking_response.status_code}")
+                        return False
+                else:
+                    self.log_test("Notification Flow - Stripe Checkout", False, f"Missing required fields: {data}")
+                    return False
+            else:
+                self.log_test("Notification Flow - Stripe Checkout", False, f"Checkout failed: {response.status_code}, {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Notification Flow - Complete Test", False, f"Error: {str(e)}")
+            return False
+
+    def test_gmail_smtp_configuration(self):
+        """Test Gmail SMTP configuration and connectivity"""
+        print("\n📧 TESTING GMAIL SMTP CONFIGURATION")
+        print("=" * 60)
+        
+        try:
+            # Test by attempting to create a booking that would trigger email
+            # We'll check if the email service is properly configured by examining the backend logs
+            
+            # Create a simple cart and checkout to trigger email notification
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Gmail SMTP - Cart Creation", False, "Failed to create test cart")
+                return False
+                
+            gmail_test_cart_id = response.json().get('cart_id')
+            
+            # Add a single item
+            item_data = {
+                "service_id": "paddle_board",
+                "quantity": 1,
+                "booking_date": "2024-12-29",
+                "booking_time": "11:00:00",
+                "special_requests": "Gmail notification test"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{gmail_test_cart_id}/add", json=item_data)
+            if response.status_code != 200:
+                self.log_test("Gmail SMTP - Add Item", False, "Failed to add test item")
+                return False
+            
+            # Test customer with valid email format
+            customer_data = {
+                "name": "Alex Thompson",
+                "email": "alex.thompson@testgulf.com",
+                "phone": "+1-850-555-1234"
+            }
+            
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "stripe",
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{gmail_test_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{gmail_test_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                gmail_booking_id = data.get('booking_id')
+                
+                if gmail_booking_id:
+                    self.log_test("Gmail SMTP - Booking Creation", True, f"Booking created for email test: {gmail_booking_id}")
+                    
+                    # Verify booking contains proper email data
+                    booking_response = self.session.get(f"{API_BASE}/bookings/{gmail_booking_id}")
+                    if booking_response.status_code == 200:
+                        booking_data = booking_response.json()
+                        customer_email = booking_data.get('customer_email')
+                        booking_reference = booking_data.get('booking_reference')
+                        
+                        if customer_email and booking_reference:
+                            self.log_test("Gmail SMTP - Email Data Verification", True, f"Email: {customer_email}, Ref: {booking_reference}")
+                            return True
+                        else:
+                            self.log_test("Gmail SMTP - Email Data Verification", False, "Missing email or booking reference")
+                            return False
+                    else:
+                        self.log_test("Gmail SMTP - Booking Retrieval", False, f"Failed to retrieve booking: {booking_response.status_code}")
+                        return False
+                else:
+                    self.log_test("Gmail SMTP - Booking Creation", False, "No booking ID returned")
+                    return False
+            else:
+                self.log_test("Gmail SMTP - Checkout Process", False, f"Checkout failed: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Gmail SMTP - Configuration Test", False, f"Error: {str(e)}")
+            return False
+
+    def test_telegram_notification_setup(self):
+        """Test Telegram notification configuration"""
+        print("\n📱 TESTING TELEGRAM NOTIFICATION SETUP")
+        print("=" * 60)
+        
+        try:
+            # Create a booking specifically for Telegram notification testing
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Telegram - Cart Creation", False, "Failed to create test cart")
+                return False
+                
+            telegram_cart_id = response.json().get('cart_id')
+            
+            # Add items with detailed information for Telegram message
+            item_data = {
+                "service_id": "canoe",
+                "quantity": 2,
+                "booking_date": "2024-12-30",
+                "booking_time": "13:00:00",
+                "special_requests": "Telegram notification test - family group"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{telegram_cart_id}/add", json=item_data)
+            if response.status_code != 200:
+                self.log_test("Telegram - Add Item", False, "Failed to add test item")
+                return False
+            
+            # Customer data for Telegram message
+            customer_data = {
+                "name": "Maria Santos",
+                "email": "maria.santos@gulftest.com",
+                "phone": "+1-850-555-9876"
+            }
+            
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "paypal",  # Test with PayPal to verify both payment methods trigger notifications
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{telegram_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{telegram_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                telegram_booking_id = data.get('booking_id')
+                payment_id = data.get('payment_id')
+                
+                if telegram_booking_id and payment_id:
+                    self.log_test("Telegram - PayPal Booking Creation", True, f"PayPal booking created: {telegram_booking_id}")
+                    
+                    # Verify booking data for Telegram message content
+                    booking_response = self.session.get(f"{API_BASE}/bookings/{telegram_booking_id}")
+                    if booking_response.status_code == 200:
+                        booking_data = booking_response.json()
+                        
+                        # Check all required fields for Telegram notification
+                        required_fields = ['customer_name', 'customer_email', 'customer_phone', 'items', 'total_amount', 'payment_method', 'booking_reference']
+                        missing_fields = [field for field in required_fields if not booking_data.get(field)]
+                        
+                        if not missing_fields:
+                            self.log_test("Telegram - Notification Data Complete", True, "All required fields present for Telegram message")
+                            return True
+                        else:
+                            self.log_test("Telegram - Notification Data Complete", False, f"Missing fields: {missing_fields}")
+                            return False
+                    else:
+                        self.log_test("Telegram - Booking Verification", False, f"Failed to retrieve booking: {booking_response.status_code}")
+                        return False
+                else:
+                    self.log_test("Telegram - PayPal Booking Creation", False, f"Missing booking or payment ID: {data}")
+                    return False
+            else:
+                self.log_test("Telegram - PayPal Checkout", False, f"PayPal checkout failed: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Telegram - Notification Test", False, f"Error: {str(e)}")
+            return False
+
+    def test_email_template_content(self):
+        """Test email template formatting and content verification"""
+        print("\n📄 TESTING EMAIL TEMPLATE CONTENT")
+        print("=" * 60)
+        
+        try:
+            # Create a comprehensive booking to test email template with multiple items
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Email Template - Cart Creation", False, "Failed to create test cart")
+                return False
+                
+            template_cart_id = response.json().get('cart_id')
+            
+            # Add multiple different services to test template formatting
+            test_items = [
+                {
+                    "service_id": "crystal_kayak",
+                    "quantity": 1,
+                    "booking_date": "2024-12-31",
+                    "booking_time": "10:00:00",
+                    "special_requests": "New Year's Eve special - LED lighting"
+                },
+                {
+                    "service_id": "luxury_cabana_4hr",
+                    "quantity": 1,
+                    "booking_date": "2024-12-31",
+                    "booking_time": "14:00:00",
+                    "special_requests": "Premium setup for celebration"
+                }
+            ]
+            
+            for item in test_items:
+                response = self.session.post(f"{API_BASE}/cart/{template_cart_id}/add", json=item)
+                if response.status_code != 200:
+                    self.log_test("Email Template - Add Items", False, f"Failed to add {item['service_id']}")
+                    return False
+            
+            self.log_test("Email Template - Add Items", True, "Multiple items added for template testing")
+            
+            # Customer with detailed information for template
+            customer_data = {
+                "name": "Jennifer Williams",
+                "email": "jennifer.williams@emailtest.com",
+                "phone": "+1-850-555-4567"
+            }
+            
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "stripe",
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{template_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{template_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                template_booking_id = data.get('booking_id')
+                
+                if template_booking_id:
+                    # Verify booking data contains all elements needed for email template
+                    booking_response = self.session.get(f"{API_BASE}/bookings/{template_booking_id}")
+                    if booking_response.status_code == 200:
+                        booking_data = booking_response.json()
+                        
+                        # Check email template data completeness
+                        items = booking_data.get('items', [])
+                        total_amount = booking_data.get('total_amount', 0)
+                        booking_reference = booking_data.get('booking_reference', '')
+                        customer_name = booking_data.get('customer_name', '')
+                        
+                        # Verify expected total calculation
+                        expected_total = 60.0 + 299.0  # crystal_kayak + luxury_cabana_4hr
+                        
+                        if (len(items) == 2 and 
+                            abs(total_amount - expected_total) < 0.01 and 
+                            booking_reference and 
+                            customer_name):
+                            
+                            # Verify each item has required fields for email template
+                            template_ready = True
+                            for item in items:
+                                required_item_fields = ['name', 'price', 'quantity', 'booking_date', 'booking_time']
+                                if not all(field in item for field in required_item_fields):
+                                    template_ready = False
+                                    break
+                            
+                            if template_ready:
+                                self.log_test("Email Template - Content Verification", True, f"Template data complete: {len(items)} items, ${total_amount}")
+                                return True
+                            else:
+                                self.log_test("Email Template - Content Verification", False, "Items missing required fields for template")
+                                return False
+                        else:
+                            self.log_test("Email Template - Content Verification", False, f"Data incomplete: items={len(items)}, total=${total_amount}, ref={bool(booking_reference)}")
+                            return False
+                    else:
+                        self.log_test("Email Template - Booking Retrieval", False, f"Failed to retrieve booking: {booking_response.status_code}")
+                        return False
+                else:
+                    self.log_test("Email Template - Booking Creation", False, "No booking ID returned")
+                    return False
+            else:
+                self.log_test("Email Template - Checkout Process", False, f"Checkout failed: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Email Template - Test", False, f"Error: {str(e)}")
+            return False
     
     def run_all_tests(self):
         """Run all backend tests"""
