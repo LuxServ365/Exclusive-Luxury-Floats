@@ -453,7 +453,10 @@ async def send_telegram_notification(booking: BookingConfirmation):
             return False
             
         items_text = "\n".join([f"• {item['name']} (x{item['quantity']}) - ${item['price']:.2f}" for item in booking.items])
-        total_amount = sum(item['price'] * item['quantity'] for item in booking.items)
+        items_subtotal = sum(item['price'] * item['quantity'] for item in booking.items)
+        
+        trip_protection_text = f"\n💼 Trip Protection: ${booking.trip_protection_fee:.2f}" if booking.trip_protection else ""
+        credit_card_fee_text = f"\n💳 Credit Card Fee: ${booking.credit_card_fee:.2f}" if booking.credit_card_fee > 0 else ""
         
         message = f"""🌊 NEW BOOKING - Exclusive Gulf Float 🌊
 
@@ -464,7 +467,11 @@ async def send_telegram_notification(booking: BookingConfirmation):
 🛍️ ITEMS BOOKED:
 {items_text}
 
-💰 Total: ${total_amount:.2f}
+💰 PRICING BREAKDOWN:
+Services Subtotal: ${items_subtotal:.2f}{trip_protection_text}
+Tax (Bay County 7%): ${booking.tax_amount:.2f}{credit_card_fee_text}
+💰 FINAL TOTAL: ${booking.final_total:.2f}
+
 💳 Payment Method: {booking.payment_method.upper()}
 💳 Payment Status: {booking.payment_status}
 
