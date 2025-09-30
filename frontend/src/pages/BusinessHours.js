@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Button } from '../components/ui/button';
 import { Clock, MapPin, Phone, Mail, Calendar } from 'lucide-react';
 
 const BusinessHours = () => {
+  useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+  }, []);
   const hours = [
     { day: 'Monday', time: '7:00 AM - 8:00 PM' },
     { day: 'Tuesday', time: '7:00 AM - 8:00 PM' },
