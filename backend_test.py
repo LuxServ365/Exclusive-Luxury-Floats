@@ -440,7 +440,8 @@ class BackendTester:
                         "name": "Test User",
                         "email": "test@example.com"
                     },
-                    "payment_method": "stripe"
+                    "payment_method": "stripe",
+                    "final_total": 0.0
                 }
                 response = self.session.post(f"{API_BASE}/cart/{empty_cart_id}/checkout", json=checkout_data)
                 if response.status_code == 400:
