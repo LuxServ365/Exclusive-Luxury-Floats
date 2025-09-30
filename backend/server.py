@@ -790,7 +790,7 @@ async def handle_stripe_checkout(booking: BookingConfirmation, checkout_request:
             "payment_method": "stripe",
             "checkout_url": session.url,
             "session_id": session.session_id,
-            "total_amount": booking.total_amount
+            "total_amount": booking.final_total
         }
         
     except Exception as e:
