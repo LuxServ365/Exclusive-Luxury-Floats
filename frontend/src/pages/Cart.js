@@ -25,6 +25,9 @@ const Cart = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     // Get cart ID from localStorage or create new cart
     const storedCartId = localStorage.getItem('cart_id');
     if (storedCartId) {
