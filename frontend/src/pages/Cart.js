@@ -386,9 +386,42 @@ const Cart = () => {
                       </div>
                     </div>
 
-                    {/* Payment Method Selection */}
+                    {/* Trip Protection Option */}
                     <div className="space-y-4">
-                      <h3 className="font-semibold">Payment Method</h3>
+                      <h3 className="font-semibold">Trip Protection</h3>
+                      
+                      <div className="border rounded-lg p-4 space-y-3">
+                        <div className="flex items-start space-x-3">
+                          <input
+                            type="checkbox"
+                            id="trip_protection"
+                            checked={tripProtection}
+                            onChange={(e) => setTripProtection(e.target.checked)}
+                            className="mt-1 w-4 h-4 text-teal-600 border-2 border-gray-300 rounded focus:ring-teal-500"
+                          />
+                          <div className="flex-1">
+                            <label htmlFor="trip_protection" className="font-medium text-gray-900 cursor-pointer">
+                              Add Trip Protection - $5.99
+                            </label>
+                            <p className="text-sm text-gray-600 mt-1">
+                              Upgrade your booking to get a fast, full refund if you can't attend due to covered reasons.
+                            </p>
+                          </div>
+                        </div>
+                        
+                        {tripProtection && (
+                          <div className="bg-green-50 border border-green-200 rounded-lg p-3 text-sm">
+                            <h4 className="font-semibold text-green-800 mb-2">You're covered for:</h4>
+                            <ul className="text-green-700 space-y-1">
+                              <li>• Accident, Illness & Pre-Existing conditions</li>
+                              <li>• Transport disruptions</li>
+                              <li>• Family or home emergency</li>
+                              <li>• And many more covered reasons!</li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                       
                       <Select value={selectedPaymentMethod} onValueChange={setSelectedPaymentMethod}>
                         <SelectTrigger>
