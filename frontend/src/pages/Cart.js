@@ -361,22 +361,22 @@ const Cart = () => {
                               PayPal
                             </div>
                           </SelectItem>
-                          <SelectItem value="venmo" disabled>
+                          <SelectItem value="venmo">
                             <div className="flex items-center gap-2">
                               <DollarSign className="h-4 w-4" />
-                              Venmo (Coming Soon)
+                              Venmo - @ExclusiveFloat850
                             </div>
                           </SelectItem>
-                          <SelectItem value="cashapp" disabled>
+                          <SelectItem value="cashapp">
                             <div className="flex items-center gap-2">
                               <DollarSign className="h-4 w-4" />
-                              Cash App (Coming Soon)
+                              Cash App - $ExclusiveFloat
                             </div>
                           </SelectItem>
-                          <SelectItem value="zelle" disabled>
+                          <SelectItem value="zelle">
                             <div className="flex items-center gap-2">
                               <DollarSign className="h-4 w-4" />
-                              Zelle (Coming Soon)
+                              Zelle - exclusivefloat850@gmail.com
                             </div>
                           </SelectItem>
                         </SelectContent>
