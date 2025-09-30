@@ -188,6 +188,9 @@ class CheckoutRequest(BaseModel):
     payment_method: str = "stripe"  # stripe, paypal, venmo, cashapp, zelle
     success_url: Optional[str] = None
     cancel_url: Optional[str] = None
+    trip_protection: bool = False
+    additional_fees: Optional[Dict] = None
+    final_total: float
 
 class BookingConfirmation(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
