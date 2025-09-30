@@ -181,9 +181,14 @@ const Bookings = () => {
   };
 
   const isBookingValid = () => {
-    return bookingData.service_id &&
-           bookingData.booking_date &&
-           bookingData.booking_time;
+    const hasSelectedServices = Object.values(selectedServices).some(selected => selected);
+    return hasSelectedServices && 
+           commonBookingData.booking_date && 
+           commonBookingData.booking_time;
+  };
+
+  const getSelectedServicesCount = () => {
+    return Object.values(selectedServices).filter(selected => selected).length;
   };
 
   return (
