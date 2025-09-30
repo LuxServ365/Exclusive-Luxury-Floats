@@ -330,10 +330,10 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
             return False
             
         items_html = ""
-        total_amount = 0
+        items_subtotal = 0
         for item in booking.items:
             item_total = item['price'] * item['quantity']
-            total_amount += item_total
+            items_subtotal += item_total
             items_html += f"""
             <div style="margin: 10px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
                 <strong>{item['name']}</strong><br>
@@ -344,6 +344,21 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
                 <strong>Subtotal: ${item_total:.2f}</strong>
             </div>
             """
+        
+        # Calculate fee breakdown for email
+        trip_protection_html = f"""
+        <div style="margin: 5px 0;">
+            <span>Trip Protection:</span>
+            <span style="float: right;">${booking.trip_protection_fee:.2f}</span>
+        </div>
+        """ if booking.trip_protection else ""
+        
+        credit_card_fee_html = f"""
+        <div style="margin: 5px 0;">
+            <span>Credit Card Processing Fee:</span>
+            <span style="float: right;">${booking.credit_card_fee:.2f}</span>
+        </div>
+        """ if booking.credit_card_fee > 0 else ""
         
         html_content = f"""
         <html>
