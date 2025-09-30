@@ -343,15 +343,18 @@ Enhanced booking system with cart functionality, multiple payment processors (St
 
   - task: "Add to cart functionality"
     implemented: true
-    working: false
+    working: true
     file: "src/pages/Bookings.js"
-    stuck_count: 1
+    stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
       - working: false
         agent: "testing"
         comment: "❌ CRITICAL ISSUE: Add to cart functionality has intermittent failures. API calls to /api/services and /api/cart/create sometimes fail with 'Failed to fetch' errors. Cart badge shows items added but cart page shows empty. This appears to be a network/API connectivity issue rather than frontend code issue."
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Add to cart functionality is now working correctly! Successfully tested multiple service additions (Crystal Kayak x2, Canoe x1, Luxury Cabana 3hr x1) with total $295.00. Cart badge updates properly showing item count. Items persist in cart and display correctly on cart page. Previous intermittent failures appear to have been resolved."
 
   - task: "Navigation and cart icon"
     implemented: true
