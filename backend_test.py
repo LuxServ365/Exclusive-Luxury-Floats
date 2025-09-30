@@ -860,9 +860,9 @@ class BackendTester:
             return False
     
     def run_all_tests(self):
-        """Run all backend tests"""
-        print("🧪 Starting Enhanced Booking System Backend Tests")
-        print("=" * 60)
+        """Run all backend tests including notification system"""
+        print("🧪 Starting Enhanced Booking System Backend Tests with Notification System")
+        print("=" * 80)
         
         # Core API tests
         if not self.test_api_health():
@@ -889,10 +889,17 @@ class BackendTester:
         # Error handling tests
         self.test_error_handling()
         
+        # NOTIFICATION SYSTEM TESTS - NEW FOCUS
+        print("\n" + "🔔" * 20 + " NOTIFICATION SYSTEM TESTING " + "🔔" * 20)
+        self.test_notification_system_complete_flow()
+        self.test_gmail_smtp_configuration()
+        self.test_telegram_notification_setup()
+        self.test_email_template_content()
+        
         # Summary
-        print("\n" + "=" * 60)
-        print("📊 TEST SUMMARY")
-        print("=" * 60)
+        print("\n" + "=" * 80)
+        print("📊 COMPREHENSIVE TEST SUMMARY")
+        print("=" * 80)
         
         passed = sum(1 for result in self.test_results if result['success'])
         total = len(self.test_results)
@@ -901,6 +908,17 @@ class BackendTester:
         print(f"Passed: {passed}")
         print(f"Failed: {total - passed}")
         print(f"Success Rate: {(passed/total)*100:.1f}%")
+        
+        # Separate notification system results
+        notification_tests = [r for r in self.test_results if 'notification' in r['test'].lower() or 'gmail' in r['test'].lower() or 'telegram' in r['test'].lower() or 'email template' in r['test'].lower()]
+        if notification_tests:
+            notification_passed = sum(1 for result in notification_tests if result['success'])
+            notification_total = len(notification_tests)
+            print(f"\n🔔 NOTIFICATION SYSTEM RESULTS:")
+            print(f"   Notification Tests: {notification_total}")
+            print(f"   Passed: {notification_passed}")
+            print(f"   Failed: {notification_total - notification_passed}")
+            print(f"   Success Rate: {(notification_passed/notification_total)*100:.1f}%")
         
         if total - passed > 0:
             print("\n❌ FAILED TESTS:")
