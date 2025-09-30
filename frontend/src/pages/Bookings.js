@@ -214,10 +214,9 @@ const Bookings = () => {
             {Object.entries(services).map(([serviceId, service]) => (
               <Card 
                 key={serviceId} 
-                className={`pricing-card cursor-pointer transition-all duration-300 ${
-                  selectedService === serviceId ? 'ring-2 ring-teal-500 bg-teal-50' : ''
+                className={`pricing-card transition-all duration-300 ${
+                  selectedServices[serviceId] ? 'ring-2 ring-teal-500 bg-teal-50' : ''
                 } ${serviceId === 'luxury_cabana_4hr' ? 'featured' : ''}`}
-                onClick={() => handleServiceSelect(serviceId)}
                 data-testid={`service-card-${serviceId}`}
               >
                 <CardHeader className="text-center">
@@ -234,7 +233,7 @@ const Bookings = () => {
                   )}
                 </CardHeader>
                 <CardContent>
-                  <ul className="pricing-features space-y-2">
+                  <ul className="pricing-features space-y-2 mb-4">
                     {service.features && service.features.map((feature, index) => (
                       <li key={index} className="flex items-start">
                         <span className="text-teal-600 mr-2">✓</span>
@@ -242,17 +241,60 @@ const Bookings = () => {
                       </li>
                     ))}
                   </ul>
-                  <Button 
-                    className={`w-full mt-6 ${
-                      selectedService === serviceId 
-                        ? 'bg-teal-600 hover:bg-teal-700' 
-                        : 'bg-gray-600 hover:bg-gray-700'
-                    }`}
-                    onClick={() => handleServiceSelect(serviceId)}
-                    data-testid={`select-service-${serviceId}`}
-                  >
-                    {selectedService === serviceId ? 'Selected' : 'Select This Experience'}
-                  </Button>
+                  
+                  {/* Service Selection */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <label className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={selectedServices[serviceId] || false}
+                          onChange={() => handleServiceToggle(serviceId)}
+                          className="w-5 h-5 text-teal-600 border-2 border-gray-300 rounded focus:ring-teal-500"
+                          data-testid={`select-service-${serviceId}`}
+                        />
+                        <span className="font-medium">
+                          {selectedServices[serviceId] ? 'Selected' : 'Select This Service'}
+                        </span>
+                      </label>
+                    </div>
+                    
+                    {/* Quantity Controls */}
+                    {selectedServices[serviceId] && (
+                      <div className="border-t pt-4">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium text-gray-700">Quantity:</span>
+                          <div className="flex items-center space-x-2">
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleQuantityChange(serviceId, (quantities[serviceId] || 1) - 1)}
+                              disabled={(quantities[serviceId] || 1) <= 1}
+                              data-testid={`decrease-${serviceId}`}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <span className="w-12 text-center font-semibold text-lg">
+                              {quantities[serviceId] || 1}
+                            </span>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleQuantityChange(serviceId, (quantities[serviceId] || 1) + 1)}
+                              data-testid={`increase-${serviceId}`}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                        <div className="text-center">
+                          <span className="text-lg font-bold text-teal-600">
+                            Subtotal: ${((quantities[serviceId] || 1) * service.price).toFixed(2)}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             ))}
