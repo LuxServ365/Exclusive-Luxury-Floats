@@ -348,6 +348,9 @@ class BackendTester:
                 self.log_test("POST /api/cart/{cart_id}/checkout (PayPal)", False, "Failed to add item to test cart")
                 return False
             
+            # Calculate expected total
+            expected_total = 75.0  # paddle_board price
+            
             # Test PayPal checkout
             checkout_data = {
                 "customer_info": {
@@ -356,6 +359,7 @@ class BackendTester:
                     "phone": "+1-555-0456"
                 },
                 "payment_method": "paypal",
+                "final_total": expected_total,
                 "success_url": f"{BACKEND_URL}/booking-success",
                 "cancel_url": f"{BACKEND_URL}/cart/{paypal_cart_id}"
             }
