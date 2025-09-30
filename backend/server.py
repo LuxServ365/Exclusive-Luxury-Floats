@@ -749,7 +749,7 @@ async def handle_stripe_checkout(booking: BookingConfirmation, checkout_request:
         cancel_url = checkout_request.cancel_url or f"{os.environ.get('BASE_URL', 'http://localhost:8000')}/cart/{booking.cart_id}"
         
         checkout_session_request = CheckoutSessionRequest(
-            amount=booking.total_amount,
+            amount=booking.final_total,
             currency="usd",
             success_url=success_url,
             cancel_url=cancel_url,
