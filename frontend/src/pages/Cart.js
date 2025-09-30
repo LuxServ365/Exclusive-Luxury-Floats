@@ -103,15 +103,6 @@ const Cart = () => {
   };
 
   const totals = calculateTotals();
-        // Cart not found or expired, create new one
-        localStorage.removeItem('cart_id');
-        createNewCart();
-      }
-    } catch (error) {
-      console.error('Error loading cart:', error);
-      toast.error('Failed to load cart');
-    }
-  };
 
   const updateItemQuantity = async (itemIndex, newQuantity) => {
     if (newQuantity <= 0) {
