@@ -775,7 +775,7 @@ async def handle_stripe_checkout(booking: BookingConfirmation, checkout_request:
             payment_method="stripe",
             payment_provider="stripe",
             session_id=session.session_id,
-            amount=booking.total_amount,
+            amount=booking.final_total,
             currency="usd",
             metadata=checkout_session_request.metadata,
             customer_email=booking.customer_email
