@@ -14,7 +14,8 @@ const API = `${BACKEND_URL}/api`;
 const Cart = () => {
   const [cartId, setCartId] = useState(null);
   const [cartItems, setCartItems] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
+  const [tripProtection, setTripProtection] = useState(false);
   const [loading, setLoading] = useState(false);
   const [customerInfo, setCustomerInfo] = useState({
     name: '',
@@ -23,6 +24,11 @@ const Cart = () => {
   });
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('stripe');
   const navigate = useNavigate();
+
+  // Fee constants
+  const TRIP_PROTECTION_FEE = 5.99;
+  const BAY_COUNTY_TAX_RATE = 0.07; // 7% Bay County, FL tax
+  const CREDIT_CARD_FEE_RATE = 0.03; // 3% credit card processing fee
 
   useEffect(() => {
     // Scroll to top when component mounts
