@@ -641,9 +641,13 @@ class BackendTester:
                 "phone": "+1-850-555-1234"
             }
             
+            # Calculate expected total for paddle board
+            expected_total = 75.0  # paddle_board price
+            
             checkout_data = {
                 "customer_info": customer_data,
                 "payment_method": "stripe",
+                "final_total": expected_total,
                 "success_url": f"{BACKEND_URL}/booking-success",
                 "cancel_url": f"{BACKEND_URL}/cart/{gmail_test_cart_id}"
             }
