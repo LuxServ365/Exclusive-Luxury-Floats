@@ -1286,8 +1286,8 @@ class BackendTester:
             return False
     
     def run_all_tests(self):
-        """Run all backend tests including notification system"""
-        print("🧪 Starting Enhanced Booking System Backend Tests with Notification System")
+        """Run all backend tests including enhanced fee calculation system"""
+        print("🧪 Starting Enhanced Booking System Backend Tests with Fee Calculations")
         print("=" * 80)
         
         # Core API tests
@@ -1315,7 +1315,13 @@ class BackendTester:
         # Error handling tests
         self.test_error_handling()
         
-        # NOTIFICATION SYSTEM TESTS - NEW FOCUS
+        # ENHANCED FEE CALCULATION TESTS - NEW FOCUS
+        print("\n" + "💰" * 20 + " ENHANCED FEE CALCULATION TESTING " + "💰" * 20)
+        self.test_enhanced_fee_calculations()
+        self.test_payment_method_fee_variations()
+        self.test_fee_calculation_edge_cases()
+        
+        # NOTIFICATION SYSTEM TESTS
         print("\n" + "🔔" * 20 + " NOTIFICATION SYSTEM TESTING " + "🔔" * 20)
         self.test_notification_system_complete_flow()
         self.test_gmail_smtp_configuration()
@@ -1334,6 +1340,17 @@ class BackendTester:
         print(f"Passed: {passed}")
         print(f"Failed: {total - passed}")
         print(f"Success Rate: {(passed/total)*100:.1f}%")
+        
+        # Separate fee calculation results
+        fee_tests = [r for r in self.test_results if 'fee' in r['test'].lower() or 'enhanced' in r['test'].lower() or 'payment method' in r['test'].lower() or 'edge case' in r['test'].lower()]
+        if fee_tests:
+            fee_passed = sum(1 for result in fee_tests if result['success'])
+            fee_total = len(fee_tests)
+            print(f"\n💰 FEE CALCULATION RESULTS:")
+            print(f"   Fee Tests: {fee_total}")
+            print(f"   Passed: {fee_passed}")
+            print(f"   Failed: {fee_total - fee_passed}")
+            print(f"   Success Rate: {(fee_passed/fee_total)*100:.1f}%")
         
         # Separate notification system results
         notification_tests = [r for r in self.test_results if 'notification' in r['test'].lower() or 'gmail' in r['test'].lower() or 'telegram' in r['test'].lower() or 'email template' in r['test'].lower()]
