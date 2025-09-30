@@ -426,9 +426,9 @@ const Bookings = () => {
             </div>
           )}
 
-          {!selectedService && (
+          {getSelectedServicesCount() === 0 && (
             <div className="text-center mt-8">
-              <p className="text-gray-600">Select a service above to get started with your booking</p>
+              <p className="text-gray-600">Select one or more services above to get started with your booking</p>
             </div>
           )}
         </div>
