@@ -17,16 +17,16 @@ const API = `${BACKEND_URL}/api`;
 
 const Bookings = () => {
   const [services, setServices] = useState({});
-  const [selectedService, setSelectedService] = useState('');
-  const [bookingData, setBookingData] = useState({
-    service_id: '',
-    quantity: 1,
+  const [selectedServices, setSelectedServices] = useState({}); // Changed to object for multiple services
+  const [quantities, setQuantities] = useState({}); // Track quantities for each service
+  const [commonBookingData, setCommonBookingData] = useState({
     booking_date: null,
     booking_time: '',
     special_requests: ''
   });
   const [loading, setLoading] = useState(false);
   const [cartId, setCartId] = useState(null);
+  const [totalAmount, setTotalAmount] = useState(0);
   const navigate = useNavigate();
 
   // Time slots (7 AM to 8 PM, every 30 minutes)
