@@ -301,16 +301,40 @@ const Bookings = () => {
           </div>
 
           {/* Booking Form */}
-          {selectedService && (
+          {getSelectedServicesCount() > 0 && (
             <div className="max-w-4xl mx-auto">
               <Card className="card" data-testid="booking-form-card">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-3">
                     <Plus className="h-6 w-6" />
-                    Add to Cart - {services[selectedService]?.name}
+                    Add {getSelectedServicesCount()} Service(s) to Cart - Total: ${totalAmount.toFixed(2)}
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-6">
+                  {/* Selected Services Summary */}
+                  <div className="bg-gray-50 p-4 rounded-lg">
+                    <h3 className="font-semibold text-gray-700 mb-3">Selected Services:</h3>
+                    <div className="space-y-2">
+                      {Object.keys(selectedServices)
+                        .filter(serviceId => selectedServices[serviceId])
+                        .map(serviceId => (
+                          <div key={serviceId} className="flex justify-between items-center">
+                            <span className="text-sm">{services[serviceId]?.name}</span>
+                            <span className="text-sm font-semibold">
+                              {quantities[serviceId] || 1} × ${services[serviceId]?.price} = 
+                              ${((quantities[serviceId] || 1) * services[serviceId]?.price).toFixed(2)}
+                            </span>
+                          </div>
+                        ))}
+                      <div className="border-t pt-2 mt-2">
+                        <div className="flex justify-between items-center font-bold text-lg">
+                          <span>Total:</span>
+                          <span className="text-teal-600">${totalAmount.toFixed(2)}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Date Selection */}
                     <div className="space-y-2">
@@ -323,14 +347,14 @@ const Bookings = () => {
                             data-testid="date-picker-trigger"
                           >
                             <CalendarIcon className="mr-2 h-4 w-4" />
-                            {bookingData.booking_date ? format(bookingData.booking_date, 'PPP') : 'Select date'}
+                            {commonBookingData.booking_date ? format(commonBookingData.booking_date, 'PPP') : 'Select date'}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent className="w-auto p-0" align="start">
                           <Calendar
                             mode="single"
-                            selected={bookingData.booking_date}
-                            onSelect={(date) => handleInputChange('booking_date', date)}
+                            selected={commonBookingData.booking_date}
+                            onSelect={(date) => handleCommonDataChange('booking_date', date)}
                             disabled={(date) => date < new Date()}
                             initialFocus
                             data-testid="date-picker-calendar"
@@ -342,7 +366,7 @@ const Bookings = () => {
                     {/* Time Selection */}
                     <div className="space-y-2">
                       <Label data-testid="time-label">Booking Time *</Label>
-                      <Select value={bookingData.booking_time} onValueChange={(value) => handleInputChange('booking_time', value)}>
+                      <Select value={commonBookingData.booking_time} onValueChange={(value) => handleCommonDataChange('booking_time', value)}>
                         <SelectTrigger data-testid="time-select-trigger">
                           <SelectValue placeholder="Select time" />
                         </SelectTrigger>
@@ -355,34 +379,6 @@ const Bookings = () => {
                         </SelectContent>
                       </Select>
                     </div>
-
-                    {/* Quantity Selection */}
-                    <div className="space-y-2">
-                      <Label data-testid="quantity-label">Quantity</Label>
-                      <Select 
-                        value={bookingData.quantity.toString()} 
-                        onValueChange={(value) => handleInputChange('quantity', parseInt(value))}
-                      >
-                        <SelectTrigger data-testid="quantity-select-trigger">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent data-testid="quantity-select-content">
-                          {[1,2,3,4,5,6].map(num => (
-                            <SelectItem key={num} value={num.toString()} data-testid={`quantity-option-${num}`}>
-                              {num} {num === 1 ? 'item' : 'items'}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-
-                    {/* Price Display */}
-                    <div className="space-y-2">
-                      <Label>Total Price</Label>
-                      <div className="text-2xl font-bold text-teal-600">
-                        ${calculatePrice().toFixed(2)}
-                      </div>
-                    </div>
                   </div>
 
                   {/* Special Requests */}
@@ -390,9 +386,9 @@ const Bookings = () => {
                     <Label htmlFor="special_requests" data-testid="requests-label">Special Requests (Optional)</Label>
                     <Textarea
                       id="special_requests"
-                      value={bookingData.special_requests}
-                      onChange={(e) => handleInputChange('special_requests', e.target.value)}
-                      placeholder="Any special requests or requirements?"
+                      value={commonBookingData.special_requests}
+                      onChange={(e) => handleCommonDataChange('special_requests', e.target.value)}
+                      placeholder="Any special requests or requirements for your Gulf Float experience?"
                       rows={3}
                       data-testid="requests-textarea"
                     />
@@ -407,7 +403,7 @@ const Bookings = () => {
                       data-testid="add-to-cart-btn"
                     >
                       <ShoppingCart className="h-4 w-4" />
-                      {loading ? 'Adding to Cart...' : `Add to Cart - $${calculatePrice().toFixed(2)}`}
+                      {loading ? 'Adding to Cart...' : `Add ${getSelectedServicesCount()} Service(s) to Cart - $${totalAmount.toFixed(2)}`}
                     </Button>
 
                     <Button 
@@ -422,8 +418,8 @@ const Bookings = () => {
                   </div>
 
                   <div className="text-sm text-gray-500 text-center">
-                    You can add multiple items to your cart before checkout. 
-                    Mix and match different services and time slots!
+                    All selected services will share the same date and time. 
+                    You can add different time slots by creating separate bookings.
                   </div>
                 </CardContent>
               </Card>
