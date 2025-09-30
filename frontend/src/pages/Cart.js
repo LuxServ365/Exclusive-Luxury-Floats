@@ -124,9 +124,6 @@ const Cart = () => {
     updatedItems[itemIndex].quantity = newQuantity;
     updatedItems[itemIndex].subtotal = updatedItems[itemIndex].price * newQuantity;
     setCartItems(updatedItems);
-    
-    const newTotal = updatedItems.reduce((sum, item) => sum + item.subtotal, 0);
-    setTotalAmount(newTotal);
   };
 
   const removeItem = async (itemIndex) => {
