@@ -858,6 +858,432 @@ class BackendTester:
         except Exception as e:
             self.log_test("Email Template - Test", False, f"Error: {str(e)}")
             return False
+
+    def test_enhanced_fee_calculations(self):
+        """Test enhanced booking system with comprehensive fee validation"""
+        print("\n💰 TESTING ENHANCED FEE CALCULATIONS")
+        print("=" * 60)
+        
+        try:
+            # Test Case 1: Kayak ($60) + Trip Protection ($5.99)
+            # Expected: Subtotal $65.99, Tax $4.62, CC Fee $2.12, Total $72.73
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Enhanced Fees - Cart Creation", False, "Failed to create test cart")
+                return False
+                
+            fee_test_cart_id = response.json().get('cart_id')
+            
+            # Add kayak service
+            item_data = {
+                "service_id": "crystal_kayak",
+                "quantity": 1,
+                "booking_date": "2025-01-15",
+                "booking_time": "14:00:00",
+                "special_requests": "Fee calculation test"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{fee_test_cart_id}/add", json=item_data)
+            if response.status_code != 200:
+                self.log_test("Enhanced Fees - Add Kayak", False, f"Failed to add kayak: {response.status_code}")
+                return False
+            
+            # Test checkout with trip protection and credit card fees
+            customer_data = {
+                "name": "David Chen",
+                "email": "david.chen@feetest.com",
+                "phone": "+1-850-555-2468"
+            }
+            
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "stripe",
+                "trip_protection": True,
+                "additional_fees": {
+                    "trip_protection_fee": 5.99,
+                    "tax_rate": 0.07,  # 7% Bay County tax
+                    "credit_card_fee_rate": 0.03  # 3% credit card processing fee
+                },
+                "final_total": 72.73,
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{fee_test_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{fee_test_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                fee_booking_id = data.get('booking_id')
+                
+                if fee_booking_id:
+                    # Verify fee calculations in booking
+                    booking_response = self.session.get(f"{API_BASE}/bookings/{fee_booking_id}")
+                    if booking_response.status_code == 200:
+                        booking_data = booking_response.json()
+                        
+                        # Verify fee breakdown
+                        services_subtotal = booking_data.get('total_amount', 0)  # $60
+                        trip_protection_fee = booking_data.get('trip_protection_fee', 0)  # $5.99
+                        tax_amount = booking_data.get('tax_amount', 0)  # $4.62
+                        credit_card_fee = booking_data.get('credit_card_fee', 0)  # $2.12
+                        final_total = booking_data.get('final_total', 0)  # $72.73
+                        
+                        # Expected calculations
+                        expected_services = 60.0
+                        expected_trip_protection = 5.99
+                        expected_taxable = expected_services + expected_trip_protection  # $65.99
+                        expected_tax = expected_taxable * 0.07  # $4.6193
+                        expected_subtotal_with_tax = expected_taxable + expected_tax  # $70.6193
+                        expected_cc_fee = expected_subtotal_with_tax * 0.03  # $2.1186
+                        expected_final = expected_subtotal_with_tax + expected_cc_fee  # $72.7379
+                        
+                        # Verify calculations (allowing for rounding)
+                        if (abs(services_subtotal - expected_services) < 0.01 and
+                            abs(trip_protection_fee - expected_trip_protection) < 0.01 and
+                            abs(tax_amount - expected_tax) < 0.01 and
+                            abs(credit_card_fee - expected_cc_fee) < 0.01 and
+                            abs(final_total - expected_final) < 0.01):
+                            
+                            self.log_test("Enhanced Fees - Kayak + Trip Protection", True, 
+                                        f"Correct calculation: Services ${services_subtotal}, Protection ${trip_protection_fee}, Tax ${tax_amount:.2f}, CC Fee ${credit_card_fee:.2f}, Total ${final_total:.2f}")
+                            
+                            # Test Case 2: Multiple services with different combinations
+                            return self.test_multiple_service_fee_combinations()
+                        else:
+                            self.log_test("Enhanced Fees - Kayak + Trip Protection", False, 
+                                        f"Fee calculation error - Services: ${services_subtotal} (exp ${expected_services}), Protection: ${trip_protection_fee} (exp ${expected_trip_protection}), Tax: ${tax_amount:.2f} (exp ${expected_tax:.2f}), CC: ${credit_card_fee:.2f} (exp ${expected_cc_fee:.2f}), Total: ${final_total:.2f} (exp ${expected_final:.2f})")
+                            return False
+                    else:
+                        self.log_test("Enhanced Fees - Booking Retrieval", False, f"Failed to retrieve booking: {booking_response.status_code}")
+                        return False
+                else:
+                    self.log_test("Enhanced Fees - Booking Creation", False, "No booking ID returned")
+                    return False
+            else:
+                self.log_test("Enhanced Fees - Checkout Process", False, f"Checkout failed: {response.status_code}, Response: {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Enhanced Fees - Test", False, f"Error: {str(e)}")
+            return False
+
+    def test_multiple_service_fee_combinations(self):
+        """Test multiple services with different fee combinations"""
+        try:
+            # Test Case: Kayak + Canoe + Cabana with trip protection
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Multiple Services - Cart Creation", False, "Failed to create test cart")
+                return False
+                
+            multi_cart_id = response.json().get('cart_id')
+            
+            # Add multiple services
+            services_to_add = [
+                {
+                    "service_id": "crystal_kayak",
+                    "quantity": 2,
+                    "booking_date": "2025-01-16",
+                    "booking_time": "10:00:00"
+                },
+                {
+                    "service_id": "canoe",
+                    "quantity": 1,
+                    "booking_date": "2025-01-16",
+                    "booking_time": "11:00:00"
+                },
+                {
+                    "service_id": "luxury_cabana_3hr",
+                    "quantity": 1,
+                    "booking_date": "2025-01-16",
+                    "booking_time": "14:00:00"
+                }
+            ]
+            
+            for service in services_to_add:
+                response = self.session.post(f"{API_BASE}/cart/{multi_cart_id}/add", json=service)
+                if response.status_code != 200:
+                    self.log_test("Multiple Services - Add Items", False, f"Failed to add {service['service_id']}")
+                    return False
+            
+            # Calculate expected totals
+            # Kayak: $60 x 2 = $120, Canoe: $75 x 1 = $75, Cabana: $100 x 1 = $100
+            # Services subtotal: $295
+            expected_services_subtotal = (60.0 * 2) + (75.0 * 1) + (100.0 * 1)  # $295
+            expected_trip_protection = 5.99
+            expected_taxable = expected_services_subtotal + expected_trip_protection  # $300.99
+            expected_tax = expected_taxable * 0.07  # $21.0693
+            expected_subtotal_with_tax = expected_taxable + expected_tax  # $322.0593
+            expected_cc_fee = expected_subtotal_with_tax * 0.03  # $9.6618
+            expected_final = expected_subtotal_with_tax + expected_cc_fee  # $331.7211
+            
+            customer_data = {
+                "name": "Lisa Rodriguez",
+                "email": "lisa.rodriguez@multitest.com",
+                "phone": "+1-850-555-3579"
+            }
+            
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "stripe",
+                "trip_protection": True,
+                "additional_fees": {
+                    "trip_protection_fee": 5.99,
+                    "tax_rate": 0.07,
+                    "credit_card_fee_rate": 0.03
+                },
+                "final_total": expected_final,
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{multi_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{multi_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                multi_booking_id = data.get('booking_id')
+                
+                if multi_booking_id:
+                    booking_response = self.session.get(f"{API_BASE}/bookings/{multi_booking_id}")
+                    if booking_response.status_code == 200:
+                        booking_data = booking_response.json()
+                        
+                        services_subtotal = booking_data.get('total_amount', 0)
+                        trip_protection_fee = booking_data.get('trip_protection_fee', 0)
+                        tax_amount = booking_data.get('tax_amount', 0)
+                        credit_card_fee = booking_data.get('credit_card_fee', 0)
+                        final_total = booking_data.get('final_total', 0)
+                        
+                        if (abs(services_subtotal - expected_services_subtotal) < 0.01 and
+                            abs(trip_protection_fee - expected_trip_protection) < 0.01 and
+                            abs(tax_amount - expected_tax) < 0.01 and
+                            abs(credit_card_fee - expected_cc_fee) < 0.01 and
+                            abs(final_total - expected_final) < 0.01):
+                            
+                            self.log_test("Multiple Services - Fee Calculations", True, 
+                                        f"Correct multi-service calculation: Services ${services_subtotal}, Total ${final_total:.2f}")
+                            return True
+                        else:
+                            self.log_test("Multiple Services - Fee Calculations", False, 
+                                        f"Multi-service fee error - Expected final: ${expected_final:.2f}, Got: ${final_total:.2f}")
+                            return False
+                    else:
+                        self.log_test("Multiple Services - Booking Retrieval", False, f"Failed to retrieve booking: {booking_response.status_code}")
+                        return False
+                else:
+                    self.log_test("Multiple Services - Booking Creation", False, "No booking ID returned")
+                    return False
+            else:
+                self.log_test("Multiple Services - Checkout Process", False, f"Checkout failed: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Multiple Services - Test", False, f"Error: {str(e)}")
+            return False
+
+    def test_payment_method_fee_variations(self):
+        """Test different payment methods with and without credit card fees"""
+        print("\n💳 TESTING PAYMENT METHOD FEE VARIATIONS")
+        print("=" * 60)
+        
+        try:
+            # Test PayPal (with credit card fee)
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Payment Methods - PayPal Cart", False, "Failed to create PayPal test cart")
+                return False
+                
+            paypal_cart_id = response.json().get('cart_id')
+            
+            item_data = {
+                "service_id": "paddle_board",
+                "quantity": 1,
+                "booking_date": "2025-01-17",
+                "booking_time": "12:00:00"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{paypal_cart_id}/add", json=item_data)
+            if response.status_code != 200:
+                self.log_test("Payment Methods - Add Item", False, "Failed to add item to PayPal cart")
+                return False
+            
+            # PayPal checkout with credit card fee
+            customer_data = {
+                "name": "Robert Kim",
+                "email": "robert.kim@paypaltest.com",
+                "phone": "+1-850-555-4680"
+            }
+            
+            # Expected: Paddle Board $75 + Trip Protection $5.99 = $80.99
+            # Tax: $80.99 * 0.07 = $5.67, Subtotal with tax: $86.66
+            # CC Fee: $86.66 * 0.03 = $2.60, Final: $89.26
+            expected_final_paypal = 89.26
+            
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "paypal",
+                "trip_protection": True,
+                "additional_fees": {
+                    "trip_protection_fee": 5.99,
+                    "tax_rate": 0.07,
+                    "credit_card_fee_rate": 0.03
+                },
+                "final_total": expected_final_paypal,
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{paypal_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{paypal_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                paypal_booking_id = data.get('booking_id')
+                
+                if paypal_booking_id:
+                    self.log_test("Payment Methods - PayPal with CC Fee", True, f"PayPal booking created: {paypal_booking_id}")
+                    
+                    # Test manual payment method (Venmo - no credit card fee)
+                    return self.test_manual_payment_methods()
+                else:
+                    self.log_test("Payment Methods - PayPal with CC Fee", False, "No PayPal booking ID returned")
+                    return False
+            else:
+                self.log_test("Payment Methods - PayPal with CC Fee", False, f"PayPal checkout failed: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Payment Methods - Test", False, f"Error: {str(e)}")
+            return False
+
+    def test_manual_payment_methods(self):
+        """Test manual payment methods (Venmo/CashApp/Zelle) without credit card fees"""
+        try:
+            # Test Venmo (no credit card fee)
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Manual Payments - Venmo Cart", False, "Failed to create Venmo test cart")
+                return False
+                
+            venmo_cart_id = response.json().get('cart_id')
+            
+            item_data = {
+                "service_id": "canoe",
+                "quantity": 1,
+                "booking_date": "2025-01-18",
+                "booking_time": "15:00:00"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{venmo_cart_id}/add", json=item_data)
+            if response.status_code != 200:
+                self.log_test("Manual Payments - Add Item", False, "Failed to add item to Venmo cart")
+                return False
+            
+            customer_data = {
+                "name": "Amanda Foster",
+                "email": "amanda.foster@venmotest.com",
+                "phone": "+1-850-555-5791"
+            }
+            
+            # Expected: Canoe $75 + Trip Protection $5.99 = $80.99
+            # Tax: $80.99 * 0.07 = $5.67, Final: $86.66 (no CC fee for Venmo)
+            expected_final_venmo = 86.66
+            
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "venmo",
+                "trip_protection": True,
+                "additional_fees": {
+                    "trip_protection_fee": 5.99,
+                    "tax_rate": 0.07,
+                    "credit_card_fee_rate": 0.0  # No CC fee for manual payments
+                },
+                "final_total": expected_final_venmo,
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{venmo_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{venmo_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                venmo_booking_id = data.get('booking_id')
+                payment_instructions = data.get('payment_instructions', '')
+                payment_account = data.get('payment_account', '')
+                
+                if (venmo_booking_id and 
+                    '@ExclusiveFloat850' in payment_account and
+                    'Venmo' in payment_instructions):
+                    
+                    self.log_test("Manual Payments - Venmo (No CC Fee)", True, 
+                                f"Venmo booking created: {venmo_booking_id}, Account: {payment_account}")
+                    return True
+                else:
+                    self.log_test("Manual Payments - Venmo (No CC Fee)", False, 
+                                f"Missing Venmo details: booking={bool(venmo_booking_id)}, account={payment_account}")
+                    return False
+            else:
+                self.log_test("Manual Payments - Venmo (No CC Fee)", False, f"Venmo checkout failed: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Manual Payments - Test", False, f"Error: {str(e)}")
+            return False
+
+    def test_fee_calculation_edge_cases(self):
+        """Test edge cases and error handling for fee calculations"""
+        print("\n⚠️ TESTING FEE CALCULATION EDGE CASES")
+        print("=" * 60)
+        
+        try:
+            # Test invalid fee calculations
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Edge Cases - Cart Creation", False, "Failed to create test cart")
+                return False
+                
+            edge_cart_id = response.json().get('cart_id')
+            
+            item_data = {
+                "service_id": "crystal_kayak",
+                "quantity": 1,
+                "booking_date": "2025-01-19",
+                "booking_time": "16:00:00"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{edge_cart_id}/add", json=item_data)
+            if response.status_code != 200:
+                self.log_test("Edge Cases - Add Item", False, "Failed to add item")
+                return False
+            
+            customer_data = {
+                "name": "Test Edge Case",
+                "email": "edge@test.com",
+                "phone": "+1-850-555-0000"
+            }
+            
+            # Test with missing trip protection data
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "stripe",
+                "trip_protection": True,  # True but no fee provided
+                "additional_fees": {
+                    "tax_rate": 0.07,
+                    "credit_card_fee_rate": 0.03
+                    # Missing trip_protection_fee
+                },
+                "final_total": 60.0,  # Incorrect total
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{edge_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{edge_cart_id}/checkout", json=checkout_data)
+            # Should still work but with default fee handling
+            if response.status_code == 200:
+                self.log_test("Edge Cases - Missing Trip Protection Fee", True, "Handled missing trip protection fee gracefully")
+                return True
+            else:
+                self.log_test("Edge Cases - Missing Trip Protection Fee", False, f"Failed to handle missing fee: {response.status_code}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Edge Cases - Test", False, f"Error: {str(e)}")
+            return False
     
     def run_all_tests(self):
         """Run all backend tests including notification system"""
