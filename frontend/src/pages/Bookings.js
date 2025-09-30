@@ -198,8 +198,15 @@ const Bookings = () => {
           <div className="section-header">
             <h1 className="section-title" data-testid="booking-title">Select Your Experience</h1>
             <p className="section-subtitle" data-testid="booking-subtitle">
-              Choose from our premium Gulf Float services and create unforgettable memories
+              Choose multiple services and create your perfect Gulf Float adventure
             </p>
+            {getSelectedServicesCount() > 0 && (
+              <div className="mt-4 p-4 bg-teal-50 border border-teal-200 rounded-lg">
+                <p className="text-teal-700 font-semibold">
+                  {getSelectedServicesCount()} service(s) selected • Total: ${totalAmount.toFixed(2)}
+                </p>
+              </div>
+            )}
           </div>
 
           {/* Services Grid */}
