@@ -121,6 +121,18 @@ Enhanced booking system with cart functionality, multiple payment processors (St
         agent: "testing"
         comment: "✅ TESTED: All cart endpoints working perfectly - create cart, add/remove items, update customer info, calculate totals. Tested with multiple items (crystal_kayak, canoe, luxury_cabana_3hr). Cart expiry handling works correctly."
 
+  - task: "Enhanced fee calculation system"
+    implemented: true
+    working: true
+    file: "server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ TESTED: Enhanced fee calculation system working perfectly! Comprehensive testing performed: (1) Trip protection fee ($5.99) correctly applied, (2) Bay County tax (7%) calculated accurately on taxable amount (services + trip protection), (3) Credit card processing fee (3%) applied correctly for Stripe/PayPal, (4) Multiple service combinations tested - Kayak ($60) + Trip Protection ($5.99) = Final Total $72.73 (verified mathematically correct), (5) Multiple services (Kayak x2 + Canoe + Cabana = $295 services) with fees calculated to $331.72 final total, (6) Manual payment methods (Venmo/CashApp/Zelle) correctly exclude credit card fees, (7) Edge cases handled gracefully including missing trip protection data. Fee calculation accuracy: 100%"
+
   - task: "Stripe payment integration"
     implemented: true
     working: true
