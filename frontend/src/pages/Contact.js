@@ -179,20 +179,27 @@ const Contact = () => {
                 <CardContent>
                   <div className="space-y-3">
                     <div className="flex justify-between">
-                      <span className="text-gray-700">Monday - Friday</span>
-                      <span className="font-semibold">10:00 AM - 10:00 PM</span>
+                      <span className="text-gray-700">Monday - Thursday</span>
+                      <span className="font-semibold">7:00 AM - 8:00 PM</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-700">Saturday - Sunday</span>
-                      <span className="font-semibold">10:00 AM - 10:00 PM</span>
+                      <span className="text-gray-700">Friday</span>
+                      <span className="font-semibold">7:00 AM - 9:00 PM</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-700">Holidays</span>
-                      <span className="font-semibold">10:00 AM - 10:00 PM</span>
+                      <span className="text-gray-700">Saturday</span>
+                      <span className="font-semibold">6:00 AM - 9:00 PM</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-700">Sunday</span>
+                      <span className="font-semibold">6:00 AM - 8:00 PM</span>
                     </div>
                     <div className="mt-4 p-3 bg-teal-50 rounded-lg border border-teal-200">
                       <p className="text-sm text-teal-700 font-medium">
-                        ⭐ Special Note: Sunrise tours available upon request
+                        ✨ Available every 30 minutes during operating hours
+                      </p>
+                      <p className="text-sm text-teal-600 mt-1">
+                        🌅 Early sunrise tours • 🌅 LED night adventures • 🌊 Extended weekend hours
                       </p>
                     </div>
                   </div>
