@@ -123,11 +123,6 @@ const Bookings = () => {
     setCommonBookingData(prev => ({ ...prev, [field]: value }));
   };
 
-  const calculatePrice = () => {
-    if (!selectedService || !services[selectedService]) return 0;
-    return services[selectedService].price * bookingData.quantity;
-  };
-
   const handleAddToCart = async () => {
     if (!cartId) {
       toast.error('Cart not initialized. Please refresh the page.');
@@ -135,41 +130,47 @@ const Bookings = () => {
     }
 
     if (!isBookingValid()) {
-      toast.error('Please fill in all required fields');
+      toast.error('Please select services and fill in all required fields');
       return;
     }
 
     setLoading(true);
+    
     try {
-      const response = await fetch(`${API}/cart/${cartId}/add`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          service_id: bookingData.service_id,
-          quantity: bookingData.quantity,
-          booking_date: bookingData.booking_date.toISOString().split('T')[0],
-          booking_time: bookingData.booking_time + ':00',
-          special_requests: bookingData.special_requests
-        })
-      });
-
-      if (response.ok) {
-        toast.success('Added to cart!');
-        // Reset form but keep service selected
-        setBookingData({
-          service_id: selectedService,
-          quantity: 1,
-          booking_date: null,
-          booking_time: '',
-          special_requests: ''
+      // Add each selected service to cart
+      const selectedServiceIds = Object.keys(selectedServices).filter(id => selectedServices[id]);
+      
+      for (const serviceId of selectedServiceIds) {
+        const quantity = quantities[serviceId] || 1;
+        
+        const response = await fetch(`${API}/cart/${cartId}/add`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            service_id: serviceId,
+            quantity: quantity,
+            booking_date: commonBookingData.booking_date.toISOString().split('T')[0],
+            booking_time: commonBookingData.booking_time + ':00',
+            special_requests: commonBookingData.special_requests
+          })
         });
-      } else {
-        const errorData = await response.json();
-        toast.error(errorData.detail || 'Failed to add to cart');
+
+        if (!response.ok) {
+          const errorData = await response.json();
+          toast.error(`Failed to add ${services[serviceId]?.name}: ${errorData.detail}`);
+          return;
+        }
       }
+      
+      toast.success(`Added ${selectedServiceIds.length} service(s) to cart!`);
+      
+      // Reset selections but keep common data
+      setSelectedServices({});
+      setQuantities({});
+      
     } catch (error) {
       console.error('Error adding to cart:', error);
-      toast.error('Failed to add to cart. Please try again.');
+      toast.error('Failed to add services to cart. Please try again.');
     } finally {
       setLoading(false);
     }
