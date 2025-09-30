@@ -380,7 +380,19 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
                         <p><strong>Items Booked:</strong></p>
                         {items_html}
                         <div style="border-top: 2px solid #1e7b85; padding-top: 15px; margin-top: 15px;">
-                            <p><strong style="font-size: 18px;">Total Amount: ${total_amount:.2f}</strong></p>
+                            <div style="margin: 5px 0;">
+                                <span>Services Subtotal:</span>
+                                <span style="float: right;">${items_subtotal:.2f}</span>
+                            </div>
+                            {trip_protection_html}
+                            <div style="margin: 5px 0;">
+                                <span>Bay County Tax (7%):</span>
+                                <span style="float: right;">${booking.tax_amount:.2f}</span>
+                            </div>
+                            {credit_card_fee_html}
+                            <div style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;">
+                                <p><strong style="font-size: 18px;">Final Total: ${booking.final_total:.2f}</strong></p>
+                            </div>
                         </div>
                     </div>
                     
