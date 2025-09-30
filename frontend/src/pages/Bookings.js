@@ -8,7 +8,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Calendar } from '../components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '../components/ui/popover';
 import { toast } from 'sonner';
-import { CalendarIcon, Clock, Users, DollarSign, ShoppingCart, Plus } from 'lucide-react';
+import { CalendarIcon, Clock, Users, DollarSign, ShoppingCart, Plus, Minus } from 'lucide-react';
 import { format } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
