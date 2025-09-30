@@ -13,6 +13,9 @@ const AdminDashboard = () => {
   const [filter, setFilter] = useState('all'); // all, pending, confirmed, completed
 
   useEffect(() => {
+    // Scroll to top when component mounts
+    window.scrollTo(0, 0);
+    
     fetchBookings();
   }, []);
 
