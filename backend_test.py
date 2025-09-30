@@ -818,9 +818,13 @@ class BackendTester:
                 "phone": "+1-850-555-4567"
             }
             
+            # Calculate expected total for template test
+            expected_total = 60.0 + 299.0  # crystal_kayak + luxury_cabana_4hr
+            
             checkout_data = {
                 "customer_info": customer_data,
                 "payment_method": "stripe",
+                "final_total": expected_total,
                 "success_url": f"{BACKEND_URL}/booking-success",
                 "cancel_url": f"{BACKEND_URL}/cart/{template_cart_id}"
             }
