@@ -366,18 +366,19 @@ const Bookings = () => {
                     {/* Time Selection */}
                     <div className="space-y-2">
                       <Label data-testid="time-label">Booking Time *</Label>
-                      <Select value={commonBookingData.booking_time} onValueChange={(value) => handleCommonDataChange('booking_time', value)}>
-                        <SelectTrigger data-testid="time-select-trigger">
-                          <SelectValue placeholder="Select time" />
-                        </SelectTrigger>
-                        <SelectContent data-testid="time-select-content">
-                          {timeSlots.map(time => (
-                            <SelectItem key={time} value={time} data-testid={`time-option-${time}`}>
-                              {format(new Date(`2000-01-01T${time}:00`), 'h:mm a')}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                      <select 
+                        value={commonBookingData.booking_time} 
+                        onChange={(e) => handleCommonDataChange('booking_time', e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent"
+                        data-testid="time-select-trigger"
+                      >
+                        <option value="" disabled>Select time</option>
+                        {timeSlots.map(time => (
+                          <option key={time} value={time} data-testid={`time-option-${time}`}>
+                            {format(new Date(`2000-01-01T${time}:00`), 'h:mm a')}
+                          </option>
+                        ))}
+                      </select>
                     </div>
                   </div>
 
