@@ -26,7 +26,7 @@ const Waiver = () => {
     additional_notes: ''
   });
   const [guests, setGuests] = useState([]);
-  const canvasRefs = useRef([]);
+  const signatureRefs = useRef([]);
 
   useEffect(() => {
     // Scroll to top when component mounts
