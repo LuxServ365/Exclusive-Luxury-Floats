@@ -1626,6 +1626,17 @@ class BackendTester:
             print(f"   Failed: {notification_total - notification_passed}")
             print(f"   Success Rate: {(notification_passed/notification_total)*100:.1f}%")
         
+        # Separate waiver system results
+        waiver_tests = [r for r in self.test_results if 'waiver' in r['test'].lower()]
+        if waiver_tests:
+            waiver_passed = sum(1 for result in waiver_tests if result['success'])
+            waiver_total = len(waiver_tests)
+            print(f"\n📋 WAIVER SYSTEM RESULTS:")
+            print(f"   Waiver Tests: {waiver_total}")
+            print(f"   Passed: {waiver_passed}")
+            print(f"   Failed: {waiver_total - waiver_passed}")
+            print(f"   Success Rate: {(waiver_passed/waiver_total)*100:.1f}%")
+        
         if total - passed > 0:
             print("\n❌ FAILED TESTS:")
             for result in self.test_results:
