@@ -77,86 +77,26 @@ const Waiver = () => {
     }
   };
 
-  const setupCanvas = (canvas, guestIndex, type) => {
-    if (!canvas) return;
+  const handleSignatureEnd = (guestIndex, type) => {
+    const refIndex = type === 'participant' ? guestIndex * 2 : (guestIndex * 2) + 1;
+    const sigCanvas = signatureRefs.current[refIndex]?.current;
     
-    const ctx = canvas.getContext('2d');
-    canvas.width = canvas.offsetWidth;
-    canvas.height = canvas.offsetHeight;
-    
-    let isDrawing = false;
-    
-    const startDrawing = (e) => {
-      isDrawing = true;
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      ctx.beginPath();
-      ctx.moveTo(x, y);
-    };
-    
-    const draw = (e) => {
-      if (!isDrawing) return;
-      const rect = canvas.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      ctx.lineTo(x, y);
-      ctx.stroke();
-    };
-    
-    const stopDrawing = () => {
-      if (!isDrawing) return;
-      isDrawing = false;
-      
-      // Save signature data
-      const signatureData = canvas.toDataURL();
+    if (sigCanvas && !sigCanvas.isEmpty()) {
+      const signatureData = sigCanvas.toDataURL();
       setGuests(prev => prev.map(guest => 
         guest.id === guestIndex + 1
           ? { ...guest, [`${type}Signature`]: signatureData }
           : guest
       ));
-    };
-    
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
-    
-    // Touch events for mobile
-    canvas.addEventListener('touchstart', (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const mouseEvent = new MouseEvent('mousedown', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      canvas.dispatchEvent(mouseEvent);
-    });
-    
-    canvas.addEventListener('touchmove', (e) => {
-      e.preventDefault();
-      const touch = e.touches[0];
-      const mouseEvent = new MouseEvent('mousemove', {
-        clientX: touch.clientX,
-        clientY: touch.clientY
-      });
-      canvas.dispatchEvent(mouseEvent);
-    });
-    
-    canvas.addEventListener('touchend', (e) => {
-      e.preventDefault();
-      const mouseEvent = new MouseEvent('mouseup', {});
-      canvas.dispatchEvent(mouseEvent);
-    });
+    }
   };
 
   const clearSignature = (guestIndex, type) => {
-    const canvasIndex = type === 'participant' ? guestIndex * 2 : (guestIndex * 2) + 1;
-    const canvas = canvasRefs.current[canvasIndex]?.current;
-    if (canvas) {
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      
+    const refIndex = type === 'participant' ? guestIndex * 2 : (guestIndex * 2) + 1;
+    const sigCanvas = signatureRefs.current[refIndex]?.current;
+    
+    if (sigCanvas) {
+      sigCanvas.clear();
       setGuests(prev => prev.map(guest => 
         guest.id === guestIndex + 1
           ? { ...guest, [`${type}Signature`]: null }
