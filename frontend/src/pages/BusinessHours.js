@@ -71,8 +71,13 @@ const BusinessHours = () => {
                 <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <h4 className="font-semibold text-blue-800 mb-2">Booking Availability</h4>
                   <p className="text-sm text-blue-700">
-                    Customers can book services hourly during operating hours (9 AM - 11 PM daily). 
-                    Each booking slot is available on the hour for all services.
+                    ✨ Last reservation 1 hour prior to closing
+                  </p>
+                </div>
+
+                <div className="mt-4 p-4 bg-gradient-to-r from-orange-50 to-blue-50 border border-orange-200 rounded-lg">
+                  <p className="text-sm text-gray-700 text-center">
+                    🌅 Early sunrise tours • 🌅 LED night adventures • 🎉 Special event reservations available
                   </p>
                 </div>
               </CardContent>
