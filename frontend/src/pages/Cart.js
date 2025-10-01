@@ -171,6 +171,17 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
+    // Check if waiver is completed first
+    if (!waiverCompleted) {
+      // Save customer info before going to waiver
+      if (customerInfo.name && customerInfo.email) {
+        await updateCustomerInfo();
+      }
+      toast.info('Please complete the waiver before proceeding to payment');
+      navigate('/waiver');
+      return;
+    }
+
     if (!customerInfo.name || !customerInfo.email) {
       toast.error('Please provide your name and email');
       return;
