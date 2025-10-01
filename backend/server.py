@@ -204,13 +204,21 @@ class BookingConfirmation(BaseModel):
     trip_protection_fee: float = 0.0
     tax_amount: float = 0.0
     credit_card_fee: float = 0.0
-    final_total: float
+    final_total: Optional[float] = None  # Make optional for backward compatibility
     payment_method: str
     payment_status: str = "pending"
     payment_session_id: Optional[str] = None
     booking_reference: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: str = "pending"
+    
+    @property
+    def computed_final_total(self) -> float:
+        """Compute final total for backward compatibility with old bookings"""
+        if self.final_total is not None:
+            return self.final_total
+        # For old bookings without enhanced fees, return total_amount
+        return self.total_amount
 
 class PaymentTransaction(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
