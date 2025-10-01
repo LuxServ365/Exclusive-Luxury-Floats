@@ -117,10 +117,6 @@ const BusinessHours = () => {
                   <h4 className="font-semibold text-gray-700 mb-3">Peak Times</h4>
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Sunrise Tours:</span>
-                      <span className="font-medium">6:00 AM - 8:00 AM</span>
-                    </div>
-                    <div className="flex justify-between">
                       <span className="text-gray-600">Morning Peak:</span>
                       <span className="font-medium">9:00 AM - 12:00 PM</span>
                     </div>
@@ -129,8 +125,12 @@ const BusinessHours = () => {
                       <span className="font-medium">1:00 PM - 5:00 PM</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-gray-600">Sunset Tours:</span>
-                      <span className="font-medium">6:00 PM - 8:00 PM</span>
+                      <span className="text-gray-600">Evening:</span>
+                      <span className="font-medium">6:00 PM - 9:00 PM</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-gray-600">Late Night:</span>
+                      <span className="font-medium">10:00 PM - 11:00 PM</span>
                     </div>
                   </div>
                 </div>
