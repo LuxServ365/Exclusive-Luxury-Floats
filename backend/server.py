@@ -835,10 +835,14 @@ async def get_all_waivers():
 @api_router.post("/cart/{cart_id}/checkout")
 async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, background_tasks: BackgroundTasks):
     """Checkout cart and create booking"""
-    if cart_id not in carts_storage:
+    # Get cart from MongoDB
+    cart_data = await db.carts.find_one({"id": cart_id})
+    if not cart_data:
         raise HTTPException(status_code=404, detail="Cart not found")
     
-    cart = carts_storage[cart_id]
+    # Parse cart from MongoDB
+    parsed_cart = parse_from_mongo(cart_data)
+    cart = Cart(**parsed_cart)
     if not cart.items:
         raise HTTPException(status_code=400, detail="Cart is empty")
     
