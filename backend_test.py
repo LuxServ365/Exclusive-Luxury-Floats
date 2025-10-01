@@ -2042,8 +2042,32 @@ class BackendTester:
 if __name__ == "__main__":
     tester = BackendTester()
     
-    # Run critical fix validation tests based on review request
-    passed, failed, critical_failures = tester.run_critical_fix_validation_tests()
+    # Run cart investigation specifically for the review request
+    print("🔍 CART NOT FOUND ERROR INVESTIGATION")
+    print("=" * 60)
+    tester.test_cart_not_found_investigation()
     
-    # Exit with appropriate code
+    # Also run basic cart tests
+    print("\n📋 BASIC CART FUNCTIONALITY TESTS")
+    print("=" * 60)
+    tester.test_api_health()
+    tester.test_get_services()
+    tester.test_create_cart()
+    tester.test_add_item_to_cart()
+    tester.test_get_cart_with_items()
+    
+    # Print summary
+    passed = sum(1 for result in tester.test_results if result['success'])
+    failed = sum(1 for result in tester.test_results if not result['success'])
+    
+    print(f"\n📊 CART INVESTIGATION SUMMARY")
+    print(f"✅ PASSED: {passed}")
+    print(f"❌ FAILED: {failed}")
+    
+    if failed > 0:
+        print("\n❌ FAILED TESTS:")
+        for result in tester.test_results:
+            if not result['success']:
+                print(f"   • {result['test']}: {result['details']}")
+    
     sys.exit(0 if failed == 0 else 1)
