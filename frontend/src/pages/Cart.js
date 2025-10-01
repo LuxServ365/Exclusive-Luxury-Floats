@@ -529,8 +529,27 @@ const Cart = () => {
                       onClick={handleCheckout}
                       disabled={loading || cartItems.length === 0}
                     >
-                      {loading ? 'Processing...' : `Proceed to Payment - $${totals.finalTotal.toFixed(2)}`}
+                      {loading ? 'Processing...' : 
+                       !waiverCompleted ? `Complete Waiver - $${totals.finalTotal.toFixed(2)}` : 
+                       `Proceed to Payment - $${totals.finalTotal.toFixed(2)}`
+                      }
                     </Button>
+
+                    {!waiverCompleted && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-lg p-3">
+                        <p className="text-sm text-amber-800">
+                          📋 All guests must complete the electronic waiver before payment
+                        </p>
+                      </div>
+                    )}
+
+                    {waiverCompleted && (
+                      <div className="bg-green-50 border border-green-200 rounded-lg p-3">
+                        <p className="text-sm text-green-800">
+                          ✅ Waiver completed - Ready for payment
+                        </p>
+                      </div>
+                    )}
 
                     <div className="text-xs text-gray-500 text-center">
                       Your booking will be confirmed after successful payment.
