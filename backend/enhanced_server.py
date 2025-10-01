@@ -326,6 +326,58 @@ class GoogleSheetsService:
             logger.error(f"Google Sheets API error: {error}")
         except Exception as error:
             logger.error(f"Unexpected error recording to sheets: {error}")
+    
+    async def record_waiver(self, waiver: Waiver):
+        """Record waiver in Google Sheets"""
+        if not self.service:
+            logger.warning("Google Sheets service not available")
+            return
+        
+        try:
+            # Prepare guest information
+            guests_info = []
+            for guest in waiver.guests:
+                guest_text = f"{guest.name} (Age: {'Minor' if guest.isMinor else 'Adult'})"
+                if guest.isMinor and guest.guardianName:
+                    guest_text += f" - Guardian: {guest.guardianName}"
+                guests_info.append(guest_text)
+            
+            guests_text = "; ".join(guests_info)
+            
+            row_data = [
+                waiver.signed_at.isoformat(),  # Timestamp
+                waiver.id,  # Waiver ID
+                waiver.cart_id,  # Cart ID
+                str(waiver.total_guests),  # Total Guests
+                guests_text,  # Guest Names & Info
+                waiver.waiver_data.emergency_contact_name,
+                waiver.waiver_data.emergency_contact_phone,
+                waiver.waiver_data.emergency_contact_relationship or '',
+                waiver.waiver_data.medical_conditions or '',
+                waiver.waiver_data.additional_notes or '',
+                'Signed'  # Status
+            ]
+            
+            # Prepare request body
+            body = {
+                'values': [row_data]
+            }
+            
+            # Make API call to Waivers sheet
+            result = self.service.spreadsheets().values().append(
+                spreadsheetId=self.spreadsheet_id,
+                range='Waivers!A:K',
+                valueInputOption='RAW',
+                insertDataOption='INSERT_ROWS',
+                body=body
+            ).execute()
+            
+            logger.info(f"Successfully recorded waiver to Google Sheets: {waiver.id}")
+            
+        except HttpError as error:
+            logger.error(f"Google Sheets API error recording waiver: {error}")
+        except Exception as error:
+            logger.error(f"Unexpected error recording waiver to sheets: {error}")
 
 # Global services
 google_sheets = GoogleSheetsService()
