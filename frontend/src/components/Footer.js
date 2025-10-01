@@ -10,8 +10,8 @@ const Footer = () => {
           <div className="col-span-1 md:col-span-2">
             <div className="flex items-center space-x-4 mb-6">
               <img 
-                src="https://customer-assets.emergentagent.com/job_gulf-float-exclusive/artifacts/90n9ndga_Gemini_Generated_Image_bw7zsebw7zsebw7z.png"
-                alt="Exclusive Luxury Floats Logo"
+                src="https://customer-assets.emergentagent.com/job_gulfbook/artifacts/fyzi2hws_Gemini_Generated_Image_3zaoln3zaoln3zao.png"
+                alt="Exclusive Water Sports & Lounge Logo"
                 className="h-20 w-auto"
               />
             </div>
