@@ -141,6 +141,14 @@ def prepare_for_mongo(data):
     if isinstance(data.get('expires_at'), datetime):
         data['expires_at'] = data['expires_at'].isoformat()
     
+    # Handle cart items array
+    if 'items' in data and isinstance(data['items'], list):
+        for item in data['items']:
+            if isinstance(item.get('booking_date'), date):
+                item['booking_date'] = item['booking_date'].isoformat()
+            if isinstance(item.get('booking_time'), time):
+                item['booking_time'] = item['booking_time'].strftime('%H:%M:%S')
+    
     # Handle guests array for waivers
     if 'guests' in data and isinstance(data['guests'], list):
         for guest in data['guests']:
