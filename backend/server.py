@@ -136,6 +136,15 @@ def prepare_for_mongo(data):
         data['booking_time'] = data['booking_time'].strftime('%H:%M:%S')
     if isinstance(data.get('created_at'), datetime):
         data['created_at'] = data['created_at'].isoformat()
+    if isinstance(data.get('signed_at'), datetime):
+        data['signed_at'] = data['signed_at'].isoformat()
+    
+    # Handle guests array for waivers
+    if 'guests' in data and isinstance(data['guests'], list):
+        for guest in data['guests']:
+            if isinstance(guest.get('date'), date):
+                guest['date'] = guest['date'].isoformat()
+    
     return data
 
 def parse_from_mongo(item):
