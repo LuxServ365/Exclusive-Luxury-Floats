@@ -401,7 +401,7 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
                             </div>
                             {credit_card_fee_html}
                             <div style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;">
-                                <p><strong style="font-size: 18px;">Final Total: ${booking.final_total:.2f}</strong></p>
+                                <p><strong style="font-size: 18px;">Final Total: ${booking.computed_final_total:.2f}</strong></p>
                             </div>
                         </div>
                     </div>
