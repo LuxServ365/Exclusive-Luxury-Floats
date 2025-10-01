@@ -10,14 +10,15 @@ from typing import List, Optional, Dict, Any
 import uuid
 from datetime import datetime, timezone, date, time, timedelta
 from emergentintegrations.payments.stripe.checkout import StripeCheckout, CheckoutSessionResponse, CheckoutStatusResponse, CheckoutSessionRequest
-import sendgrid
-from sendgrid.helpers.mail import Mail
 import httpx
 import json
 import paypalrestsdk
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
+import aiosmtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 ROOT_DIR = Path(__file__).parent
 load_dotenv(ROOT_DIR / '.env')
@@ -35,7 +36,6 @@ api_router = APIRouter(prefix="/api")
 
 # Configuration
 STRIPE_API_KEY = os.environ.get('STRIPE_API_KEY')
-SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
 SENDER_EMAIL = os.environ.get('SENDER_EMAIL')
 TELEGRAM_BOT_TOKEN = os.environ.get('TELEGRAM_BOT_TOKEN')
 TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
@@ -44,6 +44,10 @@ TELEGRAM_CHAT_ID = os.environ.get('TELEGRAM_CHAT_ID')
 PAYPAL_CLIENT_ID = os.environ.get('PAYPAL_CLIENT_ID', 'paypal_client_id_here')
 PAYPAL_CLIENT_SECRET = os.environ.get('PAYPAL_CLIENT_SECRET', 'paypal_client_secret_here')
 PAYPAL_MODE = os.environ.get('PAYPAL_MODE', 'sandbox')  # 'sandbox' or 'live'
+
+# Gmail SMTP Configuration
+GMAIL_EMAIL = os.environ.get('GMAIL_EMAIL', 'exclusivefloat850@gmail.com')
+GMAIL_APP_PASSWORD = os.environ.get('GMAIL_APP_PASSWORD', 'your_gmail_app_password_here')
 
 # Google Sheets Configuration
 GOOGLE_CREDENTIALS_FILE = os.environ.get('GOOGLE_CREDENTIALS_FILE', 'google_credentials.json')
@@ -184,6 +188,9 @@ class CheckoutRequest(BaseModel):
     payment_method: str = "stripe"  # stripe, paypal, venmo, cashapp, zelle
     success_url: Optional[str] = None
     cancel_url: Optional[str] = None
+    trip_protection: bool = False
+    additional_fees: Optional[Dict] = None
+    final_total: float
 
 class BookingConfirmation(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -193,12 +200,25 @@ class BookingConfirmation(BaseModel):
     customer_phone: Optional[str] = None
     items: List[Dict[str, Any]] = []
     total_amount: float
+    trip_protection: bool = False
+    trip_protection_fee: float = 0.0
+    tax_amount: float = 0.0
+    credit_card_fee: float = 0.0
+    final_total: Optional[float] = None  # Make optional for backward compatibility
     payment_method: str
     payment_status: str = "pending"
     payment_session_id: Optional[str] = None
     booking_reference: str
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     status: str = "pending"
+    
+    @property
+    def computed_final_total(self) -> float:
+        """Compute final total for backward compatibility with old bookings"""
+        if self.final_total is not None:
+            return self.final_total
+        # For old bookings without enhanced fees, return total_amount
+        return self.total_amount
 
 class PaymentTransaction(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid.uuid4()))
@@ -227,37 +247,13 @@ class ContactCreate(BaseModel):
     phone: Optional[str] = None
     message: str
 
-class WaiverGuest(BaseModel):
-    id: int
-    name: str
-    date: date
-    isMinor: bool = False
-    guardianName: Optional[str] = None
-    guardianSignature: Optional[str] = None
-    participantSignature: Optional[str] = None
-
-class WaiverData(BaseModel):
-    emergency_contact_name: str
-    emergency_contact_phone: str
-    emergency_contact_relationship: Optional[str] = None
-    medical_conditions: Optional[str] = None
-    additional_notes: Optional[str] = None
-
-class WaiverSubmission(BaseModel):
-    cart_id: str
-    waiver_data: WaiverData
-    guests: List[WaiverGuest]
-    signed_at: datetime
-    total_guests: int
-
-class Waiver(BaseModel):
-    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
-    cart_id: str
-    waiver_data: WaiverData
-    guests: List[WaiverGuest]
-    signed_at: datetime
-    total_guests: int
-    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+# Configure logging first
+import logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
+logger = logging.getLogger(__name__)
 
 # Google Sheets Service
 class GoogleSheetsService:
@@ -291,7 +287,9 @@ class GoogleSheetsService:
         try:
             # Prepare booking data for sheets
             items_text = ", ".join([f"{item['name']} (x{item['quantity']})" for item in booking.items])
-            total_amount = sum(item['price'] * item['quantity'] for item in booking.items)
+            
+            # Use computed final total for backward compatibility
+            total_amount = booking.computed_final_total
             
             row_data = [
                 datetime.now().isoformat(),  # Timestamp
@@ -326,58 +324,6 @@ class GoogleSheetsService:
             logger.error(f"Google Sheets API error: {error}")
         except Exception as error:
             logger.error(f"Unexpected error recording to sheets: {error}")
-    
-    async def record_waiver(self, waiver: Waiver):
-        """Record waiver in Google Sheets"""
-        if not self.service:
-            logger.warning("Google Sheets service not available")
-            return
-        
-        try:
-            # Prepare guest information
-            guests_info = []
-            for guest in waiver.guests:
-                guest_text = f"{guest.name} (Age: {'Minor' if guest.isMinor else 'Adult'})"
-                if guest.isMinor and guest.guardianName:
-                    guest_text += f" - Guardian: {guest.guardianName}"
-                guests_info.append(guest_text)
-            
-            guests_text = "; ".join(guests_info)
-            
-            row_data = [
-                waiver.signed_at.isoformat(),  # Timestamp
-                waiver.id,  # Waiver ID
-                waiver.cart_id,  # Cart ID
-                str(waiver.total_guests),  # Total Guests
-                guests_text,  # Guest Names & Info
-                waiver.waiver_data.emergency_contact_name,
-                waiver.waiver_data.emergency_contact_phone,
-                waiver.waiver_data.emergency_contact_relationship or '',
-                waiver.waiver_data.medical_conditions or '',
-                waiver.waiver_data.additional_notes or '',
-                'Signed'  # Status
-            ]
-            
-            # Prepare request body
-            body = {
-                'values': [row_data]
-            }
-            
-            # Make API call to Waivers sheet
-            result = self.service.spreadsheets().values().append(
-                spreadsheetId=self.spreadsheet_id,
-                range='Waivers!A:K',
-                valueInputOption='RAW',
-                insertDataOption='INSERT_ROWS',
-                body=body
-            ).execute()
-            
-            logger.info(f"Successfully recorded waiver to Google Sheets: {waiver.id}")
-            
-        except HttpError as error:
-            logger.error(f"Google Sheets API error recording waiver: {error}")
-        except Exception as error:
-            logger.error(f"Unexpected error recording waiver to sheets: {error}")
 
 # Global services
 google_sheets = GoogleSheetsService()
@@ -385,27 +331,19 @@ google_sheets = GoogleSheetsService()
 # Cart storage (in production, use Redis or database)
 carts_storage = {}
 
-# Waiver service
-async def add_waiver_to_sheets(waiver: Waiver):
-    """Add waiver to Google Sheets"""
-    try:
-        await google_sheets.record_waiver(waiver)
-    except Exception as e:
-        logger.error(f"Failed to add waiver to Google Sheets: {str(e)}")
-
-# Email service
+# Gmail SMTP Email service
 async def send_booking_confirmation_email(booking: BookingConfirmation):
-    """Send booking confirmation email using SendGrid"""
+    """Send booking confirmation email using Gmail SMTP"""
     try:
-        if not SENDGRID_API_KEY or SENDGRID_API_KEY == "your_sendgrid_api_key_here":
-            logger.warning("SendGrid API key not configured")
+        if not GMAIL_APP_PASSWORD or GMAIL_APP_PASSWORD == "your_gmail_app_password_here":
+            logger.warning("Gmail app password not configured")
             return False
             
         items_html = ""
-        total_amount = 0
+        items_subtotal = 0
         for item in booking.items:
             item_total = item['price'] * item['quantity']
-            total_amount += item_total
+            items_subtotal += item_total
             items_html += f"""
             <div style="margin: 10px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
                 <strong>{item['name']}</strong><br>
@@ -416,6 +354,21 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
                 <strong>Subtotal: ${item_total:.2f}</strong>
             </div>
             """
+        
+        # Calculate fee breakdown for email
+        trip_protection_html = f"""
+        <div style="margin: 5px 0;">
+            <span>Trip Protection:</span>
+            <span style="float: right;">${booking.trip_protection_fee:.2f}</span>
+        </div>
+        """ if booking.trip_protection else ""
+        
+        credit_card_fee_html = f"""
+        <div style="margin: 5px 0;">
+            <span>Credit Card Processing Fee:</span>
+            <span style="float: right;">${booking.credit_card_fee:.2f}</span>
+        </div>
+        """ if booking.credit_card_fee > 0 else ""
         
         html_content = f"""
         <html>
@@ -437,7 +390,19 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
                         <p><strong>Items Booked:</strong></p>
                         {items_html}
                         <div style="border-top: 2px solid #1e7b85; padding-top: 15px; margin-top: 15px;">
-                            <p><strong style="font-size: 18px;">Total Amount: ${total_amount:.2f}</strong></p>
+                            <div style="margin: 5px 0;">
+                                <span>Services Subtotal:</span>
+                                <span style="float: right;">${items_subtotal:.2f}</span>
+                            </div>
+                            {trip_protection_html}
+                            <div style="margin: 5px 0;">
+                                <span>Bay County Tax (7%):</span>
+                                <span style="float: right;">${booking.tax_amount:.2f}</span>
+                            </div>
+                            {credit_card_fee_html}
+                            <div style="border-top: 1px solid #ddd; margin-top: 10px; padding-top: 10px;">
+                                <p><strong style="font-size: 18px;">Final Total: ${booking.computed_final_total:.2f}</strong></p>
+                            </div>
                         </div>
                     </div>
                     
@@ -451,7 +416,7 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
                     
                     <p>If you need to make any changes or have questions, please contact us at:</p>
                     <p><strong>Phone:</strong> (850) 555-GULF<br>
-                    <strong>Email:</strong> {SENDER_EMAIL}</p>
+                    <strong>Email:</strong> {GMAIL_EMAIL}</p>
                     
                     <p style="margin-top: 30px;">We look forward to providing you with an unforgettable experience on the beautiful emerald waters of Panama City, Florida!</p>
                     
@@ -462,16 +427,28 @@ async def send_booking_confirmation_email(booking: BookingConfirmation):
         </html>
         """
         
-        message = Mail(
-            from_email=SENDER_EMAIL,
-            to_emails=booking.customer_email,
-            subject=f"Booking Confirmed - Exclusive Gulf Float - {booking.booking_reference}",
-            html_content=html_content
+        # Create message
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = f"Booking Confirmed - Exclusive Gulf Float - {booking.booking_reference}"
+        msg['From'] = GMAIL_EMAIL
+        msg['To'] = booking.customer_email
+        
+        # Create HTML part
+        html_part = MIMEText(html_content, 'html')
+        msg.attach(html_part)
+        
+        # Send email via Gmail SMTP
+        await aiosmtplib.send(
+            msg,
+            hostname="smtp.gmail.com",
+            port=587,
+            start_tls=True,
+            username=GMAIL_EMAIL,
+            password=GMAIL_APP_PASSWORD,
         )
         
-        sg = sendgrid.SendGridAPIClient(api_key=SENDGRID_API_KEY)
-        response = sg.send(message)
-        return response.status_code == 202
+        logger.info(f"Email sent successfully to {booking.customer_email}")
+        return True
         
     except Exception as e:
         logger.error(f"Failed to send confirmation email: {str(e)}")
@@ -486,7 +463,10 @@ async def send_telegram_notification(booking: BookingConfirmation):
             return False
             
         items_text = "\n".join([f"• {item['name']} (x{item['quantity']}) - ${item['price']:.2f}" for item in booking.items])
-        total_amount = sum(item['price'] * item['quantity'] for item in booking.items)
+        items_subtotal = sum(item['price'] * item['quantity'] for item in booking.items)
+        
+        trip_protection_text = f"\n💼 Trip Protection: ${booking.trip_protection_fee:.2f}" if booking.trip_protection else ""
+        credit_card_fee_text = f"\n💳 Credit Card Fee: ${booking.credit_card_fee:.2f}" if booking.credit_card_fee > 0 else ""
         
         message = f"""🌊 NEW BOOKING - Exclusive Gulf Float 🌊
 
@@ -497,7 +477,11 @@ async def send_telegram_notification(booking: BookingConfirmation):
 🛍️ ITEMS BOOKED:
 {items_text}
 
-💰 Total: ${total_amount:.2f}
+💰 PRICING BREAKDOWN:
+Services Subtotal: ${items_subtotal:.2f}{trip_protection_text}
+Tax (Bay County 7%): ${booking.tax_amount:.2f}{credit_card_fee_text}
+💰 FINAL TOTAL: ${booking.computed_final_total:.2f}
+
 💳 Payment Method: {booking.payment_method.upper()}
 💳 Payment Status: {booking.payment_status}
 
@@ -519,12 +503,15 @@ async def send_telegram_notification(booking: BookingConfirmation):
         logger.error(f"Failed to send Telegram notification: {str(e)}")
         return False
 
-# PayPal Integration
 class PayPalService:
     @staticmethod
     async def create_payment(booking: BookingConfirmation, success_url: str, cancel_url: str):
-        """Create PayPal payment"""
+        """Create PayPal payment with proper amount breakdown"""
         try:
+            # Calculate breakdown for PayPal
+            items_subtotal = sum(item['price'] * item['quantity'] for item in booking.items)
+            
+            # Create items list for PayPal
             items = []
             for item in booking.items:
                 items.append({
@@ -535,7 +522,29 @@ class PayPalService:
                     "quantity": item['quantity']
                 })
             
-            total_amount = sum(item['price'] * item['quantity'] for item in booking.items)
+            # Add trip protection as separate line item if applicable
+            if booking.trip_protection and booking.trip_protection_fee > 0:
+                items.append({
+                    "name": "Trip Protection",
+                    "sku": "trip_protection",
+                    "price": f"{booking.trip_protection_fee:.2f}",
+                    "currency": "USD",
+                    "quantity": 1
+                })
+            
+            # Add credit card fee as separate line item if applicable
+            if booking.credit_card_fee > 0:
+                items.append({
+                    "name": "Credit Card Processing Fee",
+                    "sku": "cc_processing",
+                    "price": f"{booking.credit_card_fee:.2f}",
+                    "currency": "USD",
+                    "quantity": 1
+                })
+            
+            # Calculate totals for PayPal breakdown
+            item_total = items_subtotal + booking.trip_protection_fee + booking.credit_card_fee
+            tax_total = booking.tax_amount
             
             payment = paypalrestsdk.Payment({
                 "intent": "sale",
@@ -547,8 +556,12 @@ class PayPalService:
                 "transactions": [{
                     "item_list": {"items": items},
                     "amount": {
-                        "total": f"{total_amount:.2f}",
-                        "currency": "USD"
+                        "total": f"{booking.final_total:.2f}",
+                        "currency": "USD",
+                        "details": {
+                            "subtotal": f"{item_total:.2f}",
+                            "tax": f"{tax_total:.2f}"
+                        }
                     },
                     "description": f"Booking {booking.booking_reference} - Exclusive Gulf Float"
                 }]
@@ -697,69 +710,6 @@ async def update_cart_customer(cart_id: str, customer_info: CustomerInfo):
     
     return {"message": "Customer information updated"}
 
-# Waiver Endpoints
-@api_router.post("/waiver/submit")
-async def submit_waiver(waiver_submission: WaiverSubmission):
-    """Submit electronic waiver"""
-    try:
-        # Create waiver document
-        waiver = Waiver(
-            cart_id=waiver_submission.cart_id,
-            waiver_data=waiver_submission.waiver_data,
-            guests=waiver_submission.guests,
-            signed_at=waiver_submission.signed_at,
-            total_guests=waiver_submission.total_guests
-        )
-        
-        # Store in MongoDB
-        waiver_dict = prepare_for_mongo(waiver.dict())
-        result = await db.waivers.insert_one(waiver_dict)
-        
-        # Add to Google Sheets
-        await add_waiver_to_sheets(waiver)
-        
-        return {
-            "message": "Waiver submitted successfully",
-            "waiver_id": waiver.id,
-            "mongo_id": str(result.inserted_id)
-        }
-    
-    except Exception as e:
-        logger.error(f"Error submitting waiver: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to submit waiver")
-
-@api_router.get("/waiver/{waiver_id}")
-async def get_waiver(waiver_id: str):
-    """Get waiver by ID"""
-    try:
-        waiver = await db.waivers.find_one({"id": waiver_id})
-        if not waiver:
-            raise HTTPException(status_code=404, detail="Waiver not found")
-        
-        # Parse dates back from MongoDB
-        parsed_waiver = parse_from_mongo(waiver)
-        return parsed_waiver
-    
-    except HTTPException:
-        raise
-    except Exception as e:
-        logger.error(f"Error fetching waiver: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch waiver")
-
-@api_router.get("/waivers")
-async def get_all_waivers():
-    """Get all waivers for admin"""
-    try:
-        waivers = await db.waivers.find().sort("created_at", -1).to_list(length=None)
-        
-        # Parse dates back from MongoDB
-        parsed_waivers = [parse_from_mongo(waiver) for waiver in waivers]
-        return parsed_waivers
-    
-    except Exception as e:
-        logger.error(f"Error fetching waivers: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch waivers")
-
 @api_router.post("/cart/{cart_id}/checkout")
 async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, background_tasks: BackgroundTasks):
     """Checkout cart and create booking"""
@@ -772,12 +722,12 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
     
     # Create booking confirmation
     booking_items = []
-    total_amount = 0
+    items_subtotal = 0
     
     for item in cart.items:
         service = SERVICES[item.service_id]
         item_total = service['price'] * item.quantity
-        total_amount += item_total
+        items_subtotal += item_total
         
         booking_items.append({
             "service_id": item.service_id,
@@ -790,6 +740,18 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
             "subtotal": item_total
         })
     
+    # Calculate fees and taxes
+    additional_fees = checkout_request.additional_fees or {}
+    trip_protection_fee = additional_fees.get('trip_protection_fee', 0.0)
+    tax_rate = additional_fees.get('tax_rate', 0.07)
+    credit_card_fee_rate = additional_fees.get('credit_card_fee_rate', 0.0)
+    
+    taxable_amount = items_subtotal + trip_protection_fee
+    tax_amount = taxable_amount * tax_rate
+    subtotal_with_tax = taxable_amount + tax_amount
+    credit_card_fee = subtotal_with_tax * credit_card_fee_rate
+    final_total = subtotal_with_tax + credit_card_fee
+    
     # Generate booking reference
     booking_ref = f"EGF{datetime.now().strftime('%Y%m%d')}{str(uuid.uuid4())[:6].upper()}"
     
@@ -799,7 +761,12 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
         customer_email=checkout_request.customer_info.email,
         customer_phone=checkout_request.customer_info.phone,
         items=booking_items,
-        total_amount=total_amount,
+        total_amount=items_subtotal,
+        trip_protection=checkout_request.trip_protection,
+        trip_protection_fee=trip_protection_fee,
+        tax_amount=tax_amount,
+        credit_card_fee=credit_card_fee,
+        final_total=final_total,
         payment_method=checkout_request.payment_method,
         booking_reference=booking_ref
     )
@@ -817,14 +784,33 @@ async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, backgro
     elif checkout_request.payment_method == "paypal":
         return await handle_paypal_checkout(booking, checkout_request)
     else:
-        # For now, other payment methods return pending status
+        # Handle manual payment methods (Venmo, CashApp, Zelle)
+        payment_instructions = {
+            "venmo": {
+                "account": "@ExclusiveFloat850",
+                "instructions": f"Please send ${final_total:.2f} to @ExclusiveFloat850 on Venmo with note: '{booking_ref}'"
+            },
+            "cashapp": {
+                "account": "$ExclusiveFloat",
+                "instructions": f"Please send ${final_total:.2f} to $ExclusiveFloat on Cash App with note: '{booking_ref}'"
+            },
+            "zelle": {
+                "account": "exclusivefloat850@gmail.com",
+                "instructions": f"Please send ${final_total:.2f} to exclusivefloat850@gmail.com via Zelle with note: '{booking_ref}'"
+            }
+        }
+        
+        method_info = payment_instructions.get(checkout_request.payment_method, {})
+        
         return {
             "booking_id": booking.id,
             "booking_reference": booking_ref,
             "payment_method": checkout_request.payment_method,
             "status": "pending_payment",
-            "total_amount": total_amount,
-            "message": f"Please complete payment using {checkout_request.payment_method}"
+            "total_amount": final_total,
+            "payment_instructions": method_info.get("instructions", ""),
+            "payment_account": method_info.get("account", ""),
+            "message": f"Booking created! Please complete payment using {checkout_request.payment_method} and we'll confirm your booking."
         }
 
 async def handle_stripe_checkout(booking: BookingConfirmation, checkout_request: CheckoutRequest):
@@ -836,7 +822,7 @@ async def handle_stripe_checkout(booking: BookingConfirmation, checkout_request:
         cancel_url = checkout_request.cancel_url or f"{os.environ.get('BASE_URL', 'http://localhost:8000')}/cart/{booking.cart_id}"
         
         checkout_session_request = CheckoutSessionRequest(
-            amount=booking.total_amount,
+            amount=booking.final_total,
             currency="usd",
             success_url=success_url,
             cancel_url=cancel_url,
@@ -862,7 +848,7 @@ async def handle_stripe_checkout(booking: BookingConfirmation, checkout_request:
             payment_method="stripe",
             payment_provider="stripe",
             session_id=session.session_id,
-            amount=booking.total_amount,
+            amount=booking.final_total,
             currency="usd",
             metadata=checkout_session_request.metadata,
             customer_email=booking.customer_email
@@ -877,7 +863,7 @@ async def handle_stripe_checkout(booking: BookingConfirmation, checkout_request:
             "payment_method": "stripe",
             "checkout_url": session.url,
             "session_id": session.session_id,
-            "total_amount": booking.total_amount
+            "total_amount": booking.final_total
         }
         
     except Exception as e:
@@ -905,7 +891,7 @@ async def handle_paypal_checkout(booking: BookingConfirmation, checkout_request:
             payment_method="paypal",
             payment_provider="paypal",
             session_id=payment_result['payment_id'],
-            amount=booking.total_amount,
+            amount=booking.final_total,
             currency="usd",
             customer_email=booking.customer_email
         )
@@ -919,7 +905,7 @@ async def handle_paypal_checkout(booking: BookingConfirmation, checkout_request:
             "payment_method": "paypal",
             "checkout_url": payment_result['approval_url'],
             "payment_id": payment_result['payment_id'],
-            "total_amount": booking.total_amount
+            "total_amount": booking.final_total
         }
         
     except Exception as e:
@@ -1050,13 +1036,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Configure logging
-logging.basicConfig(
-    level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-)
-logger = logging.getLogger(__name__)
 
 @app.on_event("shutdown")
 async def shutdown_db_client():
