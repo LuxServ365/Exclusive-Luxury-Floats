@@ -7,6 +7,7 @@ import { Textarea } from '../components/ui/textarea';
 import { toast } from 'sonner';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { CheckCircle, AlertTriangle, FileText, Users } from 'lucide-react';
+import SignatureCanvas from 'react-signature-canvas';
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
