@@ -323,42 +323,111 @@ const Waiver = () => {
             <CardContent className="space-y-6">
               <div className="max-h-96 overflow-y-auto border rounded-lg p-4 bg-gray-50 text-sm">
                 <div className="space-y-4">
+                  <p className="font-semibold text-center">
+                    PLEASE READ THIS DOCUMENT CAREFULLY. IT IS A LEGALLY BINDING AGREEMENT THAT WILL AFFECT YOUR LEGAL RIGHTS.
+                  </p>
+                  
+                  <p>
+                    In consideration of being permitted to participate in the activities provided by <strong>Exclusive Water Sports & Lounge</strong> (hereinafter referred to as "The Company"), located and operating in <strong>Panama City, Florida,</strong> and <strong>Panama City Beach, Bay County, Florida</strong>, the undersigned participant (and/or Participant's legal guardian, if the Participant is under 18 years of age) hereby agrees to the following terms:
+                  </p>
+
                   <div>
                     <h3 className="font-bold text-base mb-2">1. Assumption of Risk</h3>
-                    <p>The undersigned acknowledges and agrees that participation in all activities offered by Exclusive Water Sports & Lounge carries inherent risks of injury, illness, property damage, and even death. These risks include, but are not limited to:</p>
-                    <ul className="list-disc list-inside mt-2 space-y-1">
-                      <li><strong>Environmental Hazards:</strong> Drowning, changing ocean conditions, extreme weather, excessive heat exposure, sunstroke, dehydration, and slick surfaces.</li>
-                      <li><strong>Marine & Wildlife Encounters:</strong> Bites, stings, or attacks from ocean wildlife.</li>
-                      <li><strong>Equipment & Facility Use:</strong> Equipment failure, collisions, slips, trips, falls, and injuries from use or misuse of rental equipment.</li>
-                      <li><strong>Flotation Devices:</strong> Use of provided flotation devices is at your own risk. No guarantees regarding effectiveness or safety.</li>
-                      <li><strong>Nighttime Activities:</strong> Increased risks including reduced visibility and difficulty in emergency response.</li>
-                    </ul>
+                    <p>
+                      The undersigned acknowledges and agrees that participation in all activities offered by The Company, including but not limited to <strong>water sports, rentals (e.g., jet skis, kayaks, paddleboards, boats), swimming, sunbathing, use of lounge areas, and general beach activities</strong>, carries inherent risks of injury, illness, property damage, and even death. These risks include, but are not limited to:
+                    </p>
+                    
+                    <div className="mt-3 space-y-2">
+                      <p><strong>Environmental Hazards:</strong> Drowning, changing ocean conditions (currents, waves, tides), extreme weather (lightning, sudden storms), <strong>excessive heat exposure</strong>, sunstroke, dehydration, and slick or uneven surfaces.</p>
+                      
+                      <p><strong>Marine & Wildlife Encounters:</strong> Bites, stings, or attacks from <strong>ocean wildlife</strong> (e.g., jellyfish, stingrays, sharks, fish, or insects).</p>
+                      
+                      <p><strong>Equipment & Facility Use:</strong> Equipment failure, collision with other vessels or objects, slips, trips, falls, and injuries resulting from the use or misuse of rental equipment or facilities.</p>
+                      
+                      <p><strong>Third-Party Actions:</strong> Negligence or <strong>misconduct</strong> of other participants, guests, or third parties.</p>
+                      
+                      <p><strong>Flotation Devices:</strong> The Company may make flotation devices available for use during activities. The Undersigned acknowledges that the <strong>use of any provided flotation device is at their own risk</strong>, and The Company makes no guarantees regarding their effectiveness or safety. Furthermore, for guests who <strong>choose to refrain from using provided flotation devices, The Company holds no liability</strong> for any resulting injury, illness, or death.</p>
+                      
+                      <p><strong>Nighttime Activities:</strong> Participation in any <strong>nighttime tours or activities presents increased risks</strong>, including but not limited to reduced visibility, colder temperatures, and difficulty in emergency response. The Undersigned acknowledges these heightened risks and participates in such activities <strong>entirely at their own risk.</strong></p>
+                    </div>
+                    
+                    <p className="mt-3">
+                      The Undersigned voluntarily accepts and assumes all risks, whether known or unknown, foreseen or unforeseen, associated with participation in The Company's activities and use of its facilities.
+                    </p>
                   </div>
                   
                   <div>
                     <h3 className="font-bold text-base mb-2">2. Waiver and Release of Liability</h3>
-                    <p>The undersigned waives, releases, and discharges Exclusive Water Sports & Lounge from any and all claims, demands, or actions arising out of participation, <strong>EVEN IF CAUSED BY NEGLIGENCE</strong>.</p>
-                    <p className="mt-2"><strong>NO LIFEGUARDS ARE PRESENT</strong> at any time during operations.</p>
+                    <p>
+                      The Undersigned, for themselves and their heirs, executors, administrators, personal representatives, and assigns, hereby <strong>waives, releases, discharges, and forever relinquishes</strong> The Company, its owners, agents, officers, directors, employees, volunteers, affiliates, and insurers (collectively, the "Released Parties") from any and all claims, demands, actions, or causes of action of any kind arising out of or relating to participation in The Company's activities, <strong>EVEN IF CAUSED IN WHOLE OR IN PART BY THE NEGLIGENCE, FAULT, OR CARELESSNESS OF THE RELEASED PARTIES.</strong>
+                    </p>
+                    
+                    <p className="mt-3">This waiver and release of liability includes, but is not limited to, claims for:</p>
+                    <ul className="list-disc list-inside mt-2 space-y-1">
+                      <li><strong>Personal injury, illness, or death.</strong></li>
+                      <li><strong>Property damage or loss.</strong></li>
+                      <li><strong>Loss or theft of personal items.</strong> <strong>The Company is expressly not responsible for any lost, stolen, or damaged items</strong> brought onto or used at its premises or during its activities.</li>
+                      <li>Claims resulting from negligence or misconduct of the Released Parties.</li>
+                    </ul>
+                    
+                    <p className="mt-3">
+                      The Undersigned understands and agrees that <strong>NO LIFEGUARDS ARE PRESENT</strong> at any time during The Company's operations or activities, and <strong>Exclusive Water Sports & Lounge is NOT LIABLE</strong> for any incidents, injuries, or fatalities related to water activities, including swimming or the use of flotation devices.
+                    </p>
                   </div>
                   
                   <div>
-                    <h3 className="font-bold text-base mb-2">3. Participant Obligations</h3>
-                    <ul className="list-disc list-inside space-y-1">
-                      <li>Participants must be <strong>physically fit and capable</strong> of participating safely.</li>
-                      <li>Must follow all posted rules and safety guidelines.</li>
-                      <li><strong>Drug and Alcohol Policy:</strong> Participation under the influence is strictly prohibited.</li>
-                      <li>Participants are liable for any damage caused to company property.</li>
+                    <h3 className="font-bold text-base mb-2">3. Indemnification</h3>
+                    <p>
+                      The Undersigned hereby agrees to <strong>indemnify, defend, and hold harmless</strong> the Released Parties from and against any and all losses, liabilities, damages, costs, or expenses (including reasonable attorneys' fees) that any of the Released Parties may incur as a result of any claim, suit, or proceeding brought by the Undersigned, their family, or any third party alleging injury, death, or property damage arising out of the Undersigned's participation in The Company's activities.
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-bold text-base mb-2">4. Participant Obligations, Representations & Warranties</h3>
+                    <p>The Undersigned further agrees and represents that:</p>
+                    <ul className="list-disc list-inside mt-2 space-y-1">
+                      <li>They will inspect the equipment and premises before use and report any deficiencies immediately. Continued use constitutes acceptance of the equipment and premises <strong>"as is."</strong></li>
+                      <li>They are <strong>physically fit and capable</strong> of participating in the chosen activities, and have <strong>no medical conditions</strong> that would prevent safe participation or increase the risk of injury.</li>
+                      <li>They will strictly follow <strong>all posted rules, verbal instructions, and safety guidelines</strong> given by The Company staff.</li>
+                      <li>They are responsible for their own conduct and the conduct of any minor under their supervision.</li>
+                      <li>The Undersigned acknowledges that <strong>if damage is caused to The Company's property, equipment, or facilities by their actions, negligence, or misuse, Exclusive Water Sports & Lounge reserves the right to charge the guest accordingly for repair or replacement at fair market value.</strong></li>
+                      <li><strong>Drug and Alcohol Policy:</strong> The Undersigned confirms they are <strong>not under the influence of alcohol, illegal drugs, or any impairing medication</strong>. Participation under the influence of such substances is strictly prohibited and will result in immediate termination of activities without refund, and The Company retains no liability for any incidents resulting from such impairment.</li>
+                      <li><strong>Voluntary Participation:</strong> The Undersigned confirms that their participation is <strong>entirely voluntary</strong> and they are executing this waiver freely and without inducement.</li>
                     </ul>
                   </div>
                   
                   <div>
-                    <h3 className="font-bold text-base mb-2">4. Emergency Medical Authorization</h3>
-                    <p>In case of emergency, the company is authorized to administer first aid and obtain medical care. Participants are responsible for all associated costs.</p>
+                    <h3 className="font-bold text-base mb-2">5. Emergency Medical Authorization</h3>
+                    <p>
+                      In the event of an emergency, and if the Undersigned is unable to communicate, the Undersigned hereby authorizes The Company and its staff to administer or obtain first aid and emergency medical care, including transportation to a medical facility. The Undersigned (or their legal guardian) understands and agrees that they shall be <strong>solely responsible for any and all costs associated with such medical care</strong>, transportation, and related services.
+                    </p>
                   </div>
                   
                   <div>
-                    <h3 className="font-bold text-base mb-2">5. Cancellation Policy</h3>
-                    <p>If activities are canceled by the company due to unsafe conditions, guests may reschedule or request a full refund.</p>
+                    <h3 className="font-bold text-base mb-2">6. Photo and Video Release</h3>
+                    <p>
+                      The Undersigned hereby grants Exclusive Water Sports & Lounge permission to photograph and/or video record their participation in activities and consents to the use of these images and recordings for promotional, marketing, or archival purposes without further compensation or notification.
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-bold text-base mb-2">7. Cancellation Policy</h3>
+                    <p>
+                      In the event of a cancellation of confirmed tours or activities by Exclusive Water Sports & Lounge due to unforeseen circumstances, including but not limited to severe weather conditions, equipment malfunction, or other events deemed unsafe by The Company, guests will be offered the opportunity to <strong>reschedule their confirmed tour or activity</strong>. If rescheduling is not possible or desired, <strong>guests may request a full refund</strong> for the portion of the activity canceled, provided the cancellation was initiated by The Company.
+                    </p>
+                  </div>
+                  
+                  <div>
+                    <h3 className="font-bold text-base mb-2">8. Governing Law and Severability</h3>
+                    <p>
+                      This Agreement shall be governed by and construed under the laws of the <strong>State of Florida</strong>, and any legal action relating to this Agreement shall be brought in Bay County, Florida. If any provision of this Agreement is held to be invalid or unenforceable, the remainder of the Agreement shall continue in full legal force and effect. The Undersigned confirms they have read and understood this Agreement in English or have had it fully explained to them in their native language.
+                    </p>
+                  </div>
+                  
+                  <div className="border-t pt-4 mt-4">
+                    <p className="font-semibold text-center">
+                      <strong>BY SIGNING THIS DOCUMENT, I ACKNOWLEDGE THAT I HAVE CAREFULLY READ THIS WAIVER OF LIABILITY, ASSUMPTION OF RISK, AND INDEMNITY AGREEMENT. I UNDERSTAND AND AGREE TO ITS TERMS, AND I AM SIGNING IT FREELY AND VOLUNTARILY WITHOUT ANY INDUCEMENT.</strong>
+                    </p>
                   </div>
                 </div>
               </div>
