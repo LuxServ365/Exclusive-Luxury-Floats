@@ -152,9 +152,9 @@ const BusinessHours = () => {
             <Card className="card">
               <CardContent className="py-6">
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Button onClick={() => window.location.href = '/admin'}>
+                  <Button onClick={() => window.location.href = '/admin/calendar'}>
                     <Calendar className="h-4 w-4 mr-2" />
-                    View Bookings Dashboard
+                    View Booking Calendar
                   </Button>
                   <Button variant="outline" onClick={() => window.location.href = '/bookings'}>
                     <Clock className="h-4 w-4 mr-2" />
