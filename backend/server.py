@@ -763,7 +763,7 @@ async def submit_waiver(waiver_submission: WaiverSubmission):
 async def get_waiver(waiver_id: str):
     """Get waiver by ID"""
     try:
-        waiver = await db.waivers.find_one({"id": waiver_id})
+        waiver = await db.waivers.find_one({"id": waiver_id}, {"_id": 0})
         if not waiver:
             raise HTTPException(status_code=404, detail="Waiver not found")
         
@@ -781,7 +781,7 @@ async def get_waiver(waiver_id: str):
 async def get_all_waivers():
     """Get all waivers for admin"""
     try:
-        waivers = await db.waivers.find().sort("created_at", -1).to_list(length=None)
+        waivers = await db.waivers.find({}, {"_id": 0}).sort("created_at", -1).to_list(length=None)
         
         # Parse dates back from MongoDB
         parsed_waivers = [parse_from_mongo(waiver) for waiver in waivers]
