@@ -185,6 +185,20 @@ def parse_from_mongo(item):
         except:
             pass
     
+    # Handle cart items array
+    if 'items' in item and isinstance(item['items'], list):
+        for cart_item in item['items']:
+            if isinstance(cart_item.get('booking_date'), str):
+                try:
+                    cart_item['booking_date'] = datetime.fromisoformat(cart_item['booking_date']).date()
+                except:
+                    pass
+            if isinstance(cart_item.get('booking_time'), str):
+                try:
+                    cart_item['booking_time'] = datetime.strptime(cart_item['booking_time'], '%H:%M:%S').time()
+                except:
+                    pass
+    
     # Handle guests array for waivers
     if 'guests' in item and isinstance(item['guests'], list):
         for guest in item['guests']:
