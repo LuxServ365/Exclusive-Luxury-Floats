@@ -1752,6 +1752,10 @@ class BackendTester:
         print("\n" + "🔍" * 20 + " CART NOT FOUND INVESTIGATION " + "🔍" * 20)
         self.test_cart_not_found_investigation()
         
+        # MONGODB PERSISTENCE TEST - CRITICAL FIX VALIDATION
+        print("\n" + "🔍" * 20 + " MONGODB PERSISTENCE VALIDATION " + "🔍" * 20)
+        self.test_mongodb_cart_persistence()
+        
         # Cart functionality tests
         if self.test_create_cart():
             self.test_get_empty_cart()
