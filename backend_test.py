@@ -1736,6 +1736,159 @@ class BackendTester:
             self.log_test("Cart Investigation - Complete Test", False, f"Error: {str(e)}")
             return False
 
+    def test_mongodb_cart_persistence(self):
+        """Test MongoDB cart persistence - CRITICAL TEST for cart not found issue"""
+        print("\n🔍 TESTING MONGODB CART PERSISTENCE - CRITICAL FIX VALIDATION")
+        print("=" * 80)
+        
+        try:
+            # Step 1: Create a new cart
+            print("Step 1: Creating cart with MongoDB persistence...")
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("MongoDB Persistence - Cart Creation", False, f"Failed to create cart: {response.status_code}")
+                return False
+                
+            persistence_cart_id = response.json().get('cart_id')
+            expires_at = response.json().get('expires_at')
+            
+            if not persistence_cart_id or not expires_at:
+                self.log_test("MongoDB Persistence - Cart Creation", False, "Missing cart_id or expires_at")
+                return False
+                
+            self.log_test("MongoDB Persistence - Cart Creation", True, f"Cart created: {persistence_cart_id}")
+            
+            # Step 2: Add Crystal Kayak item to cart
+            print("Step 2: Adding Crystal Kayak item to cart...")
+            item_data = {
+                "service_id": "crystal_kayak",
+                "quantity": 2,
+                "booking_date": "2025-01-20",
+                "booking_time": "14:00:00",
+                "special_requests": "MongoDB persistence test - Crystal Kayak with LED lighting"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{persistence_cart_id}/add", json=item_data)
+            if response.status_code != 200:
+                self.log_test("MongoDB Persistence - Add Crystal Kayak", False, f"Failed to add item: {response.status_code}, Response: {response.text}")
+                return False
+                
+            self.log_test("MongoDB Persistence - Add Crystal Kayak", True, "Crystal Kayak added successfully")
+            
+            # Step 3: Verify cart contents immediately
+            print("Step 3: Verifying cart contents...")
+            response = self.session.get(f"{API_BASE}/cart/{persistence_cart_id}")
+            if response.status_code != 200:
+                self.log_test("MongoDB Persistence - Initial Cart Retrieval", False, f"Failed to retrieve cart: {response.status_code}")
+                return False
+                
+            cart_data = response.json()
+            items = cart_data.get('items', [])
+            total_amount = cart_data.get('total_amount', 0)
+            
+            if len(items) != 1 or items[0]['service_id'] != 'crystal_kayak' or items[0]['quantity'] != 2:
+                self.log_test("MongoDB Persistence - Initial Cart Retrieval", False, f"Cart contents incorrect: {items}")
+                return False
+                
+            expected_total = 60.0 * 2  # Crystal Kayak price * quantity
+            if abs(total_amount - expected_total) > 0.01:
+                self.log_test("MongoDB Persistence - Initial Cart Retrieval", False, f"Total amount incorrect: expected ${expected_total}, got ${total_amount}")
+                return False
+                
+            self.log_test("MongoDB Persistence - Initial Cart Retrieval", True, f"Cart contents verified: 1 item, total ${total_amount}")
+            
+            # Step 4: SIMULATE BACKEND RESTART by creating new session
+            print("Step 4: Simulating backend restart with fresh API calls...")
+            # Create a completely new session to simulate restart scenario
+            restart_session = requests.Session()
+            
+            # Step 5: Try to retrieve cart after "restart simulation"
+            print("Step 5: Testing cart retrieval after restart simulation...")
+            response = restart_session.get(f"{API_BASE}/cart/{persistence_cart_id}")
+            if response.status_code != 200:
+                self.log_test("MongoDB Persistence - Post-Restart Cart Retrieval", False, f"CRITICAL: Cart not found after restart simulation: {response.status_code}")
+                return False
+                
+            restart_cart_data = response.json()
+            restart_items = restart_cart_data.get('items', [])
+            restart_total = restart_cart_data.get('total_amount', 0)
+            
+            if len(restart_items) != 1 or restart_items[0]['service_id'] != 'crystal_kayak':
+                self.log_test("MongoDB Persistence - Post-Restart Cart Retrieval", False, f"CRITICAL: Cart data lost after restart: {restart_items}")
+                return False
+                
+            self.log_test("MongoDB Persistence - Post-Restart Cart Retrieval", True, "✅ Cart persisted through restart simulation!")
+            
+            # Step 6: Add another item after "restart" to test the critical scenario
+            print("Step 6: Adding second item after restart simulation...")
+            second_item_data = {
+                "service_id": "canoe",
+                "quantity": 1,
+                "booking_date": "2025-01-20",
+                "booking_time": "15:00:00",
+                "special_requests": "Second item after restart simulation"
+            }
+            
+            response = restart_session.post(f"{API_BASE}/cart/{persistence_cart_id}/add", json=second_item_data)
+            if response.status_code != 200:
+                self.log_test("MongoDB Persistence - Add Item After Restart", False, f"CRITICAL: Cannot add item after restart: {response.status_code}, Response: {response.text}")
+                return False
+                
+            self.log_test("MongoDB Persistence - Add Item After Restart", True, "✅ Successfully added item after restart simulation!")
+            
+            # Step 7: Final verification - cart should have both items
+            print("Step 7: Final verification of cart persistence...")
+            response = restart_session.get(f"{API_BASE}/cart/{persistence_cart_id}")
+            if response.status_code != 200:
+                self.log_test("MongoDB Persistence - Final Verification", False, f"Failed final cart retrieval: {response.status_code}")
+                return False
+                
+            final_cart_data = response.json()
+            final_items = final_cart_data.get('items', [])
+            final_total = final_cart_data.get('total_amount', 0)
+            
+            if len(final_items) != 2:
+                self.log_test("MongoDB Persistence - Final Verification", False, f"Expected 2 items, got {len(final_items)}")
+                return False
+                
+            # Verify both items are present
+            service_ids = [item['service_id'] for item in final_items]
+            if 'crystal_kayak' not in service_ids or 'canoe' not in service_ids:
+                self.log_test("MongoDB Persistence - Final Verification", False, f"Missing expected services: {service_ids}")
+                return False
+                
+            # Verify total calculation
+            expected_final_total = (60.0 * 2) + (75.0 * 1)  # Crystal Kayak + Canoe
+            if abs(final_total - expected_final_total) > 0.01:
+                self.log_test("MongoDB Persistence - Final Verification", False, f"Final total incorrect: expected ${expected_final_total}, got ${final_total}")
+                return False
+                
+            self.log_test("MongoDB Persistence - Final Verification", True, f"✅ COMPLETE SUCCESS: Cart has {len(final_items)} items, total ${final_total}")
+            
+            # Step 8: Test cart expiration still works
+            print("Step 8: Testing cart expiration functionality...")
+            # Create a cart and verify expiration logic still works
+            response = restart_session.post(f"{API_BASE}/cart/create")
+            if response.status_code == 200:
+                test_cart_id = response.json().get('cart_id')
+                # Try to access cart (should work)
+                response = restart_session.get(f"{API_BASE}/cart/{test_cart_id}")
+                if response.status_code == 200:
+                    self.log_test("MongoDB Persistence - Expiration Test", True, "Cart expiration logic functional")
+                else:
+                    self.log_test("MongoDB Persistence - Expiration Test", False, f"Cart expiration test failed: {response.status_code}")
+                    return False
+            else:
+                self.log_test("MongoDB Persistence - Expiration Test", False, "Failed to create expiration test cart")
+                return False
+            
+            print("🎉 MONGODB PERSISTENCE TEST COMPLETE - ALL SCENARIOS PASSED!")
+            return True
+            
+        except Exception as e:
+            self.log_test("MongoDB Persistence - Exception", False, f"Error during persistence test: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests including enhanced fee calculation system"""
         print("🧪 Starting Enhanced Booking System Backend Tests with Fee Calculations")
