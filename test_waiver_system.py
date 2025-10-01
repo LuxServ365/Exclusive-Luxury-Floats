@@ -78,7 +78,7 @@ def test_waiver_system():
                 },
                 {
                     "id": 2,
-                    "name": "Minor Guest",
+                    "name": "Minor Guest", 
                     "date": "2024-10-01",
                     "isMinor": True,
                     "guardianName": "Parent Guardian",
