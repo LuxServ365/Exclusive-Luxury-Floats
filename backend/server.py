@@ -749,13 +749,23 @@ async def remove_from_cart(cart_id: str, item_index: int):
 @api_router.put("/cart/{cart_id}/customer")
 async def update_cart_customer(cart_id: str, customer_info: CustomerInfo):
     """Update customer information in cart"""
-    if cart_id not in carts_storage:
+    # Get cart from MongoDB
+    cart_data = await db.carts.find_one({"id": cart_id})
+    if not cart_data:
         raise HTTPException(status_code=404, detail="Cart not found")
     
-    cart = carts_storage[cart_id]
+    # Parse cart from MongoDB
+    parsed_cart = parse_from_mongo(cart_data)
+    cart = Cart(**parsed_cart)
+    
+    # Update customer info
     cart.customer_name = customer_info.name
     cart.customer_email = customer_info.email
     cart.customer_phone = customer_info.phone
+    
+    # Update cart in MongoDB
+    cart_dict = prepare_for_mongo(cart.dict())
+    await db.carts.replace_one({"id": cart_id}, cart_dict)
     
     return {"message": "Customer information updated"}
 
