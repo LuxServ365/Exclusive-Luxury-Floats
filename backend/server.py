@@ -138,6 +138,8 @@ def prepare_for_mongo(data):
         data['created_at'] = data['created_at'].isoformat()
     if isinstance(data.get('signed_at'), datetime):
         data['signed_at'] = data['signed_at'].isoformat()
+    if isinstance(data.get('expires_at'), datetime):
+        data['expires_at'] = data['expires_at'].isoformat()
     
     # Handle guests array for waivers
     if 'guests' in data and isinstance(data['guests'], list):
