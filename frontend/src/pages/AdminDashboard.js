@@ -312,12 +312,19 @@ const AdminDashboard = () => {
                 </div>
               </div>
 
-              {/* Calendar Link */}
+              {/* Admin Tools Links */}
               <div className="border-t pt-4 mt-6">
-                <div className="flex justify-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Button onClick={() => window.location.href = '/admin/calendar'}>
                     <Calendar className="h-4 w-4 mr-2" />
                     View Booking Calendar
+                  </Button>
+                  <Button 
+                    variant="outline"
+                    onClick={() => window.location.href = '/admin/waivers'}
+                  >
+                    <FileText className="h-4 w-4 mr-2" />
+                    View Signed Waivers
                   </Button>
                 </div>
               </div>
