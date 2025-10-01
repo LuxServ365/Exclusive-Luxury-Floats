@@ -24,6 +24,8 @@ const Cart = () => {
   });
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('stripe');
   const navigate = useNavigate();
+  const location = useLocation();
+  const [waiverCompleted, setWaiverCompleted] = useState(false);
 
   // Fee constants
   const TRIP_PROTECTION_FEE = 5.99;
