@@ -9,13 +9,13 @@ const BusinessHours = () => {
     window.scrollTo(0, 0);
   }, []);
   const hours = [
-    { day: 'Monday', time: '7:00 AM - 8:00 PM' },
-    { day: 'Tuesday', time: '7:00 AM - 8:00 PM' },
-    { day: 'Wednesday', time: '7:00 AM - 8:00 PM' },
-    { day: 'Thursday', time: '7:00 AM - 8:00 PM' },
-    { day: 'Friday', time: '7:00 AM - 9:00 PM' },
-    { day: 'Saturday', time: '6:00 AM - 9:00 PM' },
-    { day: 'Sunday', time: '6:00 AM - 8:00 PM' }
+    { day: 'Monday', time: '9:00 AM - 11:00 PM' },
+    { day: 'Tuesday', time: '9:00 AM - 11:00 PM' },
+    { day: 'Wednesday', time: '9:00 AM - 11:00 PM' },
+    { day: 'Thursday', time: '9:00 AM - 11:00 PM' },
+    { day: 'Friday', time: '9:00 AM - 11:00 PM' },
+    { day: 'Saturday', time: '9:00 AM - 11:00 PM' },
+    { day: 'Sunday', time: '9:00 AM - 11:00 PM' }
   ];
 
   const currentDay = new Date().toLocaleDateString('en-US', { weekday: 'long' });
