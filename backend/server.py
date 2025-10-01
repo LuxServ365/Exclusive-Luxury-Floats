@@ -690,12 +690,18 @@ async def get_cart(cart_id: str):
 @api_router.post("/cart/{cart_id}/add")
 async def add_to_cart(cart_id: str, item: CartItemAdd):
     """Add item to cart"""
-    if cart_id not in carts_storage:
+    # Get cart from MongoDB
+    cart_data = await db.carts.find_one({"id": cart_id})
+    if not cart_data:
         raise HTTPException(status_code=404, detail="Cart not found")
     
-    cart = carts_storage[cart_id]
+    # Parse cart from MongoDB
+    parsed_cart = parse_from_mongo(cart_data)
+    cart = Cart(**parsed_cart)
+    
+    # Check expiration
     if datetime.now(timezone.utc) > cart.expires_at:
-        del carts_storage[cart_id]
+        await db.carts.delete_one({"id": cart_id})
         raise HTTPException(status_code=410, detail="Cart expired")
     
     if item.service_id not in SERVICES:
@@ -710,6 +716,11 @@ async def add_to_cart(cart_id: str, item: CartItemAdd):
     )
     
     cart.items.append(cart_item)
+    
+    # Update cart in MongoDB
+    cart_dict = prepare_for_mongo(cart.dict())
+    await db.carts.replace_one({"id": cart_id}, cart_dict)
+    
     return {"message": "Item added to cart", "cart_id": cart_id}
 
 @api_router.delete("/cart/{cart_id}/item/{item_index}")
