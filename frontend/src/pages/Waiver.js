@@ -505,13 +505,17 @@ const Waiver = () => {
                   <div>
                     <Label>Participant Signature *</Label>
                     <div className="border-2 border-gray-300 rounded-lg p-2 bg-white">
-                      <canvas
+                      <SignatureCanvas
                         ref={(ref) => {
-                          canvasRefs.current[index * 2] = { current: ref };
-                          if (ref) setupCanvas(ref, index, 'participant');
+                          signatureRefs.current[index * 2] = { current: ref };
                         }}
-                        className="w-full h-24 border border-gray-200 rounded cursor-crosshair"
-                        style={{ touchAction: 'none' }}
+                        canvasProps={{
+                          className: 'w-full h-24 border border-gray-200 rounded',
+                          style: { touchAction: 'none' }
+                        }}
+                        backgroundColor="rgb(255, 255, 255)"
+                        penColor="black"
+                        onEnd={() => handleSignatureEnd(index, 'participant')}
                       />
                       <div className="flex justify-between items-center mt-2">
                         <span className="text-sm text-gray-600">Sign above</span>
