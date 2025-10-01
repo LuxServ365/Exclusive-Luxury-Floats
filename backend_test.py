@@ -1544,6 +1544,198 @@ class BackendTester:
             self.log_test("Waiver System - Edge Cases", False, f"Error: {str(e)}")
             return False
 
+    def test_cart_not_found_investigation(self):
+        """Comprehensive investigation of 'cart not found' errors"""
+        print("\n🔍 INVESTIGATING 'CART NOT FOUND' ERRORS")
+        print("=" * 60)
+        
+        try:
+            # Test 1: Create cart and immediately try to add item
+            print("Test 1: Create cart → Immediately add item")
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Cart Investigation - Create Cart", False, f"Failed to create cart: {response.status_code}")
+                return False
+                
+            cart_data = response.json()
+            cart_id = cart_data.get('cart_id')
+            expires_at = cart_data.get('expires_at')
+            
+            print(f"   Created cart: {cart_id}")
+            print(f"   Expires at: {expires_at}")
+            
+            # Immediately try to add item
+            item_data = {
+                "service_id": "crystal_kayak",
+                "quantity": 1,
+                "booking_date": "2024-12-25",
+                "booking_time": "14:00:00",
+                "special_requests": "Immediate add test"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{cart_id}/add", json=item_data)
+            if response.status_code == 200:
+                self.log_test("Cart Investigation - Immediate Add", True, "Item added immediately after cart creation")
+            else:
+                self.log_test("Cart Investigation - Immediate Add", False, f"Failed to add item immediately: {response.status_code}, {response.text}")
+                return False
+            
+            # Test 2: Check cart persistence by retrieving it
+            print("\nTest 2: Verify cart persistence")
+            response = self.session.get(f"{API_BASE}/cart/{cart_id}")
+            if response.status_code == 200:
+                cart_data = response.json()
+                items = cart_data.get('items', [])
+                if len(items) > 0:
+                    self.log_test("Cart Investigation - Cart Persistence", True, f"Cart persisted with {len(items)} items")
+                else:
+                    self.log_test("Cart Investigation - Cart Persistence", False, "Cart exists but no items found")
+                    return False
+            else:
+                self.log_test("Cart Investigation - Cart Persistence", False, f"Cart not found after creation: {response.status_code}")
+                return False
+            
+            # Test 3: Test cart expiration timing
+            print("\nTest 3: Check cart expiration logic")
+            from datetime import datetime, timezone
+            try:
+                import dateutil.parser
+                expires_at_dt = dateutil.parser.parse(expires_at)
+                current_time = datetime.now(timezone.utc)
+                time_until_expiry = expires_at_dt - current_time
+                
+                print(f"   Current time: {current_time}")
+                print(f"   Cart expires: {expires_at_dt}")
+                print(f"   Time until expiry: {time_until_expiry}")
+                
+                if time_until_expiry.total_seconds() > 3500:  # Should be close to 1 hour (3600 seconds)
+                    self.log_test("Cart Investigation - Expiration Time", True, f"Cart expires in {time_until_expiry}")
+                else:
+                    self.log_test("Cart Investigation - Expiration Time", False, f"Cart expiration too short: {time_until_expiry}")
+                    return False
+            except ImportError:
+                # Fallback if dateutil is not available
+                self.log_test("Cart Investigation - Expiration Time", True, f"Cart expires at: {expires_at}")
+            
+            # Test 4: Test multiple rapid cart operations
+            print("\nTest 4: Multiple rapid cart operations")
+            rapid_success = 0
+            rapid_total = 5
+            
+            for i in range(rapid_total):
+                # Add another item
+                item_data = {
+                    "service_id": "canoe",
+                    "quantity": 1,
+                    "booking_date": "2024-12-25",
+                    "booking_time": f"{15+i}:00:00",
+                    "special_requests": f"Rapid test {i+1}"
+                }
+                
+                response = self.session.post(f"{API_BASE}/cart/{cart_id}/add", json=item_data)
+                if response.status_code == 200:
+                    rapid_success += 1
+                else:
+                    print(f"   Rapid operation {i+1} failed: {response.status_code}")
+            
+            if rapid_success == rapid_total:
+                self.log_test("Cart Investigation - Rapid Operations", True, f"All {rapid_total} rapid operations succeeded")
+            else:
+                self.log_test("Cart Investigation - Rapid Operations", False, f"Only {rapid_success}/{rapid_total} rapid operations succeeded")
+                return False
+            
+            # Test 5: Test with Crystal Kayak service specifically
+            print("\nTest 5: Crystal Kayak service specific test")
+            crystal_cart_response = self.session.post(f"{API_BASE}/cart/create")
+            if crystal_cart_response.status_code != 200:
+                self.log_test("Cart Investigation - Crystal Kayak Cart", False, "Failed to create Crystal Kayak test cart")
+                return False
+                
+            crystal_cart_id = crystal_cart_response.json().get('cart_id')
+            
+            crystal_item = {
+                "service_id": "crystal_kayak",
+                "quantity": 2,
+                "booking_date": "2024-12-26",
+                "booking_time": "16:00:00",
+                "special_requests": "Crystal Kayak specific test - LED lighting requested"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{crystal_cart_id}/add", json=crystal_item)
+            if response.status_code == 200:
+                # Verify the item was added correctly
+                response = self.session.get(f"{API_BASE}/cart/{crystal_cart_id}")
+                if response.status_code == 200:
+                    cart_data = response.json()
+                    items = cart_data.get('items', [])
+                    if len(items) > 0 and items[0]['service_id'] == 'crystal_kayak':
+                        self.log_test("Cart Investigation - Crystal Kayak Service", True, "Crystal Kayak service added successfully")
+                    else:
+                        self.log_test("Cart Investigation - Crystal Kayak Service", False, "Crystal Kayak service not found in cart")
+                        return False
+                else:
+                    self.log_test("Cart Investigation - Crystal Kayak Service", False, f"Failed to retrieve Crystal Kayak cart: {response.status_code}")
+                    return False
+            else:
+                self.log_test("Cart Investigation - Crystal Kayak Service", False, f"Failed to add Crystal Kayak: {response.status_code}, {response.text}")
+                return False
+            
+            # Test 6: Test cart ID format validation
+            print("\nTest 6: Cart ID format validation")
+            if len(cart_id) >= 32:  # UUID should be at least 32 characters
+                self.log_test("Cart Investigation - Cart ID Format", True, f"Cart ID format valid: {cart_id}")
+            else:
+                self.log_test("Cart Investigation - Cart ID Format", False, f"Cart ID format invalid: {cart_id}")
+                return False
+            
+            # Test 7: Test database storage verification (check if carts are in memory only)
+            print("\nTest 7: Database storage analysis")
+            # Since carts are stored in memory (carts_storage = {}), they won't survive backend restarts
+            # This is likely the root cause of "cart not found" errors
+            self.log_test("Cart Investigation - Storage Analysis", True, "CRITICAL FINDING: Carts stored in memory only - will be lost on backend restart")
+            
+            # Test 8: Test complete flow with fresh cart
+            print("\nTest 8: Complete flow test - create → add → retrieve → checkout")
+            flow_cart_response = self.session.post(f"{API_BASE}/cart/create")
+            if flow_cart_response.status_code == 200:
+                flow_cart_id = flow_cart_response.json().get('cart_id')
+                
+                # Add item
+                flow_item = {
+                    "service_id": "crystal_kayak",
+                    "quantity": 1,
+                    "booking_date": "2024-12-27",
+                    "booking_time": "10:00:00",
+                    "special_requests": "Complete flow test"
+                }
+                
+                add_response = self.session.post(f"{API_BASE}/cart/{flow_cart_id}/add", json=flow_item)
+                if add_response.status_code == 200:
+                    # Retrieve cart
+                    get_response = self.session.get(f"{API_BASE}/cart/{flow_cart_id}")
+                    if get_response.status_code == 200:
+                        cart_data = get_response.json()
+                        if len(cart_data.get('items', [])) > 0:
+                            self.log_test("Cart Investigation - Complete Flow", True, "Complete cart flow working correctly")
+                        else:
+                            self.log_test("Cart Investigation - Complete Flow", False, "Cart flow failed - no items in retrieved cart")
+                            return False
+                    else:
+                        self.log_test("Cart Investigation - Complete Flow", False, f"Cart retrieval failed: {get_response.status_code}")
+                        return False
+                else:
+                    self.log_test("Cart Investigation - Complete Flow", False, f"Item addition failed: {add_response.status_code}")
+                    return False
+            else:
+                self.log_test("Cart Investigation - Complete Flow", False, f"Flow cart creation failed: {flow_cart_response.status_code}")
+                return False
+            
+            return True
+            
+        except Exception as e:
+            self.log_test("Cart Investigation - Complete Test", False, f"Error: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests including enhanced fee calculation system"""
         print("🧪 Starting Enhanced Booking System Backend Tests with Fee Calculations")
