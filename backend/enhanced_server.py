@@ -227,6 +227,38 @@ class ContactCreate(BaseModel):
     phone: Optional[str] = None
     message: str
 
+class WaiverGuest(BaseModel):
+    id: int
+    name: str
+    date: date
+    isMinor: bool = False
+    guardianName: Optional[str] = None
+    guardianSignature: Optional[str] = None
+    participantSignature: Optional[str] = None
+
+class WaiverData(BaseModel):
+    emergency_contact_name: str
+    emergency_contact_phone: str
+    emergency_contact_relationship: Optional[str] = None
+    medical_conditions: Optional[str] = None
+    additional_notes: Optional[str] = None
+
+class WaiverSubmission(BaseModel):
+    cart_id: str
+    waiver_data: WaiverData
+    guests: List[WaiverGuest]
+    signed_at: datetime
+    total_guests: int
+
+class Waiver(BaseModel):
+    id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    cart_id: str
+    waiver_data: WaiverData
+    guests: List[WaiverGuest]
+    signed_at: datetime
+    total_guests: int
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
 # Google Sheets Service
 class GoogleSheetsService:
     def __init__(self):
