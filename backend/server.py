@@ -413,8 +413,8 @@ class GoogleSheetsService:
 # Global services
 google_sheets = GoogleSheetsService()
 
-# Cart storage (in production, use Redis or database)
-carts_storage = {}
+# Cart storage - now using MongoDB for persistence
+# carts_storage = {} # Old in-memory storage - replaced with MongoDB
 
 # Waiver service
 async def add_waiver_to_sheets(waiver: Waiver):
