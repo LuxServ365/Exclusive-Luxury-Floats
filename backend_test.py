@@ -1587,6 +1587,10 @@ class BackendTester:
         self.test_telegram_notification_setup()
         self.test_email_template_content()
         
+        # WAIVER SYSTEM TESTS - NEW FOCUS
+        print("\n" + "📋" * 20 + " WAIVER SYSTEM TESTING " + "📋" * 20)
+        self.test_waiver_system_complete()
+        
         # Summary
         print("\n" + "=" * 80)
         print("📊 COMPREHENSIVE TEST SUMMARY")
