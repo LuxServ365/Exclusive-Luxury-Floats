@@ -287,7 +287,9 @@ class GoogleSheetsService:
         try:
             # Prepare booking data for sheets
             items_text = ", ".join([f"{item['name']} (x{item['quantity']})" for item in booking.items])
-            total_amount = sum(item['price'] * item['quantity'] for item in booking.items)
+            
+            # Use computed final total for backward compatibility
+            total_amount = booking.computed_final_total
             
             row_data = [
                 datetime.now().isoformat(),  # Timestamp
