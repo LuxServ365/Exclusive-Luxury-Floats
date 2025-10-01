@@ -16,6 +16,7 @@ import BookingSuccess from "./pages/BookingSuccess";
 import BusinessHours from "./pages/BusinessHours";
 import PaymentInstructions from "./pages/PaymentInstructions";
 import Waiver from "./pages/Waiver";
+import AdminWaivers from "./pages/AdminWaivers";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
 import ScrollToTop from "./components/ScrollToTop";
