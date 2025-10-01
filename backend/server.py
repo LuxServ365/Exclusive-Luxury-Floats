@@ -493,12 +493,15 @@ Tax (Bay County 7%): ${booking.tax_amount:.2f}{credit_card_fee_text}
         logger.error(f"Failed to send Telegram notification: {str(e)}")
         return False
 
-# PayPal Integration
 class PayPalService:
     @staticmethod
     async def create_payment(booking: BookingConfirmation, success_url: str, cancel_url: str):
-        """Create PayPal payment"""
+        """Create PayPal payment with proper amount breakdown"""
         try:
+            # Calculate breakdown for PayPal
+            items_subtotal = sum(item['price'] * item['quantity'] for item in booking.items)
+            
+            # Create items list for PayPal
             items = []
             for item in booking.items:
                 items.append({
@@ -509,7 +512,29 @@ class PayPalService:
                     "quantity": item['quantity']
                 })
             
-            total_amount = sum(item['price'] * item['quantity'] for item in booking.items)
+            # Add trip protection as separate line item if applicable
+            if booking.trip_protection and booking.trip_protection_fee > 0:
+                items.append({
+                    "name": "Trip Protection",
+                    "sku": "trip_protection",
+                    "price": f"{booking.trip_protection_fee:.2f}",
+                    "currency": "USD",
+                    "quantity": 1
+                })
+            
+            # Add credit card fee as separate line item if applicable
+            if booking.credit_card_fee > 0:
+                items.append({
+                    "name": "Credit Card Processing Fee",
+                    "sku": "cc_processing",
+                    "price": f"{booking.credit_card_fee:.2f}",
+                    "currency": "USD",
+                    "quantity": 1
+                })
+            
+            # Calculate totals for PayPal breakdown
+            item_total = items_subtotal + booking.trip_protection_fee + booking.credit_card_fee
+            tax_total = booking.tax_amount
             
             payment = paypalrestsdk.Payment({
                 "intent": "sale",
@@ -522,7 +547,11 @@ class PayPalService:
                     "item_list": {"items": items},
                     "amount": {
                         "total": f"{booking.final_total:.2f}",
-                        "currency": "USD"
+                        "currency": "USD",
+                        "details": {
+                            "subtotal": f"{item_total:.2f}",
+                            "tax": f"{tax_total:.2f}"
+                        }
                     },
                     "description": f"Booking {booking.booking_reference} - Exclusive Gulf Float"
                 }]
