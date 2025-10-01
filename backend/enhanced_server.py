@@ -385,6 +385,14 @@ google_sheets = GoogleSheetsService()
 # Cart storage (in production, use Redis or database)
 carts_storage = {}
 
+# Waiver service
+async def add_waiver_to_sheets(waiver: Waiver):
+    """Add waiver to Google Sheets"""
+    try:
+        await google_sheets.record_waiver(waiver)
+    except Exception as e:
+        logger.error(f"Failed to add waiver to Google Sheets: {str(e)}")
+
 # Email service
 async def send_booking_confirmation_email(booking: BookingConfirmation):
     """Send booking confirmation email using SendGrid"""
