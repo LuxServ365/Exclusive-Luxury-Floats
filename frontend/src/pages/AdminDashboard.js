@@ -311,6 +311,16 @@ const AdminDashboard = () => {
                   </Button>
                 </div>
               </div>
+
+              {/* Calendar Link */}
+              <div className="border-t pt-4 mt-6">
+                <div className="flex justify-center">
+                  <Button onClick={() => window.location.href = '/admin/calendar'}>
+                    <Calendar className="h-4 w-4 mr-2" />
+                    View Booking Calendar
+                  </Button>
+                </div>
+              </div>
             </CardContent>
           </Card>
         </div>
