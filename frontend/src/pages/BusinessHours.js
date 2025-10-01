@@ -138,9 +138,10 @@ const BusinessHours = () => {
                 <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
                   <h4 className="font-semibold text-green-800 mb-2">Special Hours</h4>
                   <p className="text-sm text-green-700">
-                    • Extended weekend hours for sunset experiences<br/>
-                    • Early morning starts available for sunrise tours<br/>
-                    • LED night tours available until 9:00 PM on Fridays & Saturdays
+                    • Early sunrise reservations available by special request<br/>
+                    • Special Event reservations can be accommodated outside regular hours<br/>
+                    • LED night tours available during evening hours<br/>
+                    • Contact us for custom booking arrangements
                   </p>
                 </div>
               </CardContent>
