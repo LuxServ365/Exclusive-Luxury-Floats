@@ -8,6 +8,7 @@ import WatercraftRentals from "./pages/WatercraftRentals";
 import Bookings from "./pages/Bookings";
 import Cart from "./pages/Cart";
 import AdminDashboard from "./pages/AdminDashboard";
+import AdminCalendar from "./pages/AdminCalendar";
 import Gallery from "./pages/Gallery";
 import About from "./pages/About";
 import Contact from "./pages/Contact";
