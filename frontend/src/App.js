@@ -36,6 +36,7 @@ function App() {
           <Route path="/waiver" element={<Waiver />} />
           <Route path="/admin" element={<AdminDashboard />} />
           <Route path="/admin/calendar" element={<AdminCalendar />} />
+          <Route path="/admin/waivers" element={<AdminWaivers />} />
           <Route path="/business-hours" element={<BusinessHours />} />
           <Route path="/payment-instructions" element={<PaymentInstructions />} />
           <Route path="/gallery" element={<Gallery />} />
