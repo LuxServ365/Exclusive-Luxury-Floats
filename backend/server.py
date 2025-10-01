@@ -169,6 +169,11 @@ def parse_from_mongo(item):
             item['signed_at'] = datetime.fromisoformat(item['signed_at'])
         except:
             pass
+    if isinstance(item.get('expires_at'), str):
+        try:
+            item['expires_at'] = datetime.fromisoformat(item['expires_at'])
+        except:
+            pass
     
     # Handle guests array for waivers
     if 'guests' in item and isinstance(item['guests'], list):
