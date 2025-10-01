@@ -641,12 +641,18 @@ async def create_cart():
 @api_router.get("/cart/{cart_id}")
 async def get_cart(cart_id: str):
     """Get cart contents"""
-    if cart_id not in carts_storage:
+    # Get cart from MongoDB
+    cart_data = await db.carts.find_one({"id": cart_id})
+    if not cart_data:
         raise HTTPException(status_code=404, detail="Cart not found")
     
-    cart = carts_storage[cart_id]
+    # Parse cart from MongoDB
+    parsed_cart = parse_from_mongo(cart_data)
+    cart = Cart(**parsed_cart)
+    
+    # Check expiration
     if datetime.now(timezone.utc) > cart.expires_at:
-        del carts_storage[cart_id]
+        await db.carts.delete_one({"id": cart_id})
         raise HTTPException(status_code=410, detail="Cart expired")
     
     # Calculate totals
