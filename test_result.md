@@ -162,6 +162,9 @@ Enhanced booking system with cart functionality, multiple payment processors (St
       - working: true
         agent: "testing"
         comment: "✅ TESTED: PayPal integration now fully working with real credentials! All tests passed: PayPal SDK configuration (✅), API authentication (✅), checkout flow creation (✅), payment session creation (✅), payment URLs and approval flow setup (✅), payment transaction recording in database (✅), booking creation with PayPal payment method (✅). Both Stripe and PayPal payment methods are available and working correctly. PayPal checkout creates proper booking references and payment IDs."
+      - working: true
+        agent: "testing"
+        comment: "✅ CRITICAL FIX VALIDATED: PayPal enhanced fee structure integration WORKING PERFECTLY! Tested specific scenario: Crystal Kayak ($60) + Trip Protection ($5.99) + Tax + CC Fee = $72.73 - EXACT MATCH achieved. PayPal API now accepts enhanced fee breakdown with separate line items for trip protection, tax, and CC fees. Multiple services tested successfully. PayPal payment creation with enhanced totals fully functional. Payment ID: PAYID-NDOIEEQ0AY65028DE960774S confirmed working."
 
   - task: "Google Sheets integration"
     implemented: true
