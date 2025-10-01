@@ -1311,6 +1311,239 @@ class BackendTester:
             self.log_test("Edge Cases - Test", False, f"Error: {str(e)}")
             return False
     
+    def test_waiver_system_complete(self):
+        """Test complete waiver system integration as requested"""
+        print("\n📋 TESTING COMPLETE WAIVER SYSTEM INTEGRATION")
+        print("=" * 60)
+        
+        try:
+            # Step 1: Create a test cart with multiple services
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("Waiver System - Create Test Cart", False, "Failed to create cart")
+                return False
+                
+            waiver_cart_id = response.json().get('cart_id')
+            self.log_test("Waiver System - Create Test Cart", True, f"Cart ID: {waiver_cart_id}")
+            
+            # Add multiple services to simulate real booking
+            services_to_add = [
+                {
+                    "service_id": "crystal_kayak",
+                    "quantity": 2,
+                    "booking_date": "2024-10-01",
+                    "booking_time": "14:00:00",
+                    "special_requests": "LED lighting for evening adventure"
+                },
+                {
+                    "service_id": "canoe",
+                    "quantity": 1,
+                    "booking_date": "2024-10-01",
+                    "booking_time": "15:00:00",
+                    "special_requests": "Family friendly setup"
+                },
+                {
+                    "service_id": "luxury_cabana_3hr",
+                    "quantity": 1,
+                    "booking_date": "2024-10-01",
+                    "booking_time": "16:00:00",
+                    "special_requests": "Premium relaxation experience"
+                }
+            ]
+            
+            for service in services_to_add:
+                response = self.session.post(f"{API_BASE}/cart/{waiver_cart_id}/add", json=service)
+                if response.status_code != 200:
+                    self.log_test("Waiver System - Add Services", False, f"Failed to add {service['service_id']}")
+                    return False
+            
+            self.log_test("Waiver System - Add Services", True, "Multiple services added successfully")
+            
+            # Step 2: Submit comprehensive waiver with sample data
+            waiver_data = {
+                "cart_id": waiver_cart_id,
+                "waiver_data": {
+                    "emergency_contact_name": "John Emergency",
+                    "emergency_contact_phone": "(555) 123-4567",
+                    "emergency_contact_relationship": "Father",
+                    "medical_conditions": "Allergic to shellfish",
+                    "additional_notes": "Please call if late"
+                },
+                "guests": [
+                    {
+                        "id": 1,
+                        "name": "Adult Guest",
+                        "date": "2024-10-01",
+                        "isMinor": False,
+                        "participantSignature": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+                    },
+                    {
+                        "id": 2,
+                        "name": "Minor Guest",
+                        "date": "2024-10-01",
+                        "isMinor": True,
+                        "guardianName": "Parent Guardian",
+                        "participantSignature": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg==",
+                        "guardianSignature": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
+                    }
+                ],
+                "signed_at": "2024-10-01T18:00:00Z",
+                "total_guests": 2
+            }
+            
+            # Test waiver submission
+            response = self.session.post(f"{API_BASE}/waiver/submit", json=waiver_data)
+            if response.status_code == 200:
+                data = response.json()
+                waiver_id = data.get('waiver_id')
+                mongo_id = data.get('mongo_id')
+                
+                if waiver_id and mongo_id:
+                    self.log_test("Waiver System - Submit Waiver", True, f"Waiver ID: {waiver_id}")
+                    
+                    # Step 3: Test waiver retrieval by ID
+                    response = self.session.get(f"{API_BASE}/waiver/{waiver_id}")
+                    if response.status_code == 200:
+                        retrieved_waiver = response.json()
+                        
+                        # Verify waiver data structure
+                        if (retrieved_waiver.get('id') == waiver_id and
+                            retrieved_waiver.get('cart_id') == waiver_cart_id and
+                            retrieved_waiver.get('total_guests') == 2 and
+                            len(retrieved_waiver.get('guests', [])) == 2):
+                            
+                            self.log_test("Waiver System - Retrieve by ID", True, f"Waiver retrieved successfully")
+                            
+                            # Step 4: Test listing all waivers
+                            response = self.session.get(f"{API_BASE}/waivers")
+                            if response.status_code == 200:
+                                all_waivers = response.json()
+                                
+                                if isinstance(all_waivers, list) and len(all_waivers) > 0:
+                                    # Find our waiver in the list
+                                    our_waiver = next((w for w in all_waivers if w.get('id') == waiver_id), None)
+                                    
+                                    if our_waiver:
+                                        self.log_test("Waiver System - List All Waivers", True, f"Found {len(all_waivers)} waivers")
+                                        
+                                        # Step 5: Verify data structure and Google Sheets integration preparation
+                                        return self.test_waiver_data_structure_and_sheets(retrieved_waiver)
+                                    else:
+                                        self.log_test("Waiver System - List All Waivers", False, "Our waiver not found in list")
+                                        return False
+                                else:
+                                    self.log_test("Waiver System - List All Waivers", False, "No waivers returned or invalid format")
+                                    return False
+                            else:
+                                self.log_test("Waiver System - List All Waivers", False, f"Status: {response.status_code}")
+                                return False
+                        else:
+                            self.log_test("Waiver System - Retrieve by ID", False, "Waiver data structure invalid")
+                            return False
+                    else:
+                        self.log_test("Waiver System - Retrieve by ID", False, f"Status: {response.status_code}")
+                        return False
+                else:
+                    self.log_test("Waiver System - Submit Waiver", False, "Missing waiver_id or mongo_id in response")
+                    return False
+            else:
+                self.log_test("Waiver System - Submit Waiver", False, f"Status: {response.status_code}, Response: {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("Waiver System - Complete Test", False, f"Error: {str(e)}")
+            return False
+    
+    def test_waiver_data_structure_and_sheets(self, waiver_data):
+        """Verify waiver data structure and Google Sheets integration preparation"""
+        try:
+            # Verify all required fields for Google Sheets integration
+            required_fields = ['id', 'cart_id', 'waiver_data', 'guests', 'signed_at', 'total_guests', 'created_at']
+            missing_fields = [field for field in required_fields if field not in waiver_data]
+            
+            if missing_fields:
+                self.log_test("Waiver System - Data Structure", False, f"Missing fields: {missing_fields}")
+                return False
+            
+            # Verify waiver_data structure
+            waiver_info = waiver_data.get('waiver_data', {})
+            required_waiver_fields = ['emergency_contact_name', 'emergency_contact_phone']
+            missing_waiver_fields = [field for field in required_waiver_fields if field not in waiver_info]
+            
+            if missing_waiver_fields:
+                self.log_test("Waiver System - Waiver Data Structure", False, f"Missing waiver fields: {missing_waiver_fields}")
+                return False
+            
+            # Verify guests structure
+            guests = waiver_data.get('guests', [])
+            if len(guests) != 2:
+                self.log_test("Waiver System - Guests Structure", False, f"Expected 2 guests, got {len(guests)}")
+                return False
+            
+            # Verify adult guest
+            adult_guest = guests[0]
+            if (adult_guest.get('name') != 'Adult Guest' or 
+                adult_guest.get('isMinor') != False or
+                not adult_guest.get('participantSignature')):
+                self.log_test("Waiver System - Adult Guest Structure", False, "Adult guest data invalid")
+                return False
+            
+            # Verify minor guest
+            minor_guest = guests[1]
+            if (minor_guest.get('name') != 'Minor Guest' or 
+                minor_guest.get('isMinor') != True or
+                not minor_guest.get('guardianName') or
+                not minor_guest.get('participantSignature') or
+                not minor_guest.get('guardianSignature')):
+                self.log_test("Waiver System - Minor Guest Structure", False, "Minor guest data invalid")
+                return False
+            
+            self.log_test("Waiver System - Data Structure Verification", True, "All data structures valid for Google Sheets integration")
+            
+            # Test edge cases
+            return self.test_waiver_edge_cases()
+            
+        except Exception as e:
+            self.log_test("Waiver System - Data Structure Test", False, f"Error: {str(e)}")
+            return False
+    
+    def test_waiver_edge_cases(self):
+        """Test waiver system edge cases"""
+        try:
+            # Test invalid waiver ID
+            response = self.session.get(f"{API_BASE}/waiver/invalid-waiver-id")
+            if response.status_code == 404:
+                self.log_test("Waiver System - Invalid Waiver ID", True, "Correctly returned 404")
+            else:
+                self.log_test("Waiver System - Invalid Waiver ID", False, f"Expected 404, got {response.status_code}")
+                return False
+            
+            # Test malformed waiver data
+            malformed_data = {
+                "cart_id": "test-cart-id",
+                "waiver_data": {
+                    "emergency_contact_name": "Test Contact"
+                    # Missing required phone field
+                },
+                "guests": [],  # Empty guests
+                "signed_at": "invalid-date",
+                "total_guests": 0
+            }
+            
+            response = self.session.post(f"{API_BASE}/waiver/submit", json=malformed_data)
+            if response.status_code in [400, 422]:  # Bad request or validation error
+                self.log_test("Waiver System - Malformed Data", True, f"Correctly rejected malformed data with status {response.status_code}")
+            else:
+                self.log_test("Waiver System - Malformed Data", False, f"Expected 400/422, got {response.status_code}")
+                return False
+            
+            self.log_test("Waiver System - Edge Cases Complete", True, "All edge cases handled correctly")
+            return True
+            
+        except Exception as e:
+            self.log_test("Waiver System - Edge Cases", False, f"Error: {str(e)}")
+            return False
+
     def run_all_tests(self):
         """Run all backend tests including enhanced fee calculation system"""
         print("🧪 Starting Enhanced Booking System Backend Tests with Fee Calculations")
