@@ -108,9 +108,9 @@ Enhanced booking system with cart functionality, multiple payment processors (St
 ## backend:
   - task: "Multi-item cart functionality"
     implemented: true
-    working: true
+    working: false
     file: "server.py"
-    stuck_count: 0
+    stuck_count: 1
     priority: "high"
     needs_retesting: false
     status_history:
@@ -120,6 +120,9 @@ Enhanced booking system with cart functionality, multiple payment processors (St
       - working: true
         agent: "testing"
         comment: "✅ TESTED: All cart endpoints working perfectly - create cart, add/remove items, update customer info, calculate totals. Tested with multiple items (crystal_kayak, canoe, luxury_cabana_3hr). Cart expiry handling works correctly."
+      - working: false
+        agent: "testing"
+        comment: "❌ CRITICAL ISSUE IDENTIFIED: Cart 'not found' errors caused by in-memory storage. INVESTIGATION FINDINGS: (1) ✅ Cart creation working correctly - generates valid UUIDs with 1-hour expiration, (2) ✅ Immediate item addition working - no timing issues, (3) ✅ Cart persistence working within same session, (4) ✅ Crystal Kayak service specifically working correctly, (5) ✅ Multiple rapid operations successful, (6) ❌ ROOT CAUSE: Carts stored in memory only (carts_storage = {}) on line 417 of server.py - lost on backend restart, (7) ❌ EVIDENCE: Backend logs show multiple restarts due to file changes ('WatchFiles detected changes in server.py. Reloading...'), (8) ❌ USER IMPACT: Users lose carts when backend restarts, causing 'cart not found' errors when trying to add items. SOLUTION NEEDED: Move cart storage to MongoDB for persistence across restarts."
 
   - task: "Enhanced fee calculation system"
     implemented: true
