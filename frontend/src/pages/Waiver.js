@@ -65,8 +65,8 @@ const Waiver = () => {
         }));
         setGuests(guestList);
         
-        // Initialize canvas refs
-        canvasRefs.current = Array.from({ length: total * 2 }, () => React.createRef());
+        // Initialize signature refs (participant + guardian if needed)
+        signatureRefs.current = Array.from({ length: total * 2 }, () => React.createRef());
       } else {
         throw new Error('Failed to fetch cart data');
       }
