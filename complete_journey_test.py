@@ -9,7 +9,7 @@ import json
 import time
 from datetime import datetime
 
-BACKEND_URL = "https://gulf-adventures.preview.emergentagent.com"
+BACKEND_URL = "https://gulfbook.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
 
 def test_complete_customer_journey():

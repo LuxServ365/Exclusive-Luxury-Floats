@@ -8,7 +8,7 @@ import requests
 import json
 import time
 
-BACKEND_URL = "https://gulf-adventures.preview.emergentagent.com"
+BACKEND_URL = "https://gulfbook.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
 
 def test_stripe_webhook_notification():

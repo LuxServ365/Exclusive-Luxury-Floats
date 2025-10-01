@@ -9,7 +9,7 @@ import json
 def test_specific_scenarios():
     """Test the specific scenarios mentioned in the review request"""
     
-    API_BASE = 'https://gulf-adventures.preview.emergentagent.com/api'
+    API_BASE = 'https://gulfbook.preview.emergentagent.com/api'
     
     print('🔥 TESTING SPECIFIC SCENARIOS FROM REVIEW REQUEST')
     print('=' * 60)
@@ -52,8 +52,8 @@ def test_specific_scenarios():
             'credit_card_fee_rate': 0.03
         },
         'final_total': 72.73,
-        'success_url': 'https://gulf-adventures.preview.emergentagent.com/booking-success',
-        'cancel_url': f'https://gulf-adventures.preview.emergentagent.com/cart/{cart_id}'
+        'success_url': 'https://gulfbook.preview.emergentagent.com/booking-success',
+        'cancel_url': f'https://gulfbook.preview.emergentagent.com/cart/{cart_id}'
     }
     
     response = session.post(f'{API_BASE}/cart/{cart_id}/checkout', json=checkout_data)
@@ -133,8 +133,8 @@ def test_specific_scenarios():
             'credit_card_fee_rate': 0.03
         },
         'final_total': expected_final,
-        'success_url': 'https://gulf-adventures.preview.emergentagent.com/booking-success',
-        'cancel_url': f'https://gulf-adventures.preview.emergentagent.com/cart/{multi_cart_id}'
+        'success_url': 'https://gulfbook.preview.emergentagent.com/booking-success',
+        'cancel_url': f'https://gulfbook.preview.emergentagent.com/cart/{multi_cart_id}'
     }
     
     response = session.post(f'{API_BASE}/cart/{multi_cart_id}/checkout', json=checkout_data)
@@ -167,8 +167,8 @@ def test_specific_scenarios():
             'credit_card_fee_rate': 0.03
         },
         'final_total': 89.26,  # Paddle board $75 + protection + tax + cc fee
-        'success_url': 'https://gulf-adventures.preview.emergentagent.com/booking-success',
-        'cancel_url': f'https://gulf-adventures.preview.emergentagent.com/cart/{stripe_cart_id}'
+        'success_url': 'https://gulfbook.preview.emergentagent.com/booking-success',
+        'cancel_url': f'https://gulfbook.preview.emergentagent.com/cart/{stripe_cart_id}'
     }
     
     response = session.post(f'{API_BASE}/cart/{stripe_cart_id}/checkout', json=checkout_data)

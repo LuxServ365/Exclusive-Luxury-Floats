@@ -7,7 +7,7 @@ import requests
 import json
 
 # Test the enhanced fee calculation with a simple example
-API_BASE = 'https://gulf-adventures.preview.emergentagent.com/api'
+API_BASE = 'https://gulfbook.preview.emergentagent.com/api'
 
 # Create cart
 response = requests.post(f'{API_BASE}/cart/create')

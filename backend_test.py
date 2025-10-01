@@ -13,7 +13,7 @@ import sys
 import os
 
 # Backend URL from environment
-BACKEND_URL = "https://gulf-adventures.preview.emergentagent.com"
+BACKEND_URL = "https://gulfbook.preview.emergentagent.com"
 API_BASE = f"{BACKEND_URL}/api"
 
 class BackendTester:
