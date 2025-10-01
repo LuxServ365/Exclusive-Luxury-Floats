@@ -1556,6 +1556,10 @@ class BackendTester:
             
         self.test_get_services()
         
+        # CART NOT FOUND INVESTIGATION - PRIORITY TEST
+        print("\n" + "🔍" * 20 + " CART NOT FOUND INVESTIGATION " + "🔍" * 20)
+        self.test_cart_not_found_investigation()
+        
         # Cart functionality tests
         if self.test_create_cart():
             self.test_get_empty_cart()
