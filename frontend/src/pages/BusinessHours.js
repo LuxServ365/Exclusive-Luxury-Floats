@@ -71,8 +71,8 @@ const BusinessHours = () => {
                 <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                   <h4 className="font-semibold text-blue-800 mb-2">Booking Availability</h4>
                   <p className="text-sm text-blue-700">
-                    Customers can book services every 30 minutes during operating hours. 
-                    Extended evening hours available on weekends for special sunset experiences.
+                    Customers can book services hourly during operating hours (9 AM - 11 PM daily). 
+                    Each booking slot is available on the hour for all services.
                   </p>
                 </div>
               </CardContent>
