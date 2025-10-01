@@ -631,7 +631,11 @@ async def get_services():
 async def create_cart():
     """Create a new shopping cart"""
     cart = Cart()
-    carts_storage[cart.id] = cart
+    
+    # Store in MongoDB
+    cart_dict = prepare_for_mongo(cart.dict())
+    await db.carts.insert_one(cart_dict)
+    
     return {"cart_id": cart.id, "expires_at": cart.expires_at}
 
 @api_router.get("/cart/{cart_id}")
