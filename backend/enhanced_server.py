@@ -637,6 +637,69 @@ async def update_cart_customer(cart_id: str, customer_info: CustomerInfo):
     
     return {"message": "Customer information updated"}
 
+# Waiver Endpoints
+@api_router.post("/waiver/submit")
+async def submit_waiver(waiver_submission: WaiverSubmission):
+    """Submit electronic waiver"""
+    try:
+        # Create waiver document
+        waiver = Waiver(
+            cart_id=waiver_submission.cart_id,
+            waiver_data=waiver_submission.waiver_data,
+            guests=waiver_submission.guests,
+            signed_at=waiver_submission.signed_at,
+            total_guests=waiver_submission.total_guests
+        )
+        
+        # Store in MongoDB
+        waiver_dict = prepare_for_mongo(waiver.dict())
+        result = await db.waivers.insert_one(waiver_dict)
+        
+        # Add to Google Sheets
+        await add_waiver_to_sheets(waiver)
+        
+        return {
+            "message": "Waiver submitted successfully",
+            "waiver_id": waiver.id,
+            "mongo_id": str(result.inserted_id)
+        }
+    
+    except Exception as e:
+        logger.error(f"Error submitting waiver: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to submit waiver")
+
+@api_router.get("/waiver/{waiver_id}")
+async def get_waiver(waiver_id: str):
+    """Get waiver by ID"""
+    try:
+        waiver = await db.waivers.find_one({"id": waiver_id})
+        if not waiver:
+            raise HTTPException(status_code=404, detail="Waiver not found")
+        
+        # Parse dates back from MongoDB
+        parsed_waiver = parse_from_mongo(waiver)
+        return parsed_waiver
+    
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error fetching waiver: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch waiver")
+
+@api_router.get("/waivers")
+async def get_all_waivers():
+    """Get all waivers for admin"""
+    try:
+        waivers = await db.waivers.find().sort("created_at", -1).to_list(length=None)
+        
+        # Parse dates back from MongoDB
+        parsed_waivers = [parse_from_mongo(waiver) for waiver in waivers]
+        return parsed_waivers
+    
+    except Exception as e:
+        logger.error(f"Error fetching waivers: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch waivers")
+
 @api_router.post("/cart/{cart_id}/checkout")
 async def checkout_cart(cart_id: str, checkout_request: CheckoutRequest, background_tasks: BackgroundTasks):
     """Checkout cart and create booking"""
