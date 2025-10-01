@@ -1397,7 +1397,209 @@ class BackendTester:
         
         return passed == total
 
+    def test_critical_paypal_integration_fix(self):
+        """Test PayPal payment creation with enhanced fee structure - CRITICAL FIX VALIDATION"""
+        print("\n🔥 TESTING CRITICAL PAYPAL INTEGRATION FIX")
+        print("=" * 60)
+        
+        try:
+            # Create cart for PayPal test with enhanced fees
+            response = self.session.post(f"{API_BASE}/cart/create")
+            if response.status_code != 200:
+                self.log_test("CRITICAL PayPal Fix - Cart Creation", False, "Failed to create cart")
+                return False
+                
+            paypal_cart_id = response.json().get('cart_id')
+            
+            # Add Crystal Kayak ($60) for the specific test case mentioned
+            item_data = {
+                "service_id": "crystal_kayak",
+                "quantity": 1,
+                "booking_date": "2025-01-20",
+                "booking_time": "14:00:00",
+                "special_requests": "PayPal integration fix validation"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{paypal_cart_id}/add", json=item_data)
+            if response.status_code != 200:
+                self.log_test("CRITICAL PayPal Fix - Add Item", False, f"Failed to add kayak: {response.status_code}")
+                return False
+            
+            # Test the specific scenario: Crystal Kayak ($60) + Trip Protection ($5.99) + Tax + CC Fee = Expected $72.73
+            customer_data = {
+                "name": "PayPal Test User",
+                "email": "paypal.test@gulfadventures.com",
+                "phone": "+1-850-555-PAYPAL"
+            }
+            
+            checkout_data = {
+                "customer_info": customer_data,
+                "payment_method": "paypal",
+                "trip_protection": True,
+                "additional_fees": {
+                    "trip_protection_fee": 5.99,
+                    "tax_rate": 0.07,  # 7% Bay County tax
+                    "credit_card_fee_rate": 0.03  # 3% credit card processing fee
+                },
+                "final_total": 72.73,  # Expected total from review request
+                "success_url": f"{BACKEND_URL}/booking-success",
+                "cancel_url": f"{BACKEND_URL}/cart/{paypal_cart_id}"
+            }
+            
+            response = self.session.post(f"{API_BASE}/cart/{paypal_cart_id}/checkout", json=checkout_data)
+            if response.status_code == 200:
+                data = response.json()
+                booking_id = data.get('booking_id')
+                checkout_url = data.get('checkout_url')
+                payment_id = data.get('payment_id')
+                
+                if booking_id and checkout_url and payment_id:
+                    # Verify the booking was created with enhanced fee structure
+                    booking_response = self.session.get(f"{API_BASE}/bookings/{booking_id}")
+                    if booking_response.status_code == 200:
+                        booking_data = booking_response.json()
+                        
+                        # Verify enhanced fee fields are present and correct
+                        services_subtotal = booking_data.get('total_amount', 0)  # $60
+                        trip_protection_fee = booking_data.get('trip_protection_fee', 0)  # $5.99
+                        tax_amount = booking_data.get('tax_amount', 0)  # Should be ~$4.62
+                        credit_card_fee = booking_data.get('credit_card_fee', 0)  # Should be ~$2.12
+                        final_total = booking_data.get('final_total', 0)  # Should be $72.73
+                        
+                        # Verify calculations match expected values
+                        if (abs(services_subtotal - 60.0) < 0.01 and
+                            abs(trip_protection_fee - 5.99) < 0.01 and
+                            abs(final_total - 72.73) < 0.01):
+                            
+                            self.log_test("CRITICAL PayPal Fix - Enhanced Fee Structure", True, 
+                                        f"✅ PayPal accepts enhanced fee breakdown: Services ${services_subtotal}, Protection ${trip_protection_fee}, Tax ${tax_amount:.2f}, CC Fee ${credit_card_fee:.2f}, Total ${final_total:.2f}")
+                            return True
+                        else:
+                            self.log_test("CRITICAL PayPal Fix - Enhanced Fee Structure", False, 
+                                        f"❌ Fee calculation mismatch: Services ${services_subtotal}, Protection ${trip_protection_fee}, Total ${final_total}")
+                            return False
+                    else:
+                        self.log_test("CRITICAL PayPal Fix - Booking Verification", False, f"Failed to retrieve booking: {booking_response.status_code}")
+                        return False
+                else:
+                    self.log_test("CRITICAL PayPal Fix - Payment Creation", False, f"Missing required PayPal fields: {data}")
+                    return False
+            else:
+                self.log_test("CRITICAL PayPal Fix - API Call", False, f"PayPal checkout failed: {response.status_code}, Response: {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("CRITICAL PayPal Fix - Exception", False, f"Error: {str(e)}")
+            return False
+
+    def test_critical_database_compatibility_fix(self):
+        """Test GET /api/bookings endpoint for backward compatibility - CRITICAL FIX VALIDATION"""
+        print("\n🔥 TESTING CRITICAL DATABASE COMPATIBILITY FIX")
+        print("=" * 60)
+        
+        try:
+            # Test GET /api/bookings endpoint that was previously failing
+            response = self.session.get(f"{API_BASE}/bookings")
+            if response.status_code == 200:
+                bookings = response.json()
+                if isinstance(bookings, list):
+                    self.log_test("CRITICAL Database Fix - GET /api/bookings", True, 
+                                f"✅ Endpoint working: Retrieved {len(bookings)} bookings without 500 error")
+                    
+                    # Test backward compatibility with old bookings
+                    if len(bookings) > 0:
+                        # Check if old bookings without enhanced fee fields are handled
+                        for booking in bookings:
+                            # Old bookings might not have final_total, trip_protection_fee, etc.
+                            # The fix should handle this gracefully
+                            booking_id = booking.get('id')
+                            if booking_id:
+                                # Test individual booking retrieval
+                                individual_response = self.session.get(f"{API_BASE}/bookings/{booking_id}")
+                                if individual_response.status_code != 200:
+                                    self.log_test("CRITICAL Database Fix - Individual Booking", False, 
+                                                f"Failed to retrieve booking {booking_id}: {individual_response.status_code}")
+                                    return False
+                        
+                        self.log_test("CRITICAL Database Fix - Backward Compatibility", True, 
+                                    "✅ All existing bookings retrievable - backward compatibility working")
+                    
+                    return True
+                else:
+                    self.log_test("CRITICAL Database Fix - Response Format", False, f"Expected list, got: {type(bookings)}")
+                    return False
+            else:
+                self.log_test("CRITICAL Database Fix - GET /api/bookings", False, 
+                            f"❌ Endpoint still failing: {response.status_code}, Response: {response.text}")
+                return False
+                
+        except Exception as e:
+            self.log_test("CRITICAL Database Fix - Exception", False, f"Error: {str(e)}")
+            return False
+
+    def run_critical_fix_validation_tests(self):
+        """Run critical fix validation tests based on review request"""
+        print("🔥 STARTING CRITICAL FIX VALIDATION TESTING")
+        print("=" * 80)
+        print(f"Backend URL: {BACKEND_URL}")
+        print("Testing FIXED backend to validate issue resolution")
+        print("=" * 80)
+        
+        critical_tests = [
+            ("API Health Check", self.test_api_health),
+            ("CRITICAL: PayPal Integration Fix", self.test_critical_paypal_integration_fix),
+            ("CRITICAL: Database Compatibility Fix", self.test_critical_database_compatibility_fix),
+            ("Enhanced Fee System Validation", self.test_enhanced_fee_calculations),
+            ("Complete End-to-End Flow", self.test_paypal_checkout),
+            ("Admin Dashboard Compatibility", self.test_booking_retrieval),
+        ]
+        
+        passed = 0
+        failed = 0
+        critical_failures = []
+        
+        for test_name, test_func in critical_tests:
+            print(f"\n📋 Running: {test_name}")
+            print("-" * 50)
+            try:
+                if test_func():
+                    passed += 1
+                else:
+                    failed += 1
+                    if "CRITICAL" in test_name:
+                        critical_failures.append(test_name)
+            except Exception as e:
+                print(f"❌ EXCEPTION in {test_name}: {str(e)}")
+                failed += 1
+                if "CRITICAL" in test_name:
+                    critical_failures.append(f"{test_name} (EXCEPTION)")
+        
+        # Print summary
+        print("\n" + "=" * 80)
+        print("🏁 CRITICAL FIX VALIDATION COMPLETE")
+        print("=" * 80)
+        print(f"✅ PASSED: {passed}")
+        print(f"❌ FAILED: {failed}")
+        print(f"📊 SUCCESS RATE: {(passed/(passed+failed)*100):.1f}%")
+        
+        if critical_failures:
+            print(f"\n🚨 CRITICAL FAILURES ({len(critical_failures)}):")
+            for failure in critical_failures:
+                print(f"   • {failure}")
+        
+        if failed > 0:
+            print("\n❌ ALL FAILED TESTS:")
+            for result in self.test_results:
+                if not result['success']:
+                    print(f"   • {result['test']}: {result['details']}")
+        
+        return passed, failed, critical_failures
+
 if __name__ == "__main__":
     tester = BackendTester()
-    success = tester.run_all_tests()
-    sys.exit(0 if success else 1)
+    
+    # Run critical fix validation tests based on review request
+    passed, failed, critical_failures = tester.run_critical_fix_validation_tests()
+    
+    # Exit with appropriate code
+    sys.exit(0 if failed == 0 else 1)
