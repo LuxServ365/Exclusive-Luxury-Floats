@@ -103,7 +103,7 @@
 #====================================================================================================
 
 ## user_problem_statement: 
-Enhanced booking system with cart functionality, multiple payment processors (Stripe, PayPal, Venmo, CashApp, Zelle), and Google Sheets integration for reservation tracking.
+Enhanced booking system with cart functionality, multiple payment processors (Stripe, PayPal, Venmo, CashApp, Zelle), and Google Sheets integration for reservation tracking. Updated operating hours to 9 AM - 11 PM daily with hourly booking slots and special reservation notes.
 
 ## backend:
   - task: "Multi-item cart functionality"
