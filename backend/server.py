@@ -480,7 +480,7 @@ async def send_telegram_notification(booking: BookingConfirmation):
 💰 PRICING BREAKDOWN:
 Services Subtotal: ${items_subtotal:.2f}{trip_protection_text}
 Tax (Bay County 7%): ${booking.tax_amount:.2f}{credit_card_fee_text}
-💰 FINAL TOTAL: ${booking.final_total:.2f}
+💰 FINAL TOTAL: ${booking.computed_final_total:.2f}
 
 💳 Payment Method: {booking.payment_method.upper()}
 💳 Payment Status: {booking.payment_status}
