@@ -36,6 +36,22 @@ const Cart = () => {
     // Scroll to top when component mounts
     window.scrollTo(0, 0);
     
+    // Check if coming from waiver
+    if (location.state?.fromWaiver && location.state?.waiverComplete) {
+      setWaiverCompleted(true);
+      // Check if waiver ID exists
+      const waiverExists = localStorage.getItem('waiver_id');
+      if (waiverExists) {
+        setWaiverCompleted(true);
+      }
+    } else {
+      // Check if waiver was already completed
+      const waiverExists = localStorage.getItem('waiver_id');
+      if (waiverExists) {
+        setWaiverCompleted(true);
+      }
+    }
+    
     // Get cart ID from localStorage or create new cart
     const storedCartId = localStorage.getItem('cart_id');
     if (storedCartId) {
@@ -44,7 +60,7 @@ const Cart = () => {
     } else {
       createNewCart();
     }
-  }, []);
+  }, [location]);
 
   const createNewCart = async () => {
     try {
